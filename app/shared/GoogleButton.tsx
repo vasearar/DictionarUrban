@@ -8,8 +8,8 @@ const GoogleButton = () => {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   
   return (
-    <button onClick={() => signIn('google', {callbackUrl})}>
-      Conectează-te cu Google
+    <button className="text-white flex items-center border border-white rounded-full px-3" onClick={() => signIn('google', {callbackUrl})}>
+      <img className="size-8" src="GoogleLogo.webp" alt="google" />Conectează-te cu Google
     </button>
   )
 }
