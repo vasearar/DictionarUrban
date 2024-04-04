@@ -13,6 +13,15 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        Unbounded: ['"Unbounded"', "sans-serif"],
+        Spacegrotesc: ['"Space Grotesk"', "sans-serif"],
+      },
+      colors: {
+        myorange: '#E86842',
+        mygray: '#202020',
+        mywhite: "#f1f1f1",
+      },
     },
   },
   plugins: [],

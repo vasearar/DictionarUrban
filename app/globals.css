@@ -1,7 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Unbounded:wght@200..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 body{
-  background-color: #37363C;
+  background-color: #f1f1f1;
+  font-family: "Unbounded", sans-serif;
+  margin: 0;
+}
+
+.mydropshadow::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #202020;
+  z-index: -1;
+  border-radius: 2px;
+  transform: translate(4px, 4px);
 }
