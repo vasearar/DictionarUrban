@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import GoogleButton from "../shared/GoogleButton";
+import GoogleButton from "../../shared/GoogleButton";
 import { useState } from "react";
 
 const Signin = () => {
