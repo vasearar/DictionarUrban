@@ -34,8 +34,8 @@
           </Link>
         </li> 
         {session?.data ? 
-        <li><Link className='text-mywhite py-[10px] px-4 hover:opacity-75 bg-myorange rounded-sm border-mygray border-solid border-2 relative mydropshadow' href="#" onClick={() => signOut({ callbackUrl: "/" })}>Sign out</Link></li> : 
-        <li><Link className='text-mywhite py-[10px] px-4 hover:opacity-75 bg-myorange rounded-sm border-mygray border-solid border-2 relative mydropshadow' href="/signIn">Sign up</Link></li>}
+        <li><Link className='text-mywhite py-[10px] hover:bg-myhoverorange px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative mydropshadow rounded-br-none transition-all' href="#" onClick={() => signOut({ callbackUrl: "/" })}>Sign out</Link></li> : 
+        <li><Link className='text-mywhite py-[10px] hover:bg-myhoverorange px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative mydropshadow rounded-br-none transition-all' href="/signIn">Sign up</Link></li>}
         <label className="switch mydropshadow">
           <input id='toggle' type="checkbox" checked={isChecked} onChange={handleToggle} />
           <span className="slider">

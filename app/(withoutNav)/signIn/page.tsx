@@ -27,7 +27,7 @@ const Signin = () => {
               <path d="M1.41 4.58008L0 6.00008L4 10.0001L12 2.00008L10.59 0.580078L4 7.17008L1.41 4.58008Z" fill="#E86842"/>
             </svg>
           </label>
-          <p>Am citit și sunt de acord cu <Link href={"#"} className="text-myorange">Termenii și Condiții</Link> și <Link href={"#"} className="text-myorange">Politică de Confidențialitate</Link></p>
+          <p>Am citit și sunt de acord cu <Link href={"#"} className="text-myorange hover:text-myhoverorange transition-all">Termenii și Condiții</Link> și <Link href={"#"} className="text-myorange hover:text-myhoverorange transition-all">Politică de Confidențialitate</Link></p>
         </div>
       </div>
     </div>

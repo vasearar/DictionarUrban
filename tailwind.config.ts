@@ -15,7 +15,9 @@ const config: Config = {
       colors: {
         myorange: '#E86842',
         mygray: '#202020',
-        mywhite: "#f1f1f1",
+        mywhite: "#F1F1F1",
+        myhoverorange: '#EA8A6D',
+        myhovergray: '#545454',
       },
     },
   },

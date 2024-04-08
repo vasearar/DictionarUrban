@@ -8,7 +8,7 @@ const GoogleButton = (props: { accepted: boolean }) => {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   let useraccept = props.accepted;
   return (
-    <button className="mydropshadow relative bg-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-2xl font-Spacegrotesc items-center px-12 py-2 border-2"
+    <button className="mydropshadow relative hover:bg-myhoverorange transition-all bg-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-2xl font-Spacegrotesc items-center px-12 py-2 border-2"
             onClick={() => {
               if(useraccept){
                 signIn('google', {callbackUrl})

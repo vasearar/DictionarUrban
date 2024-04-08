@@ -9,6 +9,7 @@ body{
   background-color: #f1f1f1;
   font-family: "Unbounded", sans-serif;
   margin: 0;
+  overflow-x: hidden;
 }
 
 nav{
@@ -26,6 +27,23 @@ nav{
   z-index: -1;
   border-radius: 2px;
   transform: translate(4px, 4px);
+}
+
+.mybigdropshadow::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #202020;
+  z-index: -1;
+  border-radius: 2px;
+  transform: translate(8px, 8px);
+}
+
+.mybigdropshadow:hover::after {
+  opacity: 1;
 }
 
 .switch {
