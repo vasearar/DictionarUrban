@@ -2,6 +2,7 @@
 import Link from "next/link";
 import GoogleButton from "../../shared/GoogleButton";
 import { useState } from "react";
+import FacebookButton from "@/app/shared/FacebookButton";
 
 const Signin = () => {
   const [accepted, setAccepted] = useState(false);
@@ -20,6 +21,7 @@ const Signin = () => {
         <h1 className="text-mygray text-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
         <p className="font-Spacegrotesc text-center mb-12">Definițiile scrise în UrbanDex.ro au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} />
+        <FacebookButton accepted={accepted} />
         <div className="flex items-center justify-center mt-12 gap-2">
           <label className="confirm font-Spacegrotesc">
             <input type="checkbox" name="confirm" id="confirm" onClick={handleCheckboxChange} className="" />

@@ -125,3 +125,16 @@ nav{
 .confirm input:checked + .checkmark{
   opacity: 1;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.secret {
+  animation: fadeIn 1s ease-in-out;
+}

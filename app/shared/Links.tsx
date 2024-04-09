@@ -14,7 +14,6 @@
     };
 
     const backgroundImage = isChecked ? '/moon.svg' : '/sun.svg';
-
     return (
       <ul className='items-center flex text-mygray gap-8 text-nowrap font-Spacegrotesc font-bold ml-6'>
         <li>
