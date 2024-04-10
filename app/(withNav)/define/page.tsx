@@ -87,10 +87,10 @@ const page = () => {
       <form id="define" onSubmit={onSubmit} className='font-Spacegrotesc text-mygray bg-mywhite max-w-[720px] relative h-fit shadow-lg'>
 				<div className="py-6 px-8 rounded-sm rounded-br-none border-mygray border-2 mybigdropshadow">
 					<p className="text-left">*Distribuiți definiții pentru cuvinte care ar putea fi utile altor persoane și NU publicați texte înjositoare sau informații personale <span className="font-bold">- acestea vor fi eliminate.</span></p>
-					<input className='outline-none bg-transparent text-2xl mt-2 mb-5 border-mygray border-2 rounded-sm p-2 w-full' maxLength={35} type='text' name='word' id="word" required placeholder='Cuvântul sau expresia' />
+					<input title="fără simboluri speciale și maxim 35" className='outline-none bg-transparent text-2xl mt-2 mb-5 border-mygray border-2 rounded-sm p-2 w-full' maxLength={35} type='text' name='word' id="word" required placeholder='Cuvântul sau expresia' />
 					<p className='text-left'>*Rețineți că această definiție <span className="font-bold">va fi citită de un public larg </span>- depuneți efort și asigurați-vă că definiția este detaliată.</p>
-					<textarea className='bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2' maxLength={450} name="definition" id="definition" required placeholder='Scrie aici explicația ta...'></textarea>
-					<textarea className='bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-3 h-[4.3rem] resize-none border-mygray border-2' maxLength={200} name='exampleOfUsing' id="exampleOfUsing" required placeholder='Scrie un exemplu cum se folosește într-un enunț...'></textarea>
+					<textarea title="fără simboluri speciale și maxim 460" className='bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2' maxLength={460} name="definition" id="definition" required placeholder='Scrie aici explicația ta...'></textarea>
+					<textarea title="fără simboluri speciale și maxim 250" className='bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-3 h-[4.3rem] resize-none border-mygray border-2' maxLength={250} name='exampleOfUsing' id="exampleOfUsing" required placeholder='Scrie un exemplu cum se folosește într-un enunț...'></textarea>
 					<ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} className="flex justify-center" />
 				</div>
       </form>
