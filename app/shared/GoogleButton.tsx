@@ -7,6 +7,10 @@ const GoogleButton = (props: { accepted: boolean }) => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/username";
   let useraccept = props.accepted;
+
+  // TODO: pe cei care exista sa-i arunce pe callback sau /
+  // async function emailExist()
+
   return (
     <button className="mydropshadow relative justify-center outline-none w-full max-w-[367px] hover:bg-myhoverorange transition-all bg-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-2xl font-Spacegrotesc items-center py-2 border-2"
             onClick={() => {
