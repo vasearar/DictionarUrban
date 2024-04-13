@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  @apply transition-colors duration-500;
+}
 
 body{
   background-color: #f1f1f1;
@@ -24,6 +27,19 @@ nav{
   left: 0;
   right: 0;
   background-color: #202020;
+  z-index: -1;
+  border-radius: 2px;
+  transform: translate(4px, 4px);
+}
+
+.mywhitedropshadow::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #F1F1F1;
   z-index: -1;
   border-radius: 2px;
   transform: translate(4px, 4px);
@@ -51,8 +67,6 @@ nav{
   display: inline-block;
   width: 72px;
   height: 45px;
-  border-radius: 2px;
-  border: #202020 solid 2px;
 }
 
 .switch input {
@@ -83,8 +97,6 @@ nav{
   background-color: #E86842;
   -webkit-transition: .4s;
   transition: .4s;
-  border-radius: 1px;
-  border: #202020 solid 1px;
 }
 
 #toggle:checked + .slider {
@@ -137,4 +149,8 @@ nav{
 
 .secret {
   animation: fadeIn 5s ease-in-out;
+}
+
+.svg{
+  filter: brightness(0) saturate(100%) invert(97%) sepia(1%) saturate(204%) hue-rotate(117deg) brightness(115%) contrast(89%);
 }

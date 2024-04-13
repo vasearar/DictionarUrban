@@ -1,9 +1,9 @@
-"use client"
+'use client'
 import React, { useState, useEffect } from 'react';
 
 const SearchBar = () => {
   const [placeholder, setPlaceholder] = useState("Caută un cuvânt sau o frază");
-
+  const [isDark, setisDark] = useState<Boolean>();
   useEffect(() => {
     const handleResize = () => {
       if (window.matchMedia("(max-width: 1535px)").matches) {
@@ -17,18 +17,42 @@ const SearchBar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  function hasDarkClass() {
+    const html = document.querySelector("html");
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+
+          if (html?.classList.contains("dark")) {
+            setisDark(true);
+          } else {
+            setisDark(false);
+          }
+        }
+      });
+    });
+
+    observer.observe(html!, { attributes: true });
+  
+    return html?.classList.contains("dark");
+  }
+  hasDarkClass();
+  
+  const svgClass = isDark ? 'svg' : '';
+  const dropShadow = isDark ? 'mywhitedropshadow' : 'mydropshadow';
+  
+
   return (
     <form id='searchForm'
           action="" 
-          className='rounded-sm border-mygray bg-mywhite border-solid border-2 flex items-center px-4 py-[10px] gap-2 h-[48px] w-[175px] 2xl:w-[20vw] relative mydropshadow'>
+          className={`${dropShadow} rounded-sm dark:bg-mygray border-mygray dark:border-mywhite bg-mywhite border-solid border-2 flex items-center px-4 py-[10px] gap-2 h-[48px] w-[175px] 2xl:w-[20vw] relative`}>
           <button type='submit' form='searchForm'>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1.125 4.52173H2.82337V2.82337H4.52173V1.125H9.9565V2.82337H11.6549V4.52173H13.3532V9.61683H11.6549V11.3152H13.3532V13.0136H15.0516V14.7119H16.75V16.4103H15.0516V14.7119H13.3532V13.0136H11.6549V11.3152H9.9565V13.0136H4.52173V11.3152H2.82337V9.61683H1.125V4.52173Z" fill="#202020"/>
-              <path d="M9.95638 2.8125H4.52161V4.51087H2.82324V9.60597H4.52161V11.3043H9.95638V9.60597H11.6547V4.51087H9.95638V2.8125Z" fill="#F1F1F1"/>
-              <path d="M9.95635 5.85869V4.5H8.59766V5.85869H9.95635Z" fill="#202020"/>
-            </svg>
+          <svg className={svgClass} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" clipRule="evenodd" d="M1.82324 3.52173H0.125V8.61683H1.82337V10.3152H3.52173V12.0136H8.9565V10.3152H10.6549V12.0136H12.3532V13.7119H14.0516V15.4103H15.75V13.7119H14.0516V12.0136H12.3532V10.3152H10.6549V8.61683H12.3532V3.52173H10.6549V1.82337H8.9565V0.125H3.52173V1.8125H8.95638V3.51087H10.6547V8.60597H8.95638V10.3043H3.52161V8.60597H1.82324V3.52173ZM1.82337 3.51087H3.52161V1.82337H1.82337V3.51087Z" fill="#202020"/>
+          </svg>
           </button>
-          <input className='font-Spacegrotesc bg-transparent focus:outline-none w-full'
+          <input className='font-Spacegrotesc bg-transparent dark:text-mywhite focus:outline-none w-full'
                 type="text" 
                 placeholder={placeholder}
           />

@@ -12,7 +12,7 @@ export default async function NavBar() {
       <div className='flex'>
         <Link href={"/"} id="logo" className="flex flex-col text-base font-Unbounded font-bold mr-8">
           <p className='text-myorange'>Dex</p>
-          <p>Urban.ro</p>
+          <p className='dark:text-mywhite'>Urban.ro</p>
         </Link>
         <SearchBar />
       </div>
