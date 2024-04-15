@@ -5,11 +5,13 @@ import { useSearchParams } from "next/navigation"
 import React from 'react'
 
 const FacebookButton = (props: { accepted: boolean }) => {
+  //TODO: transmit callback la user si apoi il folosesc 
+  // searchParams.get("callbackUrl")
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/username";
+  const callbackUrl = "/username";
   let useraccept = props.accepted;
   return (
-    <button className="mydropshadow mt-6 w-full max-w-[367px] outline-none justify-center text-nowrap relative hover:bg-myhoverorange transition-all bg-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-2xl font-Spacegrotesc items-center py-2 border-2"
+    <button className="mydropshadow mt-6 w-full max-w-[367px] outline-none justify-center text-nowrap relative hover:bg-myhoverorange dark:hover:bg-mydarkhoverorange transition-all bg-mywhite dark:bg-mygray dark:text-mywhite dark:border-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-2xl font-Spacegrotesc items-center py-2 border-2"
             onClick={() => {
               if(useraccept){
                 signIn('facebook', {callbackUrl})

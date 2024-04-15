@@ -18,6 +18,8 @@ const config: Config = {
         mywhite: "#F1F1F1",
         myhoverorange: '#EA8A6D',
         myhovergray: '#545454',
+        mydarkhovergray: '#BDBDBD',
+        mydarkhoverorange: '#B65639',
       },
     },
   },

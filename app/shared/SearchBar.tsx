@@ -17,27 +17,25 @@ const SearchBar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  function hasDarkClass() {
-    const html = document.querySelector("html");
+  useEffect(() => {
+    function hasDarkClass() {
+      const html = document.querySelector("html");
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-
-          if (html?.classList.contains("dark")) {
-            setisDark(true);
-          } else {
-            setisDark(false);
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            setisDark(html?.classList.contains("dark"));
           }
-        }
+        });
       });
-    });
 
-    observer.observe(html!, { attributes: true });
-  
-    return html?.classList.contains("dark");
-  }
-  hasDarkClass();
+      observer.observe(html!, { attributes: true });
+      
+      return () => observer.disconnect();
+    }
+    
+    hasDarkClass();
+  }, []);
   
   const svgClass = isDark ? 'svg' : '';
   const dropShadow = isDark ? 'mywhitedropshadow' : 'mydropshadow';

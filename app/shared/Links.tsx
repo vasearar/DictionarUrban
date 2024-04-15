@@ -3,9 +3,11 @@
   import React, { useEffect, useState } from 'react';
   import Link from 'next/link';
   import { useSession, signOut } from 'next-auth/react';
+  import Image from 'next/image';
 
   const Links = () => {
     const session = useSession();
+    const [isDark, setisDark] = useState<Boolean>();
 
     const [isChecked, setIsChecked] = useState(() => {
       if (typeof window !== 'undefined') {
@@ -53,9 +55,29 @@
       }
     }, [isChecked]);
 
-    const backgroundImage = isChecked ? '/moon.svg' : '/sun.svg';
-    const svgClass = isChecked ? 'svg' : '';
-    const dropShadow = isChecked ? 'mywhitedropshadow' : 'mydropshadow';
+    useEffect(() => {
+      function hasDarkClass() {
+        const html = document.querySelector("html");
+  
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              setisDark(html?.classList.contains("dark"));
+            }
+          });
+        });
+  
+        observer.observe(html!, { attributes: true });
+        
+        return () => observer.disconnect();
+      }
+      
+      hasDarkClass();
+    }, []);
+    
+    const backgroundImage = isDark ? '/moon.svg' : '/sun.svg';
+    const svgClass = isDark ? 'svg' : '';
+    const dropShadow = isDark ? 'mywhitedropshadow' : 'mydropshadow';
     
     return (
       <ul className='items-center flex text-mygray gap-8 text-nowrap font-Spacegrotesc font-bold ml-6'>
@@ -84,7 +106,7 @@
           <input id='toggle' type="checkbox" checked={isChecked} onChange={handleToggle} />
           <span className="slider">
             <div className='mover border-mygray rounded-sm dark:border-mywhite border flex items-center justify-center'>
-              <img className='select-none' src={backgroundImage} alt="sun/moon" />
+              <Image width={0} height={0} className='select-none w-fit h-fit' src={backgroundImage} alt="sun/moon" />
             </div>
           </span>
         </label>
