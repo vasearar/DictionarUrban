@@ -19,7 +19,7 @@ const Signin = () => {
           <p className="">Urban.ro</p>
       </Link>
       <div className="bg-transparent p-6 rounded-lg flex items-center justify-center flex-col">
-        <h1 className="text-mygraytext-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
+        <h1 className="text-mygray text-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
         <p className="font-Spacegrotes text-center mb-12">Definițiile scrise în UrbanDex.ro au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} />
         <FacebookButton accepted={accepted} />

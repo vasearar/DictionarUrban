@@ -56,29 +56,29 @@ const Page = () => {
       ...setError
     }));
 		setError(tests);
-	
+		console.log(tests);
 		//TODO: introducerea in bd
-		
-		// try {
-		// 	//TODO: Alt fetch
-		// 	const response = await fetch("/api/contact", {
-		// 		method: "POST",
-		// 		headers: {
-		// 			"Content-Type": "application/json",
-		// 		},
-		// 		body: JSON.stringify(data),
-		// 	});
-		// 	if (!response.ok) {
-		// 		throw new Error("HTTP error! status: " + response.status);
-		// 	}
-		// 	setMessageSent(true);
-		// } catch (error) {
-		// 	console.log(
-		// 		"There was a problem with the fetch operation: ", error
-		// 	);
-		// }
-		document.querySelector("form")?.reset();
-		grecaptcha.reset();
+		if (tests.definition == "" && tests.exampleOfUsing == "" && tests.word == ""){
+			try {
+				const response = await fetch("/api/definition", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				});
+				if (!response.ok) {
+					throw new Error("HTTP error! status: " + response.status);
+				}
+				setMessageSent(true);
+			} catch (error) {
+				console.log(
+					"There was a problem with the fetch operation: ", error
+				);
+			}
+			document.querySelector("form")?.reset();
+			grecaptcha.reset();
+		}
 	}
 
 	const resetForm = () => {
@@ -101,7 +101,7 @@ const Page = () => {
 						{error && <p className='text-left absolute -top-5 text-red-500 text-xs'>{error.word}</p>}
 					</div>
 					<p className='text-left text-mygray'>*Rețineți că această definiție <span className="font-bold text-mygray">va fi citită de un public larg </span>- depuneți efort și asigurați-vă că definiția este detaliată.</p>
-					<textarea title="fără simboluri speciale și maxim 460" className={`${error.definition ? 'myred' : ''}bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2`} name="definition" id="definition" placeholder='Scrie aici explicația ta...'></textarea>
+					<textarea title="fără simboluri speciale și maxim 460" className={`${error.definition ? 'myred' : ''} bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2`} name="definition" id="definition" placeholder='Scrie aici explicația ta...'></textarea>
 					<div className="relative">
 						{error && <p className='text-left absolute -top-2 text-red-500 text-xs'>{error.definition}</p>}
 					</div>
