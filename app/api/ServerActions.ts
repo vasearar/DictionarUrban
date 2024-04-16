@@ -15,7 +15,6 @@ export async function verifyCaptcha(token: string | null) {
 }
 
 export async function verifyUsername(username: string | null) {
-  //TODO: Regex de testat sa fie doar simbolurile corecte si sa verifice daca deja exista in db
   let regex = /^[a-zA-Z0-9_ăîșțâĂÎȘȚÂ]+$/;
   if (username!.length > 28 || username!.length < 3){
     return ("Porecla trebuie să fie între 3 și 28 de simboluri");
@@ -28,4 +27,39 @@ export async function verifyUsername(username: string | null) {
 
 export async function navigate() {
   redirect("/");
+}
+
+interface myWord{
+  word: string;
+  definition: string;
+  exampleOfUsing: string;
+  username: string | null | undefined;
+  userEmail: string | null | undefined;
+  likes: number;
+  date: string;
+}
+
+export async function verifyDefinition(data: myWord) {
+  const errors = {
+    word: "",
+    definition: "",
+    exampleOfUsing: ""
+  };
+  
+  const validateText = (text: string, minLength: number, maxLength: number, errorMessage: string) => {
+    if (text.trim().length < minLength) {
+      return errorMessage + " nu poate conține mai puțin de " + minLength + " simboluri";
+    } else if (text.trim().length > maxLength) {
+      return errorMessage + " nu poate conține mai mult de " + maxLength + " simboluri";
+    } else if (!/^[a-zA-Z0-9_ăîșțâĂÎȘȚÂéÉêÊœŒûÛïÏàÀèÈçÇäÄüÜöÖ(){}\[\]\"':;,.\/\\~`„”?\-_=+!* ]+$/.test(text)) {
+      return errorMessage + " nu poate conține simboluri speciale";
+    }
+    return "";
+  };
+
+  errors.word = validateText(data.word, 2, 40, "*Expresia sau cuvântul");
+  errors.definition = validateText(data.definition, 40, 460, "*Definiția");
+  errors.exampleOfUsing = validateText(data.exampleOfUsing, 20, 250, "*Exemplul de folosire");
+
+  return errors;
 }
