@@ -25,6 +25,13 @@ const Page = () => {
 	}
 	}
 
+	const resetForm = () => {
+		const form = document.getElementById("define") as HTMLFormElement | null;
+		if (form) {
+			form.reset();
+		}
+	}
+
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const target = e.target as HTMLFormElement;
@@ -56,8 +63,6 @@ const Page = () => {
       ...setError
     }));
 		setError(tests);
-		console.log(tests);
-		//TODO: introducerea in bd
 		if (tests.definition == "" && tests.exampleOfUsing == "" && tests.word == ""){
 			try {
 				const response = await fetch("/api/definition", {
@@ -76,15 +81,10 @@ const Page = () => {
 					"There was a problem with the fetch operation: ", error
 				);
 			}
-			document.querySelector("form")?.reset();
+			resetForm();
 			grecaptcha.reset();
-		}
-	}
-
-	const resetForm = () => {
-		const form = document.getElementById("define") as HTMLFormElement | null;
-		if (form) {
-			form.reset();
+		} else {
+			grecaptcha.reset();
 		}
 	}
 

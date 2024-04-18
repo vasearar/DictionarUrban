@@ -51,7 +51,7 @@ export async function verifyDefinition(data: myWord) {
       return errorMessage + " nu poate conține mai puțin de " + minLength + " simboluri";
     } else if (text.trim().length > maxLength) {
       return errorMessage + " nu poate conține mai mult de " + maxLength + " simboluri";
-    } else if (!/^[a-zA-Z0-9_ăîșțâĂÎȘȚÂéÉêÊœŒûÛïÏàÀèÈçÇäÄüÜöÖ(){}\[\]\"':;,.\/\\~`„”?\-_=+!* ]+$/.test(text)) {
+    } else if (!/^[a-zA-Z0-9_ăîșțâĂÎȘȚÂéÉêÊœŒûÛïÏàÀèÈçÇäÄüÜöÖ(){}\[\]\"':;,.\/\\~`„”?\-_=+!*]+\s*$/.test(text.replace(/\s/g, ''))) {
       return errorMessage + " nu poate conține simboluri speciale";
     }
     return "";
