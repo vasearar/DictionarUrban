@@ -1,10 +1,12 @@
 import React from 'react';
+import NavBar from '../shared/NavBar';
+import Definition from '../shared/Definition';
+
 const page = () => {
   return (
     <>
-      alo?
-      <br />
-      Ну как там с дельгами?
+      <NavBar />
+      <Definition />
     </>
   )
 }

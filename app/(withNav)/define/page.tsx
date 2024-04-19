@@ -32,6 +32,25 @@ const Page = () => {
 		}
 	}
 
+	async function getUsername() {
+    try {
+			const response = await fetch(`/api/contact?email=${Session.data?.user?.email}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+      if(response.status == 200){
+				const data = await response.json();
+        return data.username;
+      };
+		} catch (error) {
+			console.log(
+				"There was a problem with the fetch operation: ", error
+			);
+		}
+  }
+
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const target = e.target as HTMLFormElement;
@@ -40,6 +59,8 @@ const Page = () => {
 		const exampleOfUsing = target?.elements.namedItem("exampleOfUsing") as HTMLInputElement;
 		
 		const date = new Date();
+		const username = await getUsername();
+	
 		
     interface CustomDateTimeFormatOptions extends Intl.DateTimeFormatOptions {
 			locale?: string;
@@ -51,7 +72,7 @@ const Page = () => {
 			word: word?.value.toLowerCase(),
 			definition: definition.value,
 			exampleOfUsing: exampleOfUsing.value,
-			username: Session?.data?.user?.name,
+			username: username,
 			userEmail: Session?.data?.user?.email,
 			likes: 0,
 			date: date.toLocaleString('ro-RO', options),

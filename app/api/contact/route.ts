@@ -27,10 +27,11 @@ export async function GET(req: Request, res: Response) {
     const url = new URL(req.url);
     const searchParams = new URLSearchParams(url.searchParams);
     const email = searchParams.get("email");
-    const userEmail = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email });
 
-    if (userEmail) {
-      return NextResponse.json({ exists: true }, { status: 200 });
+    if (user) {
+      const username = user.username;
+      return NextResponse.json({ username: username }, { status: 200 });
     } else {
       return NextResponse.json({ exists: false }, { status: 201 });
     }
