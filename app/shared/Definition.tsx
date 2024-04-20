@@ -1,5 +1,5 @@
 import React from "react";
-import { getServerSideProps } from "../api/ServerActions";
+import { getWords } from "../api/ServerActions";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.split(ver);
@@ -30,7 +30,7 @@ interface wordModel {
 }
 
 export default async function Definition(){
-  const words = await getServerSideProps();
+  const words = await getWords();
   return (
     <>
       { words.map((word: wordModel) => (
