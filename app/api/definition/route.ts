@@ -18,11 +18,10 @@ export async function POST(req: Request, res: Response) {
   }
 }
 
-export async function GET(request) {
-  const searchParams = request.nextUrl.searchParams.get('limit');
+export async function GET(request: NextRequest) {
   try {
     await mongoose.connect(MONGO_URI);
-    const data = await wordModel.find({}).sort({_id: -1}).limit(searchParams);
+    const data = await wordModel.find({}).sort({_id: -1});
     return NextResponse.json(data);
   } catch(error){
     console.log("Something went wrong", error);
