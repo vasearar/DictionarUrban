@@ -5,7 +5,6 @@ import Definition from '../shared/Definition';
 const page = () => {
   return (
     <>
-      <NavBar />
       <Definition />
     </>
   )
