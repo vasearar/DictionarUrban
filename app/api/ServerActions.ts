@@ -63,3 +63,8 @@ export async function verifyDefinition(data: myWord) {
 
   return errors;
 }
+
+export async function getServerSideProps() {
+  const res = await fetch(`http://localhost:3000/api/definition`, {cache: "no-store"});
+  return res.json();
+}
