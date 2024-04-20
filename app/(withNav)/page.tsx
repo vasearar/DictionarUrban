@@ -4,6 +4,7 @@ import Definition from '../shared/Definition';
 const page = () => {
   return (
     <>
+      test
       <Definition />
     </>
   )
