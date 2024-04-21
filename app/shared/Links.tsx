@@ -61,6 +61,7 @@
         </li>
         <li>
         </li> 
+        <li><Link href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Dashboard</Link></li>
         {session?.data ? 
         <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="#" onClick={() => signOut({ callbackUrl: "/" })}>Sign out</Link></li> : 
         <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/signIn">Sign up</Link></li>}

@@ -2,7 +2,7 @@
 import React, { FormEvent, useEffect, useRef, useState } from "react"
 import { useSession } from "next-auth/react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { verifyCaptcha, verifyDefinition } from "../../api/ServerActions";
+import { navigate, verifyCaptcha, verifyDefinition } from "../../api/ServerActions";
 
 const Page = () => {
 	const Session = useSession();
@@ -104,6 +104,7 @@ const Page = () => {
 			}
 			resetForm();
 			grecaptcha.reset();
+			navigate();
 		} else {
 			grecaptcha.reset();
 		}

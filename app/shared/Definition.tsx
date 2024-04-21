@@ -3,6 +3,7 @@ import { getWords } from "../api/ServerActions";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.split(ver);
+  //TODO: tu ai intrebat gpt cum sa pui mai multi delimitatori console.log(transformToArr);
   const result = transformToArr.map((item, index) => {
     if (index !== transformToArr.length - 1) {
       return (
@@ -34,7 +35,7 @@ export default async function Definition(){
   return (
     <>
       { words.map((word: wordModel) => (
-        <div key={word._id} className="mx-auto relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-[720px] p-8 mb-6">
+        <div key={word._id} className="mx-auto mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-[720px] p-8 mb-6">
           <h1 className="text-3xl text-myorange font-bold mb-2">{word.word}</h1>
           <p className="text-lg">{word.definition}</p>
           <p className="text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>

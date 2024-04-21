@@ -71,6 +71,19 @@ nav{
   transform: translate(8px, 8px);
 }
 
+.mybigdropshadowrounded::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #202020;
+  z-index: -1;
+  border-radius: 6px;
+  transform: translate(8px, 8px);
+}
+
 .switch {
   position: relative;
   display: inline-block;
