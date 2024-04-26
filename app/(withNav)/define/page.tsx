@@ -30,6 +30,11 @@ const Page = () => {
 		if (form) {
 			form.reset();
 		}
+		setError({
+			word: "",
+			definition: "",
+			exampleOfUsing: ""
+		});
 	}
 
 	async function getUsername() {
@@ -109,38 +114,38 @@ const Page = () => {
 			grecaptcha.reset();
 		}
 	}
-
+	//TODO: Responsive! Ai grija ca captcha se ahueste.
   return (
 		<>
-    <div className='flex relative items-center text-white flex-col text-center'>
-      <h1 className='text-4xl mt-5 mb-5 text-mygray font-Unbounded text-center'>Ai posibilitatea să contribui la dicționar</h1>
+    <div className='flex relative px-3 items-center text-white flex-col text-center mb-9'>
+      <h1 className='text-3xl md:text-4xl mt-5 mb-5 text-mygray font-Unbounded text-center'>Ai posibilitatea să contribui la dicționar</h1>
 			<h3 className="text-mygray font-Spacegrotesc mb-8">Definițiile în UrbanDex.ro au fost create de indivizi obișnuiți, asemenea ție.</h3>
       <form id="define" onSubmit={onSubmit} className='font-Spacegrotesc text-mygray bg-mywhite max-w-[720px] relative h-fit shadow-lg'>
-				<div className={`py-6 px-8 rounded-sm rounded-br-none border-mygray border-2 mydropshadow`}>
+				<div className={`md:py-6 w-80 im:w-fit p-3 md:px-8 rounded-sm rounded-br-none border-mygray border-2 mydropshadow`}>
 					<p className="text-left">*Distribuiți definiții pentru cuvinte care ar putea fi utile altor persoane și NU publicați texte înjositoare sau informații personale <span className="font-bold text-mygray">- acestea vor fi eliminate.</span></p>
-					<input title="fără simboluri speciale și maxim 40" className={`${error.word ? 'myred' : ''} outline-none bg-transparent text-2xl mt-2 mb-5 border-mygray border-2 rounded-sm p-2 w-full`} type='text' name='word' id="word" placeholder='Cuvântul sau expresia' />
+					<input title="fără simboluri speciale și maxim 40" className={`${error.word ? 'myred' : ''} outline-none bg-transparent text-base sm:text-2xl mt-2 mb-9 sm:mb-5 border-mygray border-2 rounded-sm p-2 w-full`} type='text' name='word' id="word" placeholder='Cuvântul sau expresia' />
 					<div className="relative">
-						{error && <p className='text-left absolute -top-5 text-red-500 text-xs'>{error.word}</p>}
+						{error && <p className='text-left absolute -top-9 im:-top-5 text-red-500 text-xs'>{error.word}</p>}
 					</div>
 					<p className='text-left text-mygray'>*Rețineți că această definiție <span className="font-bold text-mygray">va fi citită de un public larg </span>- depuneți efort și asigurați-vă că definiția este detaliată.</p>
-					<textarea title="fără simboluri speciale și maxim 460" className={`${error.definition ? 'myred' : ''} bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2`} name="definition" id="definition" placeholder='Scrie aici explicația ta...'></textarea>
+					<textarea title="fără simboluri speciale și maxim 460" className={`${error.definition ? 'myred' : ''} bg-transparent text-base sm:text-lg w-full outline-none rounded-sm p-2 mt-2 h-36 resize-none border-mygray border-2`} name="definition" id="definition" placeholder='Scrie aici explicația ta...'></textarea>
 					<div className="relative">
 						{error && <p className='text-left absolute -top-2 text-red-500 text-xs'>{error.definition}</p>}
 					</div>
-					<textarea title="fără simboluri speciale și maxim 250" className={`${error.exampleOfUsing ? 'myred' : ''} bg-transparent text-lg w-full outline-none rounded-sm p-2 mt-3 h-[4.3rem] resize-none border-mygray border-2 mb-3`} name='exampleOfUsing' id="exampleOfUsing" placeholder='Scrie un exemplu cum se folosește într-un enunț...'></textarea>
+					<textarea title="fără simboluri speciale și maxim 250" className={`${error.exampleOfUsing ? 'myred' : ''} bg-transparent text-base sm:text-lg w-full outline-none rounded-sm p-2 h-[4.3rem] resize-none border-mygray border-2 my-8 sm:my-3`} name='exampleOfUsing' id="exampleOfUsing" placeholder='Scrie un exemplu cum se folosește într-un enunț...'></textarea>
 					<div className="relative">
-						{error && <p className='text-left absolute -top-5 text-red-500 text-xs'>{error.exampleOfUsing}</p>}
+						{error && <p className='text-left absolute -top-10 im:-top-5 text-red-500 text-xs'>{error.exampleOfUsing}</p>}
 					</div>
 					<ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} className="flex justify-center" />
 				</div>
       </form>
-			<div className="w-[724px] flex mt-6 gap-6">
+			<div className="w-full md:w-[724px] flex md:flex-row flex-col mt-6 gap-6">
         <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mydropshadow`} form="define" type="submit">Adaugă
 					<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M-2.62268e-07 6L-3.49691e-07 8L12 8L12 10L14 10L14 8L16 8L16 6L14 6L14 4L12 4L12 6L-2.62268e-07 6ZM10 2L12 2L12 4L10 4L10 2ZM10 2L8 2L8 -3.49691e-07L10 -2.62268e-07L10 2ZM10 12L12 12L12 10L10 10L10 12ZM10 12L8 12L8 14L10 14L10 12Z" fill="#F1F1F1"/>
 					</svg>
 				</button>
-				<button className={`hover:text-myhovergray text-mygray px-6 text-2xl h-fit py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mydropshadow`} onClick={resetForm}>M-am răzgândit</button>
+				<button className={`hover:text-myhovergray w-full md:w-fit text-mygray px-6 text-2xl h-fit py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mydropshadow`} onClick={resetForm}>M-am răzgândit</button>
 			</div>
     </div>
 		</>

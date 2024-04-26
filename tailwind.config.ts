@@ -12,6 +12,9 @@ const config: Config = {
         Unbounded: ['"Unbounded"', "sans-serif"],
         Spacegrotesc: ['"Space Grotesk"', "sans-serif"],
       },
+      screens: {
+        'im': '390px',
+      },
       colors: {
         myorange: '#E86842',
         mygray: '#202020',

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import NavBar from "../shared/NavBar";
+import Footer from "../shared/Footer";
 
 export const metadata: Metadata = {
   title: "Dicționar urban",
@@ -16,6 +17,9 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     <main>
       {children}
     </main>
+    <footer>
+      <Footer />
+    </footer>
   </>
   );
 }

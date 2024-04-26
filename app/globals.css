@@ -8,6 +8,10 @@
   @apply transition-colors duration-500;
 }
 
+html{
+  scroll-behavior: smooth;
+}
+
 body{
   background-color: #f1f1f1;
   font-family: "Unbounded", sans-serif;
@@ -15,71 +19,60 @@ body{
   overflow-x: hidden;
 }
 
-nav{
-  padding: 0 clamp(100px, 15%, 20%);
-}
 
-.mydropshadow::after{
+.mydropshadow::after,
+.mywhitedropshadow::after, 
+.mywhitedropshadowno::after,
+.mybigdropshadow::after,
+.mybigwhitedropshadow::after,
+.mybigdropshadowrounded::after,
+.mydropshadowrounded::after{
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #202020;
   z-index: -1;
+}
+
+.mydropshadow::after{
+  background-color: #202020;
   border-radius: 2px;
   transform: translate(4px, 4px);
 }
 
 .mywhitedropshadow::after{
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: #F1F1F1;
-  z-index: -1;
   border-radius: 2px;
   transform: translate(4px, 4px);
 }
 
+.mywhitedropshadowno::after{
+  background-color: #F1F1F1;
+  transform: translate(4px, 4px);
+}
+
 .mybigdropshadow::after{
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: #202020;
-  z-index: -1;
   border-radius: 2px;
   transform: translate(8px, 8px);
 }
 
 .mybigwhitedropshadow::after{
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: #F1F1F1;
-  z-index: -1;
   border-radius: 2px;
   transform: translate(8px, 8px);
 }
 
-.mybigdropshadowrounded::after{
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.mydropshadowrounded::after{
   background-color: #202020;
-  z-index: -1;
+  border-radius: 6px;
+  transform: translate(4px, 4px);
+}
+
+.mybigdropshadowrounded::after{
+  background-color: #202020;
   border-radius: 6px;
   transform: translate(8px, 8px);
 }
@@ -142,8 +135,8 @@ nav{
 
 .confirm input{
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .checkmark{
@@ -178,4 +171,36 @@ nav{
 
 .myred{
   border-color: red !important;
+}
+
+.change .bar2{
+  opacity: 0;
+}
+
+.change .bar1{
+  transform: translate(-5px, 8px) rotate(-45deg);
+}
+
+.change .bar3{
+  transform: translate(-5px, -8px) rotate(45deg);
+}
+
+@media screen and (max-width: 768px){
+  .change .bar1{
+    transform: translate(-5px, 6px) rotate(-45deg);
+  }
+  
+  .change .bar3{
+    transform: translate(-5px, -6px) rotate(45deg);
+  }
+}
+
+@keyframes active{
+  from{transform: translateX(600px);}
+  to{transform: translateX(0);}
+}
+
+.active{
+  transform: translateX(600px);
+  animation: active 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
 }
