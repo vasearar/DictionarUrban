@@ -3,12 +3,11 @@ import React from 'react'
 const DeleteLater = () => {
   return (
     <div className='sticky bottom-0 left-0 text-sm'>
-      <p>Versiunea 1.2</p>
-      <i>-dashboard <br />
-         +full responsive <br />
-         +cuvinte boldate corect <br />
-         !Aprecieri + reporturi <br />
-         ?Vreau feedback despre menu mobil
+      <p>Versiunea 1.1</p>
+      <i>+menu normal pe mob <br />
+         +pregătire pentru dashboard <br />
+         +animație shake la Signin <br />
+         !urmează like-urile și reporturile
       </i>
     </div>
   )
