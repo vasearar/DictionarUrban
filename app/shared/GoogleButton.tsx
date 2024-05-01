@@ -3,12 +3,17 @@
 import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 
-const GoogleButton = (props: { accepted: boolean }) => {
+interface GoogleButtonProps{
+  accepted: boolean;
+  setShouldAnimate: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const GoogleButton:React.FC<GoogleButtonProps> = ({accepted, setShouldAnimate}) => {
   const searchParams = useSearchParams();
   //TODO: transmit callback la user si apoi il folosesc 
   // searchParams.get("callbackUrl")
   const callbackUrl = "/username";
-  let useraccept = props.accepted;
+  let useraccept = accepted;
 
   return (
     <button className="mydropshadow relative justify-center outline-none w-full max-w-[367px] md:hover:bg-myhoverorange transition-all bg-mywhite text-mygray font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2"
@@ -16,6 +21,7 @@ const GoogleButton = (props: { accepted: boolean }) => {
               if(useraccept){
                 signIn('google', {callbackUrl})
               } else {
+                setShouldAnimate(true);
                 return;
               }}}>
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,6 +32,7 @@ const GoogleButton = (props: { accepted: boolean }) => {
       </svg>
       Sign in with Google
     </button>
+
   )
 }
 

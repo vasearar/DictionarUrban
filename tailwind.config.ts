@@ -14,6 +14,7 @@ const config: Config = {
       },
       screens: {
         'im': '390px',
+        'vs': '330px',
       },
       colors: {
         myorange: '#E86842',

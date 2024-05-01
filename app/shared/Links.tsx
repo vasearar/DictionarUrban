@@ -4,10 +4,12 @@
   import Link from 'next/link';
   import { useSession, signOut } from 'next-auth/react';
   import Image from 'next/image';
+  import { usePathname } from 'next/navigation';
 
   const Links = () => {
     const [isDark, setIsDark] = useState(false);
     const [isActive, setActive] = useState(false);
+    const [isCurrent, setCurrent] = useState("");
     const session = useSession();
 
     async function userExist() {
@@ -42,17 +44,19 @@
 
     function handleMenu(){
       const burger = document.querySelector(".burger");
+      const body = document.querySelector("body");
+      body!.classList.toggle("overflow-hidden");
       burger!.classList.toggle("change");
       setActive(!isActive);
     }
+
     
     const backgroundImage = isDark ? '/moon.svg' : '/sun.svg';
-    
     return (
       <>
         <ul className='items-center hidden text-mygray gap-8 text-nowrap font-Spacegrotesc font-bold ml-[8.5vw] lg:flex'>
           <li>
-            <Link className='flex items-center gap-2 hover:opacity-75' href="/define">
+            <Link className={`${usePathname().includes("/define") ? "current" : ""} flex items-center gap-2 hover:opacity-75`} href="/define">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.6667 7.95242H7.95242V13.6667H6.04766V7.95242H0.333374V6.04766H6.04766V0.333374H7.95242V6.04766H13.6667V7.95242Z" fill="#202020"/>
               </svg>
@@ -70,8 +74,8 @@
           <li>
           </li> 
           {session?.data ? 
-          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="#" onClick={() => signOut({ callbackUrl: "/" })}>Sign out</Link></li> : 
-          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/signIn">Sign up</Link></li>}
+          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/dashboard">Contul meu</Link></li> : 
+          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/signIn">Conectează-te </Link></li>}
           <label className={`switch rounded-sm border-mygray border-2 mydropshadow`}>
             <input id='toggle' type="checkbox" onChange={handleToggle} />
             <span className="slider">
@@ -86,20 +90,55 @@
             <div className='md:w-7 w-[18px] transition-all md:h-1 h-[2px] bg-mygray bar2'></div>
             <div className='md:w-7 w-[18px] transition-all md:h-1 h-[2px] bg-mygray bar3'></div>
         </div>
-        <div className={`absolute left-0 top-0 w-screen lg:hidden h-screen z-40 ${isActive ? "flex" : "hidden"} items-center justify-center bg-mywhite`}>
-          <div className={`relative ${isActive ? "active" : ""}`}>
-           <div className="flex flex-col items-center justify-center border-2 bg-mywhite border-mygray p-4 mydropshadow">
-              <h2 className='text-2xl text-myorange font-medium'>Meniu</h2>
-              <ul className='font-Spacegrotesc text-center mt-3 font-medium'>
-                <li><Link href="/define">Adaugă un cuvânt</Link></li>
-                <li><Link href="/">Donează</Link></li>
-                {session?.data ? (
-                  <li><Link href="#" onClick={() => signOut({ callbackUrl: "/" })}>Sign out</Link></li>
-                ) : (
-                  <li><Link href="/signIn">Sign up</Link></li>
-                )}
-              </ul>
-            </div> 
+        <div className={`absolute bottom-0 md:top-full left-0 w-full lg:hidden h-[calc(100vh-5.5rem)] z-40 ${isActive ? "flex active" : "not-active"} menuself bg-mywhite`}>
+          <div className={`relative flex flex-col justify-end w-full gap-y-8 h-full p-3 ${isActive ? "active" : ""}`}>
+           <Link onClick={handleMenu} className={`${["/define", "/dashboard"].includes(usePathname()) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
+            Acasă
+            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+            </svg> 
+          </Link>
+           <Link onClick={handleMenu} className={`${usePathname().includes("/define") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="define">
+             Adaugă cuvânt
+             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+             </svg>
+           </Link>
+           {session?.data ?
+            <Link onClick={handleMenu} className={`${usePathname().includes("/dashboard") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="dashboard">
+             Contul meu
+             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+             </svg>
+            </Link> : 
+            <Link onClick={handleMenu} className="imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center" href="signIn">
+             Conectează-te
+             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+             </svg>
+           </Link>}
+           <Link onClick={handleMenu} className="imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center" href="#">
+             Donează
+             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+             </svg>
+           </Link>
+           <div className='anim flex justify-center w-full gap-8 my-8'>
+              <Link href="#" target='_blank' className='flex gap-2'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 6.54541C10.5533 6.54541 9.16594 7.12008 8.14301 8.14301C7.12008 9.16594 6.54541 10.5533 6.54541 12C6.54541 13.4466 7.12008 14.834 8.14301 15.8569C9.16594 16.8798 10.5533 17.4545 12 17.4545C13.4466 17.4545 14.834 16.8798 15.8569 15.8569C16.8798 14.834 17.4545 13.4466 17.4545 12C17.4545 10.5533 16.8798 9.16594 15.8569 8.14301C14.834 7.12008 13.4466 6.54541 12 6.54541ZM8.72723 12C8.72723 12.8679 9.07203 13.7004 9.68579 14.3141C10.2995 14.9279 11.132 15.2727 12 15.2727C12.8679 15.2727 13.7004 14.9279 14.3141 14.3141C14.9279 13.7004 15.2727 12.8679 15.2727 12C15.2727 11.132 14.9279 10.2995 14.3141 9.68579C13.7004 9.07203 12.8679 8.72723 12 8.72723C11.132 8.72723 10.2995 9.07203 9.68579 9.68579C9.07203 10.2995 8.72723 11.132 8.72723 12Z" fill="#202020"/>
+                  <path d="M18.5455 4.36353C18.2562 4.36353 17.9787 4.47846 17.7741 4.68305C17.5695 4.88763 17.4546 5.16511 17.4546 5.45443C17.4546 5.74376 17.5695 6.02124 17.7741 6.22582C17.9787 6.43041 18.2562 6.54534 18.5455 6.54534C18.8348 6.54534 19.1123 6.43041 19.3169 6.22582C19.5215 6.02124 19.6364 5.74376 19.6364 5.45443C19.6364 5.16511 19.5215 4.88763 19.3169 4.68305C19.1123 4.47846 18.8348 4.36353 18.5455 4.36353Z" fill="#202020"/>
+                  <path fillRule="evenodd" clipRule="evenodd" d="M4.36364 0C3.20633 0 2.09642 0.459739 1.27808 1.27808C0.459739 2.09642 0 3.20633 0 4.36364V19.6364C0 20.7937 0.459739 21.9036 1.27808 22.7219C2.09642 23.5403 3.20633 24 4.36364 24H19.6364C20.7937 24 21.9036 23.5403 22.7219 22.7219C23.5403 21.9036 24 20.7937 24 19.6364V4.36364C24 3.20633 23.5403 2.09642 22.7219 1.27808C21.9036 0.459739 20.7937 0 19.6364 0H4.36364ZM19.6364 2.18182H4.36364C3.78498 2.18182 3.23003 2.41169 2.82086 2.82086C2.41169 3.23003 2.18182 3.78498 2.18182 4.36364V19.6364C2.18182 20.215 2.41169 20.77 2.82086 21.1791C3.23003 21.5883 3.78498 21.8182 4.36364 21.8182H19.6364C20.215 21.8182 20.77 21.5883 21.1791 21.1791C21.5883 20.77 21.8182 20.215 21.8182 19.6364V4.36364C21.8182 3.78498 21.5883 3.23003 21.1791 2.82086C20.77 2.41169 20.215 2.18182 19.6364 2.18182Z" fill="#202020"/>
+                </svg>
+                Instagram
+              </Link>
+              <Link href="#" target='_blank' className='flex gap-2'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.3333 0H2.66667C1.2 0 0 1.2 0 2.66667V21.3333C0 22.8013 1.2 24 2.66667 24H12V14.6667H9.33333V11.3667H12V8.63333C12 5.748 13.616 3.72133 17.0213 3.72133L19.4253 3.724V7.19733H17.8293C16.504 7.19733 16 8.192 16 9.11467V11.368H19.424L18.6667 14.6667H16V24H21.3333C22.8 24 24 22.8013 24 21.3333V2.66667C24 1.2 22.8 0 21.3333 0Z" fill="#202020"/>
+                </svg>
+                Facebook
+              </Link>
+           </div>
           </div> 
         </div>
       </>

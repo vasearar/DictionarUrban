@@ -4,14 +4,14 @@ import React from "react";
 export default function Definition() {
   return (
     <>
-      <div className="w-full h-fit bg-mygray flex lg:flex-row flex-col items-center lg:items-start justify-between mx-auto lg:mx-0 px-3 lg:px-44 xl:px-64 pt-8 pb-16 text-nowrap relative">
-        <div className="absolute z-10 bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center size-8 bg-mygray hover:bg-myorange border">
-          <Link href="#nav" className="z-10">
+      <div className="w-full h-fit bg-mygray flex lg:flex-row flex-col lg:items-start justify-between mx-auto lg:mx-0 px-3 im:px-8 lg:px-44 xl:px-64 pt-8 pb-16 text-nowrap relative">
+        <Link href="#nav" className="absolute z-10 bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center size-8 bg-mygray hover:bg-myorange border">
+          <div className="z-10">
               <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.66669 21.6667H11.3334L11.3334 5.66667H14V3L11.3334 3V0.333334L8.66669 0.333334V3L6.00002 3L6.00002 5.66667H8.66669L8.66669 21.6667ZM3.33335 8.33333L3.33335 5.66667L6.00002 5.66667V8.33333H3.33335ZM3.33335 8.33333L3.33335 11H0.666687L0.666687 8.33333H3.33335ZM16.6667 8.33333V5.66667L14 5.66667L14 8.33333L16.6667 8.33333ZM16.6667 8.33333V11L19.3334 11V8.33333H16.6667Z" fill="#F1F1F1"/>
               </svg>
-          </Link>
-        </div>
+          </div>
+        </Link>
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 mywhitedropshadowno size-8"></div>
         <div className="flex items-center lg:items-start lg:flex-col">
           <Link href="/" id="logo" className="lg:flex hidden flex-col text-2xl font-Unbounded font-bold mr-8">
@@ -60,7 +60,7 @@ export default function Definition() {
               <li><Link href="#" key="general-rules">Reguli generale</Link></li>
               <li><Link href="#" key="privacy-policy">Politică de confidențialitate</Link></li>
               <li><Link href="#" key="terms-conditions">Termeni și condiții</Link></li>
-              <li><Link href="#" key="contact">Contact</Link></li>
+              <li><Link href="#" key="contact">Contact</Link></li> 
             </ul>
           </div>
         </div>

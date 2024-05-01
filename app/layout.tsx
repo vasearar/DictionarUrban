@@ -5,6 +5,9 @@ import { Providers } from "./shared/Providers";
 export const metadata: Metadata = {
   title: "Dicționar urban",
   description: "Dicționarul urban a limbii române",
+  icons: {
+    icon: '/favicon1.ico',
+  },
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
