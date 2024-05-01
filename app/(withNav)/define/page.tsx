@@ -114,7 +114,6 @@ const Page = () => {
 			grecaptcha.reset();
 		}
 	}
-	//TODO: Responsive! Ai grija ca captcha se ahueste.
   return (
 		<>
     <div className='flex relative px-3 items-center text-white flex-col text-center mb-9'>

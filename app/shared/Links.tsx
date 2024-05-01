@@ -11,6 +11,7 @@
     const [isActive, setActive] = useState(false);
     const [isCurrent, setCurrent] = useState("");
     const session = useSession();
+    const pathname = usePathname();
 
     async function userExist() {
       try {
@@ -56,7 +57,7 @@
       <>
         <ul className='items-center hidden text-mygray gap-8 text-nowrap font-Spacegrotesc font-bold ml-[8.5vw] lg:flex'>
           <li>
-            <Link className={`${usePathname().includes("/define") ? "current" : ""} flex items-center gap-2 hover:opacity-75`} href="/define">
+            <Link className={`${pathname.includes("/define") ? "current" : ""} flex items-center gap-2 hover:opacity-75`} href="/define">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.6667 7.95242H7.95242V13.6667H6.04766V7.95242H0.333374V6.04766H6.04766V0.333374H7.95242V6.04766H13.6667V7.95242Z" fill="#202020"/>
               </svg>
@@ -92,20 +93,20 @@
         </div>
         <div className={`absolute bottom-0 md:top-full left-0 w-full lg:hidden h-[calc(100vh-5.5rem)] z-40 ${isActive ? "flex active" : "not-active"} menuself bg-mywhite`}>
           <div className={`relative flex flex-col justify-end w-full gap-y-8 h-full p-3 ${isActive ? "active" : ""}`}>
-           <Link onClick={handleMenu} className={`${["/define", "/dashboard"].includes(usePathname()) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
+           <Link onClick={handleMenu} className={`${["/define", "/dashboard"].includes(pathname) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
             Acasă
             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
             </svg> 
           </Link>
-           <Link onClick={handleMenu} className={`${usePathname().includes("/define") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="define">
+           <Link onClick={handleMenu} className={`${pathname.includes("/define") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="define">
              Adaugă cuvânt
              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
              <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
              </svg>
            </Link>
            {session?.data ?
-            <Link onClick={handleMenu} className={`${usePathname().includes("/dashboard") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="dashboard">
+            <Link onClick={handleMenu} className={`${pathname.includes("/dashboard") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="dashboard">
              Contul meu
              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
              <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
