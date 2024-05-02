@@ -208,25 +208,6 @@ body{
   to{transform: translateY(0);}
 }
 
-
-@-webkit-keyframes not-active {
-  0% {
-    -webkit-transform: translateX(0px); /* Safari */
-    transform: translateX(0px);
-    display: -webkit-flex; /* Safari */
-    display: flex;
-  }
-  
-  99% {
-    -webkit-transform: translateX(1000px); /* Safari */
-    transform: translateX(1000px);
-  }
-  
-  100% {
-    display: none;
-  }
-}
-
 @keyframes not-active{
   0%{
     transform: translateX(0px);
@@ -234,19 +215,13 @@ body{
     display: -webkit-flex
   }
 
-  99%{
-    transform: translateX(1000px);
-  }
-
   100%{
-    display: none;
+    transform: translateX(1000px);
   }
 }
 
 .not-active{
-  -webkit-animation: not-active 1s forwards;
   animation: not-active 1s forwards;
-  display: none;
 }
 
 .active{
