@@ -208,6 +208,7 @@ body{
   to{transform: translateY(0);}
 }
 
+
 @keyframes not-active{
   0%{
     transform: translateX(0px);
@@ -215,8 +216,12 @@ body{
     display: -webkit-flex
   }
 
-  100%{
+  99%{
     transform: translateX(1000px);
+  }
+
+  100%{
+    display: none;
   }
 }
 
