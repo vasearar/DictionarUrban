@@ -8,12 +8,12 @@ export async function POST(req: Request, res: Response) {
   try{
     await mongoose.connect(MONGO_URI);
     const aux = await req.json();
+    console.log(aux);
     const userName = await userModel.findOne({username: aux.username}); 
     if (userName){                  
       return NextResponse.json({ error: "Acestă poreclă deja se folosește" }, { status: 409 });
     }
     await userModel.create(aux);
-    
     return NextResponse.json({ someProp: aux }, { status: 200 });
   } catch(error) {
     console.log("Something went wrong", error);

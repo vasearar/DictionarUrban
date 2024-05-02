@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { verifyUsername, navigate } from '@/app/api/ServerActions';
 
 const Page = () => {
@@ -44,11 +44,21 @@ const Page = () => {
     }
 	}
 
+  const date = new Date();
+
+  interface CustomDateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+    locale?: string;
+  }
+  
+  const options : CustomDateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', locale: 'ro' };
+
   async function addToDb(username: string){
     const data = {
       email: session.data?.user?.email,
       username: username,
       role: "user",
+      date: date.toLocaleString('ro-RO', options),
+      likes: ["puka"],
     };
 
     try {

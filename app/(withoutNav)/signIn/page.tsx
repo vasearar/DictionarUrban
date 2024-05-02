@@ -12,13 +12,6 @@ const Signin = () => {
     setAccepted(!accepted);
   };
 
-
-  // function test(){
-  //   const forShake = document.querySelector(".check");
-  //   forShake?.classList.add("shake");
-  // }
-  console.log(shouldAnimate);
-
   return (
     <Suspense>
     <div className="w-screen h-screen flex items-center justify-center flex-col font-Unbounded">
