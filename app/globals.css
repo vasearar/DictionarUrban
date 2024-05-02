@@ -226,6 +226,7 @@ body{
 
 .not-active{
   animation: not-active 1s forwards;
+  display: none;
 }
 
 .active{
