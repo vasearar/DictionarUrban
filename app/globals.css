@@ -138,8 +138,6 @@ body{
   opacity: 0;
   width: 100%;
   height: 100%;
-  width: 18px;
-  height: 18px;
 }
 
 .checkmark{
@@ -149,6 +147,8 @@ body{
   left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
+  width: 18px;
+  height: 18px;
 }
 
 .confirm input:checked + .checkmark{
@@ -213,7 +213,6 @@ body{
   0%{
     transform: translateX(0px);
     display: flex;
-    display: -webkit-flex
   }
 
   99%{
