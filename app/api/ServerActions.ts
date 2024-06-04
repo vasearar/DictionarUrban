@@ -39,6 +39,7 @@ interface myWord{
   date: string;
 }
 
+
 export async function verifyDefinition(data: myWord) {
   const errors = {
     word: "",

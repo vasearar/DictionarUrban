@@ -19,6 +19,13 @@ body{
   overflow-x: hidden;
 }
 
+button{
+  outline: none;
+}
+
+.invert{
+  filter: invert(1);
+}
 
 .mydropshadow::after,
 .mywhitedropshadow::after, 
@@ -34,6 +41,7 @@ body{
   left: 0;
   right: 0;
   z-index: -1;
+  transition: all .2s ease-in;
 }
 
 .mydropshadow::after{
@@ -147,8 +155,8 @@ body{
   left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 
 .confirm input:checked + .checkmark{

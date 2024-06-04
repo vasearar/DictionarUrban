@@ -1,6 +1,6 @@
   'use client'
   
-  import React, { useState } from 'react';
+  import React, { useEffect, useState } from 'react';
   import Link from 'next/link';
   import { useSession, signOut } from 'next-auth/react';
   import Image from 'next/image';
@@ -9,7 +9,7 @@
   const Links = () => {
     const [isDark, setIsDark] = useState(false);
     const [isActive, setActive] = useState(false);
-    const [isCurrent, setCurrent] = useState("");
+    const [html, setHtml] = useState<HTMLHtmlElement | null>(null);
     const session = useSession();
     const pathname = usePathname();
 
@@ -34,23 +34,36 @@
     if (session?.data){
       userExist();
     }
+    
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const element = typeof window !== 'undefined' ? document.querySelector('html') : null;
+        setHtml(element);
+      }
+    }, []);
 
     function handleToggle(){
       if (isDark == false){
         setIsDark(true);
+        html!.classList.add("invert");
       } else {
         setIsDark(false);
+        html!.classList.remove("invert");
       }
     }
+    
 
     function handleMenu(){
       const burger = document.querySelector(".burger");
       const body = document.querySelector("body");
       body!.classList.toggle("overflow-hidden");
+      body!.classList.toggle("h-screen");
       burger!.classList.toggle("change");
       setActive(!isActive);
+      body!.addEventListener("scroll", (e) => {
+        e.preventDefault();
+      })
     }
-
     
     const backgroundImage = isDark ? '/moon.svg' : '/sun.svg';
     return (

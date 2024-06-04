@@ -22,7 +22,7 @@ const Signin = () => {
             <path d="M21.9998 11V8.33333L5.99984 8.33333L5.99984 5.66667H3.33317L3.33317 8.33333H0.666504L0.666504 11H3.33317L3.33317 13.6667H5.99984V11L21.9998 11ZM8.6665 16.3333H5.99984L5.99984 13.6667H8.6665V16.3333ZM8.6665 16.3333H11.3332V19H8.6665V16.3333ZM8.6665 3L5.99984 3V5.66667L8.6665 5.66667V3ZM8.6665 3H11.3332V0.333334H8.6665V3Z" fill="#202020"/>
           </svg>
       </Link>
-      <div className="bg-transparent p-3 md:p-6 rounded-lg flex items-center justify-center flex-col">
+      <div className="bg-transparent p-3 md:p-6 rounded-lg mt-10 flex items-center justify-center flex-col">
         <h1 className="text-mygray text-3xl md:text-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
         <p className="font-Spacegrotes text-sm md:text-base text-center mb-12">Definițiile scrise în UrbanDex.ro au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} setShouldAnimate={setShouldAnimate} />

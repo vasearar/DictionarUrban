@@ -1,15 +1,15 @@
 'use client';
-import React, { FormEvent, useEffect, useRef, useState } from "react"
+import React, { FormEvent, useState } from "react"
 import { useSession } from "next-auth/react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { navigate, verifyCaptcha, verifyDefinition } from "../../api/ServerActions";
 
 const Page = () => {
 	const Session = useSession();
-  const [isMessageSent, setMessageSent] = useState(false);
 	const [captcha, setCaptcha] = useState<string | null>();
 	const [error, setError] = useState<{ word?: string; definition?: string; exampleOfUsing?: string }>({});
-
+	const [isMessageSent, setMessageSent] = useState(false);
+	
 	async function onSubmit(e: FormEvent){
 		e.preventDefault();
 		if (captcha){
@@ -116,11 +116,11 @@ const Page = () => {
 	}
   return (
 		<>
-    <div className='flex relative px-3 items-center text-white flex-col text-center mb-9'>
-      <h1 className='text-3xl md:text-4xl mt-5 mb-5 text-mygray font-Unbounded text-center'>Ai posibilitatea să contribui la dicționar</h1>
+    <div className='flex relative px-3 items-center text-white flex-col text-center mb-14'>
+      <h1 className='text-3xl md:text-4xl mt-5 mb-5 text-mygray font-bold font-Unbounded text-center'>Ai posibilitatea să contribui la dicționar</h1>
 			<h3 className="text-mygray font-Spacegrotesc mb-8">Definițiile în UrbanDex.ro au fost create de indivizi obișnuiți, asemenea ție.</h3>
       <form id="define" onSubmit={onSubmit} className='font-Spacegrotesc text-mygray bg-mywhite max-w-[720px] relative h-fit shadow-lg'>
-				<div className={`md:py-6 w-80 im:w-fit p-3 md:px-8 rounded-sm rounded-br-none border-mygray border-2 mydropshadow`}>
+				<div className={`md:py-6 w-80 im:w-fit p-3 md:px-8 rounded-sm rounded-br-none border-mygray border-2 mybigdropshadow`}>
 					<p className="text-left">*Distribuiți definiții pentru cuvinte care ar putea fi utile altor persoane și NU publicați texte înjositoare sau informații personale <span className="font-bold text-mygray">- acestea vor fi eliminate.</span></p>
 					<input title="fără simboluri speciale și maxim 40" className={`${error.word ? 'myred' : ''} outline-none bg-transparent text-base sm:text-2xl mt-2 mb-9 sm:mb-5 border-mygray border-2 rounded-sm p-2 w-full`} type='text' name='word' id="word" placeholder='Cuvântul sau expresia' />
 					<div className="relative">
@@ -139,12 +139,12 @@ const Page = () => {
 				</div>
       </form>
 			<div className="w-full md:w-[724px] flex md:flex-row flex-col mt-6 gap-6">
-        <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mydropshadow`} form="define" type="submit">Adaugă
+        <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mybigdropshadow`} form="define" type="submit">Adaugă
 					<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M-2.62268e-07 6L-3.49691e-07 8L12 8L12 10L14 10L14 8L16 8L16 6L14 6L14 4L12 4L12 6L-2.62268e-07 6ZM10 2L12 2L12 4L10 4L10 2ZM10 2L8 2L8 -3.49691e-07L10 -2.62268e-07L10 2ZM10 12L12 12L12 10L10 10L10 12ZM10 12L8 12L8 14L10 14L10 12Z" fill="#F1F1F1"/>
 					</svg>
 				</button>
-				<button className={`hover:text-myhovergray w-full md:w-fit text-mygray px-6 text-2xl h-fit py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mydropshadow`} onClick={resetForm}>M-am răzgândit</button>
+				<button className={`hover:text-myhovergray w-full md:w-fit text-mygray px-6 text-2xl h-fit py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mybigdropshadow`} onClick={resetForm}>M-am răzgândit</button>
 			</div>
     </div>
 		</>

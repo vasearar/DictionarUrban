@@ -30,6 +30,7 @@ interface wordModel {
   _id: string
 }
 
+
 export default async function Definition(){
   const words = await getWords();
   return (
@@ -41,7 +42,7 @@ export default async function Definition(){
             <p className="text-base md:text-lg">{word.definition}</p>
             <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
             <p className="text-base md:text-lg font-bold">de <span className="text-myorange mr-2">{word.username}</span>{word.date}</p>
-            <Actions />
+            <Actions id={word._id} likes={word.likes} />
           </div>
         </div>
       ))}

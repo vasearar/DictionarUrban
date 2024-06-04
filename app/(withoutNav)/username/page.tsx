@@ -58,7 +58,7 @@ const Page = () => {
       username: username,
       role: "user",
       date: date.toLocaleString('ro-RO', options),
-      likes: ["puka"],
+      likes: [],
     };
 
     try {
