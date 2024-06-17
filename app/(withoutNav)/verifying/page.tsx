@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { navigate } from '@/app/api/ServerActions';
 import { useRouter } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
   const session = useSession();
   const router = useRouter();
   const [word, setWord] = useState<string>("...");
@@ -58,4 +58,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
