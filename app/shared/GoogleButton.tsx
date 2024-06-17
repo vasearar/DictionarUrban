@@ -12,7 +12,7 @@ const GoogleButton:React.FC<GoogleButtonProps> = ({accepted, setShouldAnimate}) 
   const searchParams = useSearchParams();
   //TODO: transmit callback la user si apoi il folosesc 
   // searchParams.get("callbackUrl")
-  const callbackUrl = "/username";
+  const callbackUrl = "/verifying";
   let useraccept = accepted;
 
   return (

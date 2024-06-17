@@ -47,16 +47,17 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
   }, [email]);
 
   async function addLike(){
-    console.log(isliked);
-    setLiked(!isliked);
-    if(isliked){
-      setcurrentLikes(currentLikes - 1);
-      likeToWordDb(currentLikes - 1);
-      deleteToUserDb()
-    } else {
-      setcurrentLikes(currentLikes + 1);
-      likeToWordDb(currentLikes + 1);
-      likeToUserDb();
+    if(email){
+      setLiked(!isliked);
+      if(isliked && email){
+        setcurrentLikes(currentLikes - 1);
+        likeToWordDb(currentLikes - 1);
+        deleteToUserDb()
+      } else {
+        setcurrentLikes(currentLikes + 1);
+        likeToWordDb(currentLikes + 1);
+        likeToUserDb();
+      }
     }
   }
 

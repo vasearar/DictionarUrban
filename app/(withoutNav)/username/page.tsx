@@ -99,7 +99,6 @@ const Page = () => {
         <h1 className='font-Unbounded text-2xl im:text-3xl text-center md:text-5xl text-mygray'>Care e <span className='text-myorange'>porecla</span> ta?</h1>
         <p className='mt-5 text-mygray font-Spacegrotesc text-center'>Porecla va apărea în spațiul online.<br /> Îți sugerăm <span className='font-bold'>să nu-ți folosești numele real.</span></p>
         <div className='justify-end flex flex-col mt-7 relative'>
-          <label htmlFor="name" className='text-right text-xs text-myorange'>*apoi nu se va putea de schimbat</label>
           <input  
                  title="fără simboluri speciale și maxim 28" 
                  id="name" 

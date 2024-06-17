@@ -35,7 +35,6 @@ const DashDef = () => {
   const Session = useSession();
   const email = Session?.data?.user?.email;
   const [words, setWords] = useState([]);
-  const [top, setTop] = useState(0);
   const [data, setData] = useState<wordModel>({
     word: '',
     definition: '',
