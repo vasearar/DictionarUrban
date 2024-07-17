@@ -52,8 +52,9 @@ const DashDef = () => {
   const [showDefinitionEdit, setShowDefinitionEdit] = useState(false);
 
   useEffect(() => {
-    setWord(searchParams.get('query')?.toString());
-  }, [searchParams]);
+  const query = searchParams.get('query');
+  setWord(query ? query.toString() : "");
+}, [searchParams]);
 
   async function getWordsByEmail(){
     try {
