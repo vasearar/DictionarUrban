@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import DefinitionEdit from './DefinitionEdit';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
