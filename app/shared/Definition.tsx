@@ -1,6 +1,8 @@
 import React from "react";
 import { getWords } from "../api/ServerActions";
 import Actions from "./Actions";
+import { headers } from "next/headers";
+import path from "path";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
@@ -31,8 +33,8 @@ interface wordModel {
 }
 
 
-export default async function Definition(){
-  const words = await getWords();
+export default async function Definition({query}: { query: string }){
+  const words = await getWords(query);
   return (
     <>
       { words.map((word: wordModel) => (

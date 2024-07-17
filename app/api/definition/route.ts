@@ -22,19 +22,26 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.searchParams);
   const email = searchParams.get("email");
-    try {
-      await mongoose.connect(MONGO_URI);
-      if (!email) {
-        const data = await wordModel.find({}).sort({_id: -1});
-        return NextResponse.json(data);
-      } else {
-        const data = await wordModel.find({userEmail: email}).sort({_id: -1});
-        return NextResponse.json(data);
-      }
-    } catch(error){
-      console.log("Something went wrong", error);
-      return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
-    }
+  let word = searchParams.get("word");
+
+  let query = {};
+
+  if (email && word) {
+    query = { userEmail: email, word: word };
+  } else if (email) {
+    query = { userEmail: email };
+  } else if (word) {
+    query = { word: word };
+  }
+  
+  try {
+    await mongoose.connect(MONGO_URI);
+    const data = await wordModel.find(query).sort({ _id: -1 });
+    return NextResponse.json(data);
+  } catch (error) {
+    console.log("Something went wrong", error);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+  }
 }
 
 export async function PATCH(req: Request, res: Response) {

@@ -2,6 +2,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import DefinitionEdit from './DefinitionEdit';
+import { useSearchParams } from 'next/navigation';
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
@@ -34,7 +35,9 @@ interface wordModel {
 const DashDef = () => {
   const Session = useSession();
   const email = Session?.data?.user?.email;
+  const searchParams = useSearchParams();
   const [words, setWords] = useState([]);
+  const [word, setWord] = useState<string | undefined>("");
   const [data, setData] = useState<wordModel>({
     word: '',
     definition: '',
@@ -46,9 +49,14 @@ const DashDef = () => {
     _id: ''
   });
   const [showDefinitionEdit, setShowDefinitionEdit] = useState(false);
+
+  useEffect(() => {
+    setWord(searchParams.get('query')?.toString());
+  }, [searchParams]);
+
   async function getWordsByEmail(){
     try {
-      const res = await fetch(`/api/definition?email=${email}`, {
+      const res = await fetch(`/api/definition?email=${email}&word=${word}`, {
         cache: "no-store", 
         method: "GET",
         headers: {"Content-Type": "application/json",}
@@ -91,11 +99,10 @@ const DashDef = () => {
   }
 
   useEffect(() => {
-    if(email){
+    if (email && word !== undefined) {
       getWordsByEmail();
     }
-  }, [email]);
-
+  }, [email, word]);
 
   function displayEdit(word: wordModel){
     setShowDefinitionEdit(!showDefinitionEdit);

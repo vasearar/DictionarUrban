@@ -65,9 +65,9 @@ export async function verifyDefinition(data: myWord) {
   return errors;
 }
 
-export async function getWords() {
+export async function getWords(query: string) {
   try {
-    const res = await fetch(`https://dictionar-urban.vercel.app/api/definition`, {cache: "no-store"});
+    const res = await fetch(`http://localhost:3000/api/definition/?word=${query}`, {cache: "no-store"});
     if (!res.ok) {
       throw new Error('Failed to fetch data');
     }
