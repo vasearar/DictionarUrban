@@ -9,10 +9,11 @@ export default async function page({searchParams}: {searchParams?: {
   page?: string;
 };}){
   const query = searchParams?.query || "";
+  const page = searchParams?.page ?? '1';
   return(
     <>
       <TopSection />
-      <Definition query={query} />
+      <Definition query={query} page={page}/>
       <DeleteLater />
     </>
   );
