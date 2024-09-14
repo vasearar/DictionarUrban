@@ -57,6 +57,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
           onClick={() => {
             router.push(`/?page=1`)
           }}>
+          <span className="hidden">To first</span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 17L8 17L8 15L10 15L10 17ZM10 17L12 17L12 19L10 19L10 17ZM10 7L8 7L8 9L10 9L10 7ZM10 7L12 7L12 5L10 5L10 7Z" fill="#202020"/>
             <path d="M8 13L8 15L6 15L6 13L4 13L4 11L6 11L6 9L8 9L8 11L6 11L6 13L8 13Z" fill="#202020"/>
@@ -70,6 +71,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
           onClick={() => {
             router.push(`/?page=${Math.max(currentPage - 1, 1)}`)
           }}>
+          <span className="hidden">one to the back</span>  
           <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 8L16 6L4 6L4 4L2 4L2 6L1.04907e-06 6L7.86805e-07 8L2 8L2 10L4 10L4 8L16 8ZM6 12L4 12L4 10L6 10L6 12ZM6 12L8 12L8 14L6 14L6 12ZM6 2L4 2L4 4L6 4L6 2ZM6 2L8 2L8 -8.58275e-07L6 -1.12054e-06L6 2Z" fill="#202020"/>
           </svg>
@@ -80,6 +82,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
           onClick={() => {
             router.push(`/?page=${Math.min(currentPage + 1, end)}`)
           }}>
+          <span className="hidden">Next one</span>  
           <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg" className='rotate-180'>
             <path d="M16 8L16 6L4 6L4 4L2 4L2 6L1.04907e-06 6L7.86805e-07 8L2 8L2 10L4 10L4 8L16 8ZM6 12L4 12L4 10L6 10L6 12ZM6 12L8 12L8 14L6 14L6 12ZM6 2L4 2L4 4L6 4L6 2ZM6 2L8 2L8 -8.58275e-07L6 -1.12054e-06L6 2Z" fill="#202020"/>
           </svg>
@@ -90,6 +93,7 @@ const PaginationControls: FC<PaginationControlsProps> = (
           onClick={() => {
             router.push(`/?page=${end - 3}`)
           }}>
+          <span className="hidden">To the end</span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='rotate-180'>
             <path d="M10 17L8 17L8 15L10 15L10 17ZM10 17L12 17L12 19L10 19L10 17ZM10 7L8 7L8 9L10 9L10 7ZM10 7L12 7L12 5L10 5L10 7Z" fill="#202020"/>
             <path d="M8 13L8 15L6 15L6 13L4 13L4 11L6 11L6 9L8 9L8 11L6 11L6 13L8 13Z" fill="#202020"/>
