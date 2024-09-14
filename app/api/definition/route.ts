@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { ObjectId } from "mongodb";
 import wordModel from "../../../models/wordModel";
 import mongoose from "mongoose";
 
@@ -22,16 +23,18 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.searchParams);
   const email = searchParams.get("email");
-  let word = searchParams.get("word");
-
+  const word = searchParams.get("word");
+  const id = searchParams.get("id");
   let query = {};
 
-  if (email && word) {
-    query = { userEmail: email, word: word };
+  if (id){
+    query = { _id: new ObjectId(id) };
+  } else if (email && word) {
+    query = { userEmail: email, word: { $regex: `^${word}`, $options: "i" } };
   } else if (email) {
     query = { userEmail: email };
   } else if (word) {
-    query = { word: word };
+    query = { word: { $regex: `^${word}`, $options: "i" } };
   }
   
   try {
@@ -43,6 +46,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
+
 
 export async function PATCH(req: Request, res: Response) {
   try {

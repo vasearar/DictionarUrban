@@ -30,7 +30,8 @@ export async function GET(req: Request, res: Response) {
     if (user) {
       const username = user.username;
       const date = user.date;
-      return NextResponse.json({ username: username, date: date }, { status: 200 });
+      const role = user.role;
+      return NextResponse.json({ username: username, date: date, role: role }, { status: 200 });
     } else {
       return NextResponse.json({ exists: false }, { status: 201 });
     }

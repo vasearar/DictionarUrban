@@ -1,8 +1,6 @@
 import React from "react";
 import { getWords } from "../api/ServerActions";
 import Actions from "./Actions";
-import { headers } from "next/headers";
-import path from "path";
 import PaginationControls from "./PaginationControls";
 
 function text(aux: string, ver: string) {
@@ -43,7 +41,7 @@ export default async function Definition({query, page}: { query: string, page: s
   return (
     <>
       {displayableWord.length === 0 ? (
-        <div className="text-center text-xl font-bold my-24">Astea au fost toate definițiile `(*&gt;﹏&lt;*)′</div>
+        <div className="text-center text-xl font-bold my-24 px-3">Astea au fost toate definițiile `(*&gt;﹏&lt;*)′</div>
       ) : (
         <>
           {displayableWord.map((word: wordModel) => (

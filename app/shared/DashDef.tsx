@@ -118,32 +118,38 @@ const DashDef = () => {
     <>
       {showDefinitionEdit && <DefinitionEdit word={data} close={setShowDefinitionEdit} />}
       <div className="min-h-screen h-fit mb-16">
-        { words.map((word: wordModel) => (
-          <div className="px-3 md:px-0" key={word._id}>
-            <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
-              <div className='flex justify-between items-center mb-3'>
-                <h1 className="text-2xl md:text-3xl text-myorange font-bold">{word.word}</h1>
-                <div className='z-10 flex gap-5'>
-                  <button className='px-4 tracking-wide relative h-fit py-2 text-mygray hover:text-myhovergray transition-all bg-mywhite font-bold border-mygray mydropshadow border-2' onClick={() => displayEdit(word)}>Editează</button>
-                  <button className='px-4 tracking-wide relative h-fit py-2 text-white bg-red-600 hover:bg-red-400 transition-all font-bold border-mygray mydropshadow border-2' onClick={() => confirmFunction(word._id)}>Șterge</button>
+      {words.length === 0 ? (
+        <div className="text-center text-xl font-bold my-24 px-3">Tu n-ai adăugat nimic :[</div>
+      ) : (
+        <>
+          {words.map((word: wordModel) => (
+            <div className="px-3 md:px-0" key={word._id}>
+              <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
+                <div className='flex justify-between items-center mb-3'>
+                  <h1 className="text-2xl md:text-3xl text-myorange font-bold">{word.word}</h1>
+                  <div className='z-10 flex gap-5'>
+                    <button className='px-4 tracking-wide relative h-fit py-2 text-mygray hover:text-myhovergray transition-all bg-mywhite font-bold border-mygray mydropshadow border-2' onClick={() => displayEdit(word)}>Editează</button>
+                    <button className='px-4 tracking-wide relative h-fit py-2 text-white bg-red-600 hover:bg-red-400 transition-all font-bold border-mygray mydropshadow border-2' onClick={() => confirmFunction(word._id)}>Șterge</button>
+                  </div>
+                </div>
+                <p className="text-base md:text-lg">{word.definition}</p>
+                <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
+                <div className="flex w-full justify-between items-center">
+                  <p className="text-base md:text-lg font-bold">{word.date}</p>
+                  <button className={`cursor-default border-2 border-mygray bg-stone-300 rounded-sm py-2 px-5 flex gap-1 items-center relative mydropshadow`}>
+                    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.5 0.5H4.5V2.5H2.5V4.5H0.5V9.5H2.5V11.5H4.5V13.5H6.5V15.5H8.5V17.5H10.5V19.5H11.5V17.5H13.5V15.5H15.5V13.5H17.5V11.5H19.5V9.5H21.5V4.5H19.5V2.5H17.5V0.5H14.5V2.5H12.5V4.5H9.5V2.5H7.5V0.5Z" fill="#E86842" stroke="#E86842"/>
+                    </svg>
+                    <span className={`transition-none font-bold`}>
+                      {word.likes}
+                    </span>
+                  </button>
                 </div>
               </div>
-              <p className="text-base md:text-lg">{word.definition}</p>
-              <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
-              <div className="flex w-full justify-between items-center">
-                <p className="text-base md:text-lg font-bold">{word.date}</p>
-                <button className={`cursor-default border-2 border-mygray bg-stone-300 rounded-sm py-2 px-5 flex gap-1 items-center relative mydropshadow`}>
-                  <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.5 0.5H4.5V2.5H2.5V4.5H0.5V9.5H2.5V11.5H4.5V13.5H6.5V15.5H8.5V17.5H10.5V19.5H11.5V17.5H13.5V15.5H15.5V13.5H17.5V11.5H19.5V9.5H21.5V4.5H19.5V2.5H17.5V0.5H14.5V2.5H12.5V4.5H9.5V2.5H7.5V0.5Z" fill="#E86842" stroke="#E86842"/>
-                  </svg>
-                  <span className={`transition-none font-bold`}>
-                    {word.likes}
-                  </span>
-                </button>
-              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </> 
+      )}
       </div>
     </>
   )

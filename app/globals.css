@@ -16,7 +16,7 @@ body{
   background-color: #f1f1f1;
   font-family: "Unbounded", sans-serif;
   margin: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 button{
@@ -288,4 +288,22 @@ button{
 .shake *{
   color: red !important;
   border-color: red !important;
+}
+
+th, td{
+  border: #202020 solid 2px;
+  padding: 0 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
+td{
+  word-break: break-word;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  font-size: 14px;
 }

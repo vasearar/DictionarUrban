@@ -10,6 +10,7 @@
     const [isDark, setIsDark] = useState(false);
     const [isActive, setActive] = useState(false);
     const [html, setHtml] = useState<HTMLHtmlElement | null>(null);
+    const [userRole, setUserRole] = useState("user");
     const session = useSession();
     const pathname = usePathname();
 
@@ -21,6 +22,8 @@
             "Content-Type": "application/json",
           },
         });
+        const res = await response.json();
+        setUserRole(res.role);
         if (response.status === 201) {
           signOut({ callbackUrl: "/" });
         }
@@ -98,6 +101,17 @@
               </div>
             </span>
           </label>
+          {(userRole === "moderator" || userRole === "admin") && (
+            <div className='hidden md:flex absolute top-0 right-0'>
+              <Link href="/moderator" className=''>Moderează</Link>
+              {(userRole === "admin") && (
+                <>
+                  <p>&nbsp;|&nbsp;</p>
+                  <Link href="/admin">Admin</Link> 
+                </>
+              )} 
+            </div>
+          )}
         </ul>
         <div onClick={handleMenu} className='burger flex flex-col ml-6 gap-1 z-50 lg:hidden transition-all cursor-pointer'>
             <div className='md:w-7 w-[18px] transition-all md:h-1 h-[2px] bg-mygray bar1'></div>
@@ -112,6 +126,17 @@
               <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
             </svg> 
           </Link>
+          {(userRole === "moderator" || userRole === "admin") && (
+            <div className='flex md:hidden absolute left-0 top-[50px]'>
+              <Link href="/moderator" className=''>Moderează</Link>
+              {(userRole === "admin") && (
+                <>
+                  <p>&nbsp;|&nbsp;</p>
+                  <Link href="/admin">Admin</Link> 
+                </>
+              )} 
+            </div>
+          )}
            <Link onClick={handleMenu} className={`${pathname.includes("/define") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="define">
              Adaugă cuvânt
              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
