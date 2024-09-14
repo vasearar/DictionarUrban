@@ -132,7 +132,8 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
         </button>
       </div>  
       <div className='z-10'>
-        <Link href={`/report/?id=${id}`} className='border-2 border-mygray flex bg-mywhite md:hover:bg-myhoverorange relative rounded-sm py-2 px-5 mydropshadow'>
+        <Link href={`/report/?id=${id}`} className='border-2 border-mygray flex bg-mywhite md:hover:bg-myhoverorange relative rounded-sm py-2 px-5 mydropshadow'
+        aria-label='report'>        
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.71429 18.8571V17.1429H0V1.71429H1.71429V0H22.2857V1.71429H24V17.1429H22.2857V18.8571H12H10.2857V20.5714H8.57143V22.2857H6.85714V24H5.14286V22.2857V20.5714V18.8571H1.71429Z" fill="#E86842"/>
             <path d="M11 11.5714V3H13V11.5714H11Z" fill="#202020"/>
