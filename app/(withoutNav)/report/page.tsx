@@ -41,7 +41,6 @@ const Report = () => {
         navigate();
       }
   }, []);
-  console.log(Session?.data?.user?.email);
 
   async function handleSubmit(e: React.FormEvent){
     e.preventDefault();
@@ -116,7 +115,7 @@ const Report = () => {
         <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} className="flex justify-center scale-90 im:scale-100" />
       </form>
       <div className="w-full md:w-[653px] flex md:flex-row flex-col mt-6 gap-6">
-        <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mybigdropshadow`} form="report" type="submit">Raportează cuvântul
+        <button disabled={!Session?.data?.user?.email} className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mybigdropshadow`} form="report" type="submit">Raportează cuvântul
 					<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M-2.62268e-07 6L-3.49691e-07 8L12 8L12 10L14 10L14 8L16 8L16 6L14 6L14 4L12 4L12 6L-2.62268e-07 6ZM10 2L12 2L12 4L10 4L10 2ZM10 2L8 2L8 -3.49691e-07L10 -2.62268e-07L10 2ZM10 12L12 12L12 10L10 10L10 12ZM10 12L8 12L8 14L10 14L10 12Z" fill="#F1F1F1"/>
 					</svg>
@@ -128,4 +127,3 @@ const Report = () => {
 }
 
 export default Report
-

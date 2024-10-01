@@ -107,7 +107,7 @@ const Page = () => {
         <>
           <h1 className='mx-3 text-3xl font-bold'>Moderator, fii obiectiv ;-)</h1>
           <div className='flex justify-center min-h-[calc(100vh-200px)]'>
-            <table className='mx-3 w-[100vw] h-fit'>
+            <table className='mx-3 w-[100vw] mb-6 h-fit'>
               <thead className='text-2xl'>
                 <tr className=''>
                   <th className='m min-w-16'>Nr.</th>
