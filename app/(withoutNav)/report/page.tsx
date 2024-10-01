@@ -41,6 +41,7 @@ const Report = () => {
         navigate();
       }
   }, []);
+  console.log(Session?.data?.user?.email);
 
   async function handleSubmit(e: React.FormEvent){
     e.preventDefault();
