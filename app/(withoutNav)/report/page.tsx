@@ -1,90 +1,101 @@
-'use client'
+'use client';
 import { navigate, verifyCaptcha } from '@/app/api/ServerActions';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link'
-import React, { FormEvent, useEffect, useState } from 'react'
-import ReCAPTCHA from "react-google-recaptcha";
+import Link from 'next/link';
+import React, { FormEvent, useEffect, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Report = () => {
-  const Session = useSession();
+  const { data: session, status } = useSession();
   const [captcha, setCaptcha] = useState<string | null>();
   const [id, setId] = useState<string | null>(null);
-  
-  async function onSubmit(e: FormEvent){
-    e.preventDefault();
-    if (captcha){
-			try{
-				if(await verifyCaptcha(captcha)){
-					handleSubmit(e);
-				}
-			} catch (error){
-				console.error("Error verifying captcha:", error);
-			}
-	} else {
-			console.log("ReCAPTCHA not verified");
-	}
-  }
-
-  const resetForm = () => {
-		const form = document.getElementById("report") as HTMLFormElement | null;
-		if (form) {
-			form.reset();
-		}
-    grecaptcha.reset();
-	}
-
+  const [text, setText] = useState<string>("Verificăm");
   useEffect(() => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const paramId = searchParams.get("id");
-      setId(paramId);
-      if (paramId == null) {
-        navigate();
-      }
-  }, []);
-
-  async function handleSubmit(e: React.FormEvent){
-    e.preventDefault();
-    const target = e.target as HTMLFormElement;
-    const checkedValue = (target.querySelector('input[name="reason"]:checked') as HTMLInputElement)?.value;
-    const optional = target?.elements.namedItem("additional") as HTMLInputElement;
-    const date = new Date();
-
-    interface CustomDateTimeFormatOptions extends Intl.DateTimeFormatOptions {
-			locale?: string;
-    }
-
-    const options : CustomDateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', locale: 'ro' };
-  
-    const data = {
-			wordId: id,
-			reason: checkedValue,
-			optional: optional.value,
-			userEmail: Session?.data?.user?.email,
-			date: date.toLocaleString('ro-RO', options),
-		};
-
-    if(checkedValue == undefined){
-      alert("Așa nu merge");
-    } else {
-      try {
-				const response = await fetch("/api/report", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(data),
-				});
-				if (!response.ok) {
-					throw new Error("HTTP error! status: " + response.status);
-				}
-			} catch (error) {
-				console.log(
-					"There was a problem with the fetch operation: ", error
-				);
-			}
+    const searchParams = new URLSearchParams(window.location.search);
+    const paramId = searchParams.get('id');
+    setId(paramId);
+    if (paramId == null) {
       navigate();
     }
+  }, []);
 
+  const resetForm = () => {
+    const form = document.getElementById('report') as HTMLFormElement | null;
+    if (form) {
+      form.reset();
+    }
+    grecaptcha.reset();
+  };
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (captcha) {
+      try {
+        if (await verifyCaptcha(captcha)) {
+          handleSubmit(e);
+        }
+      } catch (error) {
+        console.error('Error verifying captcha:', error);
+      }
+    } else {
+      console.log('ReCAPTCHA not verified');
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const target = e.target as HTMLFormElement;
+    const checkedValue = (
+      target.querySelector('input[name="reason"]:checked') as HTMLInputElement
+    )?.value;
+    const optional = target?.elements.namedItem('additional') as HTMLInputElement;
+    const date = new Date();
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    };
+
+    const data = {
+      wordId: id,
+      reason: checkedValue,
+      optional: optional.value,
+      userEmail: session?.user?.email,
+      date: date.toLocaleString('ro-RO', options),
+    };
+
+    if (checkedValue == undefined) {
+      alert('Așa nu merge');
+    } else {
+      try {
+        const response = await fetch('/api/report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          throw new Error('HTTP error! status: ' + response.status);
+        }
+      } catch (error) {
+        console.log('There was a problem with the fetch operation: ', error);
+      }
+      navigate();
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setText((prevText) => prevText + ".");
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  if (status === 'loading') {
+    return <div className='flex w-full text-4xl h-screen justify-center items-center'>{text}</div>
   }
 
   return (
@@ -115,7 +126,7 @@ const Report = () => {
         <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} className="flex justify-center scale-90 im:scale-100" />
       </form>
       <div className="w-full md:w-[653px] flex md:flex-row flex-col mt-6 gap-6">
-        <button disabled={!Session?.data?.user?.email} className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mybigdropshadow`} form="report" type="submit">Raportează cuvântul
+        <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-full h-fit text-2xl border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange py-2 mybigdropshadow`} form="report" type="submit">Raportează cuvântul
 					<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M-2.62268e-07 6L-3.49691e-07 8L12 8L12 10L14 10L14 8L16 8L16 6L14 6L14 4L12 4L12 6L-2.62268e-07 6ZM10 2L12 2L12 4L10 4L10 2ZM10 2L8 2L8 -3.49691e-07L10 -2.62268e-07L10 2ZM10 12L12 12L12 10L10 10L10 12ZM10 12L8 12L8 14L10 14L10 12Z" fill="#F1F1F1"/>
 					</svg>
@@ -123,7 +134,7 @@ const Report = () => {
 				<button className={`hover:text-myhovergray w-full md:w-fit text-mygray px-6 text-2xl h-fit py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mybigdropshadow`} onClick={resetForm}>M-am răzgândit</button>
 			</div>
     </div>
-  )
-}
+  );
+};
 
-export default Report
+export default Report;
