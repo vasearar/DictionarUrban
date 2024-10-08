@@ -94,7 +94,7 @@ const Report = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  if (status === 'loading') {
+  if (status === 'loading' || status === 'unauthenticated') {
     return <div className='flex w-full text-4xl h-screen justify-center items-center'>{text}</div>
   }
 
