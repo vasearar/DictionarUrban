@@ -48,7 +48,7 @@ const UsernameEdit: React.FC<UsernameEditProps> = ({ email, close }) => {
 
   return (
     <div className={`h-screen w-screen bg-black bg-opacity-70 z-50 fixed top-0 left-0 flex justify-center items-center font-Spacegrotesc`}>
-      <div className='h-fit max-w-[720px] w-full bg-mywhite p-8'>
+      <div className='h-fit max-w-[720px] w-full bg-mywhite mx-3 p-4 sm:p-8'>
         <h1 className='text-center font-bold text-3xl'>Modifică porecla ta</h1>
         <p className='text-center'>Porecla va apărea în spațiul online. Îți sugerăm <span className='font-bold'>să nu-ți folosești numele real.</span></p>
         <form id="edit" onSubmit={handleSubmit} className='flex-col flex gap-4 mt-2 relative'>

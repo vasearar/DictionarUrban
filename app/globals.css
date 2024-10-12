@@ -258,6 +258,9 @@ button{
 .active .imp:nth-child(4){
   animation-delay: 0.9s;
 }
+.active .imp:nth-child(5){
+  animation-delay: 1.2s;
+}
 
 .active .imp{
   transform: translateX(1000px);

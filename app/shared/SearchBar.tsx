@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+
 const SearchBar = () => {
   const [placeholder, setPlaceholder] = useState("Caută un cuvânt sau o frază");
 
@@ -26,7 +27,7 @@ const SearchBar = () => {
     const target = e.target as HTMLFormElement;
     const term = target?.elements.namedItem("term") as HTMLInputElement;
     const termValue = term.value;
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     if (termValue) {
       params.set('query', termValue.toString());
     } else {

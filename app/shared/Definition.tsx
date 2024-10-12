@@ -2,6 +2,7 @@ import React from "react";
 import { getWords } from "../api/ServerActions";
 import Actions from "./Actions";
 import PaginationControls from "./PaginationControls";
+import Filters from "./Filters";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
@@ -32,18 +33,26 @@ interface wordModel {
 }
 
 
-export default async function Definition({query, page}: { query: string, page: string }){
+export default async function Definition({query, page, popularity}: { query: string, page: string, popularity: string }){
   const words = await getWords(query);
-  
+
+  let sortedWords = [...words];
+  if (popularity === "2") {
+    sortedWords = sortedWords.sort((a, b) => b.likes - a.likes);
+  } else if (popularity === "3") {
+    sortedWords = sortedWords.sort((a, b) => a.likes - b.likes);
+  }
+
   const start = (Number(page) - 1) * 7;
   const end = start + 7;
-  const displayableWord = words.slice(start, end);
+  const displayableWord = sortedWords.slice(start, end);
   return (
     <>
       {displayableWord.length === 0 ? (
-        <div className="text-center text-xl font-bold my-24 px-3">Astea au fost toate definițiile `(*&gt;﹏&lt;*)′</div>
+        <div className="text-center text-xl font-bold my-24 px-3">Astea au fost toate definițiile `(*&gt;﹏&lt;*)`</div>
       ) : (
         <>
+          <Filters/>
           {displayableWord.map((word: wordModel) => (
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">

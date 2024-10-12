@@ -126,13 +126,55 @@ const DashDef = () => {
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
                 <div className='flex justify-between items-center mb-3'>
-                  <h1 className="text-2xl md:text-3xl text-myorange font-bold">{word.word}</h1>
+                  <h1 className="text-2xl md:text-3xl text-myorange font-bold break-all">{word.word}</h1>
                   <div className='z-10 flex gap-5'>
-                    <button className='px-4 tracking-wide relative h-fit py-2 text-mygray hover:text-myhovergray transition-all bg-mywhite font-bold border-mygray mydropshadow border-2' onClick={() => displayEdit(word)}>Editează</button>
-                    <button className='px-4 tracking-wide relative h-fit py-2 text-white bg-red-600 hover:bg-red-400 transition-all font-bold border-mygray mydropshadow border-2' onClick={() => confirmFunction(word._id)}>Șterge</button>
+                    <button className='px-4 tracking-wide relative h-fit py-2 text-mygray hover:text-myhovergray transition-all bg-mywhite font-bold border-mygray mydropshadow border-2' onClick={() => displayEdit(word)}>
+                      <span className='md:block hidden'>Editează</span>
+                      <span className='block md:hidden'>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14 0H15V1H16V2H17V3H18V4H17V5H16V6H15V5H14V4H13V3H12V2H13V1H14M10 4H12V5H13V6H14V8H13V9H12V10H11V11H10V12H9V13H8V14H7V15H6V16H5V17H4V18H0V14H1V13H2V12H3V11H4V10H5V9H6V8H7V7H8V6H9V5H10" fill="#202020"/>
+                        </svg>
+                      </span>
+                    </button>
+                    <button className='px-4 tracking-wide relative h-fit py-2 text-white bg-red-600 hover:bg-red-400 transition-all font-bold border-mygray mydropshadow border-2' onClick={() => confirmFunction(word._id)}>
+                      <span className='md:block hidden'>Șterge</span>
+                      <span className='block md:hidden'>
+                        <svg width="15" height="20" viewBox="0 0 60 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="25.7668" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="25.7668" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="34.3389" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="34.3389" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="17.1484" y="34.3389" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="17.1484" y="42.9111" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="34.2793" y="42.9111" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="34.2793" y="34.3389" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="42.9111" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="42.9111" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="51.4832" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="51.4832" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="60.0513" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="60.0513" width="8.57124" height="8.57124" fill="white"/>
+                          <rect y="68.6255" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="68.6255" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="8.55664" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="8.55664" y="77.1956" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="17.1484" y="77.1956" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="25.7227" y="77.1956" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="34.2793" y="77.1956" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="42.8555" y="77.1956" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="17.1484" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="25.7227" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="25.7734" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="34.2793" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="42.8555" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                          <rect x="51.4297" y="8.59106" width="8.57124" height="8.57124" fill="white"/>
+                        </svg>
+                      </span>
+                    </button>
                   </div>
                 </div>
-                <p className="text-base md:text-lg">{word.definition}</p>
+                <p className="text-base md:text-lg break-words">{word.definition}</p>
                 <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
                 <div className="flex w-full justify-between items-center">
                   <p className="text-base md:text-lg font-bold">{word.date}</p>

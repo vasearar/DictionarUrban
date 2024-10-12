@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { FC } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 interface PaginationControlsProps {
   hasNextPage: boolean
@@ -16,9 +16,10 @@ const PaginationControls: FC<PaginationControlsProps> = (
     end,
   }
 ) => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const currentPage = Number(searchParams.get('page') ?? '1')
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page') ?? '1');
 
   const numButtons = 5;
   const halfNumButtons = Math.floor(numButtons / 2);
@@ -43,7 +44,9 @@ const PaginationControls: FC<PaginationControlsProps> = (
               key={page}
               className={`size-8 border-[1px] flex items-center justify-center border-mygray md:hover:bg-myhoverorange transition-all ${page === currentPage ? 'bg-myorange' : ''}`}
               onClick={() => {
-                router.push(`/?page=${page}`)
+                const params = new URLSearchParams(searchParams.toString());
+                params.set('page', page.toString());
+                router.push(`${pathname}?${params.toString()}`);
               }}
             >
               {page}
@@ -56,7 +59,9 @@ const PaginationControls: FC<PaginationControlsProps> = (
           disabled={!hasPrevPage}
           aria-label='Treci la prima pagina'
           onClick={() => {
-            router.push(`/?page=1`)
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', '1');
+            router.push(`${pathname}?${params.toString()}`);
           }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 17L8 17L8 15L10 15L10 17ZM10 17L12 17L12 19L10 19L10 17ZM10 7L8 7L8 9L10 9L10 7ZM10 7L12 7L12 5L10 5L10 7Z" fill="#202020"/>
@@ -70,7 +75,9 @@ const PaginationControls: FC<PaginationControlsProps> = (
           disabled={!hasPrevPage}
           aria-label='Precedenta'
           onClick={() => {
-            router.push(`/?page=${Math.max(currentPage - 1, 1)}`)
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', Math.max(currentPage - 1, 1).toString());
+            router.push(`${pathname}?${params.toString()}`);
           }}>
           <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 8L16 6L4 6L4 4L2 4L2 6L1.04907e-06 6L7.86805e-07 8L2 8L2 10L4 10L4 8L16 8ZM6 12L4 12L4 10L6 10L6 12ZM6 12L8 12L8 14L6 14L6 12ZM6 2L4 2L4 4L6 4L6 2ZM6 2L8 2L8 -8.58275e-07L6 -1.12054e-06L6 2Z" fill="#202020"/>
@@ -81,7 +88,9 @@ const PaginationControls: FC<PaginationControlsProps> = (
           disabled={!hasNextPage}
           aria-label='Următoarea'
           onClick={() => {
-            router.push(`/?page=${Math.min(currentPage + 1, end)}`)
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', Math.min(currentPage + 1, end).toString());
+            router.push(`${pathname}?${params.toString()}`);
           }}>
           <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg" className='rotate-180'>
             <path d="M16 8L16 6L4 6L4 4L2 4L2 6L1.04907e-06 6L7.86805e-07 8L2 8L2 10L4 10L4 8L16 8ZM6 12L4 12L4 10L6 10L6 12ZM6 12L8 12L8 14L6 14L6 12ZM6 2L4 2L4 4L6 4L6 2ZM6 2L8 2L8 -8.58275e-07L6 -1.12054e-06L6 2Z" fill="#202020"/>
@@ -92,7 +101,9 @@ const PaginationControls: FC<PaginationControlsProps> = (
           disabled={!hasNextPage}
           aria-label='Treci la ultima pagină'
           onClick={() => {
-            router.push(`/?page=${end - 3}`)
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', end.toString());
+            router.push(`${pathname}?${params.toString()}`);
           }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='rotate-180'>
             <path d="M10 17L8 17L8 15L10 15L10 17ZM10 17L12 17L12 19L10 19L10 17ZM10 7L8 7L8 9L10 9L10 7ZM10 7L12 7L12 5L10 5L10 7Z" fill="#202020"/>

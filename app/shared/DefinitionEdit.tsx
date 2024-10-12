@@ -89,7 +89,7 @@ const DefinitionEdit: React.FC<DefinitionEditProps> = ({ word, close }) => {
 
   return (
     <div className={`h-screen w-screen bg-black bg-opacity-70 z-50 fixed top-0 left-0 flex justify-center items-center font-Spacegrotesc`}>
-      <div className='h-fit max-w-[720px] w-full bg-mywhite p-8'>
+      <div className='h-fit max-w-[720px] w-full mx-3 bg-mywhite p-6 im:p-8'>
         <h1 className='text-center font-bold text-3xl'>Modifică definiția ta</h1>
         {/* TODO: Modifica in reguli reale */}
         <p className='text-center'>Aici menționez ceva despre reguli.</p>
@@ -98,9 +98,9 @@ const DefinitionEdit: React.FC<DefinitionEditProps> = ({ word, close }) => {
           <textarea className={`${error.definition ? 'myred' : ''} text-xl px-4 py-2 resize-none w-full h-36 outline-none border-mygray border-2 rounded-sm' title="fără simboluri speciale și maxim 460`} name="definition" id="definition" value={definitionInput} onChange={handleDefinitionChange}></textarea>
           <textarea className={`${error.exampleOfUsing ? 'myred' : ''} text-xl px-4 py-2 resize-none w-full outline-none border-mygray border-2 rounded-sm' title="fără simboluri speciale și maxim 250`} name='exampleOfUsing' id="exampleOfUsing" value={exampleInput} onChange={handleExampleChange}></textarea>
         </form>
-        <div className="w-full flex flex-row justify-end mt-6 gap-6 relative z-10">
-          <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-fit h-fit border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange px-4 py-2 mydropshadow`} form="edit" type="submit">Confirmă</button>
-				  <button className={`hover:text-myhovergray w-fit text-mygray h-fit px-4 py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mydropshadow`} onClick={resetForm}>M-am răzgândit</button>
+        <div className="w-full flex flex-row justify-end mt-6 gap-4 im:gap-6 relative z-10">
+          <button className={`flex items-center justify-center gap-2 hover:bg-myhoverorange font-Spacegrotesc relative w-fit h-fit border-2 border-mygray font-bold rounded-sm rounded-br-none text-mywhite bg-myorange px-3 im:px-4 py-2 mydropshadow`} form="edit" type="submit">Confirmă</button>
+				  <button className={`hover:text-myhovergray w-fit text-mygray h-fit px-3 im:px-4 py-2 font-bold text-nowrap relative font-Spacegrotesc rounded-sm bg-mywhite rounded-br-none border-2 border-mygray mydropshadow`} onClick={resetForm}>M-am răzgândit</button>
 			</div>
       </div>
     </div>
