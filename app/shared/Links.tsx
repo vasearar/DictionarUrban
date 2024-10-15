@@ -118,7 +118,7 @@
             <div className='md:w-7 w-[18px] transition-all md:h-1 h-[2px] bg-mygray bar2'></div>
             <div className='md:w-7 w-[18px] transition-all md:h-1 h-[2px] bg-mygray bar3'></div>
         </div>
-        <div className={`absolute bottom-0 md:top-full left-0 w-full lg:hidden h-[calc(100%-8.8px)] md:h-[calc(100vh-5.5rem)] z-40 ${isActive ? "flex active" : "not-active"} menuself bg-mywhite`}>
+        <div className={`fixed bottom-0 left-0 w-full lg:hidden h-[calc(100%-8.8px)] md:h-[calc(100vh-5.5rem)] z-40 ${isActive ? "flex active" : "not-active"} menuself bg-mywhite`}>
           <div className={`relative flex flex-col justify-end w-full gap-y-8 h-full p-3 ${isActive ? "active" : ""}`}>
            <Link onClick={handleMenu} className={`${["/define", "/dashboard"].includes(pathname) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
             Acasă

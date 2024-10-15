@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default async function NavBar() {
   return (
   <>
-    <nav id='nav' className="flex text-base h-fit items-center lg:justify-between w-full px-3 lg:px-0 lg:w-fit md:relative mx-auto py-7">
+    <nav id='nav' className="flex text-base h-fit items-center lg:justify-between w-full px-3 lg:px-0 lg:w-fit relative mx-auto py-7">
       <div className='flex w-full lg:w-auto'>
         <Link href={"/"} id="logo" className="lg:flex hidden flex-col text-base font-Unbounded font-bold mr-8">
           <p className='text-myorange'>Dex</p>
