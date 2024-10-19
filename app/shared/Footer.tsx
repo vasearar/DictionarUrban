@@ -4,7 +4,7 @@ import React from "react";
 export default function Definition() {
   return (
     <>
-      <div className="w-full h-fit bg-mygray flex lg:flex-row flex-col lg:items-start justify-between mx-auto lg:mx-0 px-3 im:px-8 lg:px-44 xl:px-64 pt-8 pb-16 text-nowrap relative">
+      <div className="w-full h-fit mt-12 bg-mygray flex lg:flex-row flex-col lg:items-start justify-between mx-auto lg:mx-0 px-3 im:px-8 lg:px-44 xl:px-64 pt-8 pb-16 text-nowrap relative">
         <Link href="#nav" aria-label="La început de pagină" className="absolute z-10 bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center size-8 bg-mygray hover:bg-myorange border">
           <div className="z-10">
               <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +16,7 @@ export default function Definition() {
         <div className="flex items-center lg:items-start lg:flex-col">
           <Link href="/" id="logo" className="lg:flex hidden flex-col text-2xl font-Unbounded font-bold mr-8">
             <p className='text-myorange'>Dex</p>
-            <p className='text-mywhite'>Urban.ro</p>
+            <p className='text-mywhite'>Urban.md</p>
           </Link>
           <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-2 lg:mr-8">
             <svg width="0" height="0" className='size-14' viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@ export default function Definition() {
             <h2 className="text-myorange text-lg font-medium">Urmărește-ne</h2>
             <ul className=" mt-6 font-Spacegrotesc text-mywhite font-medium gap-4 flex flex-col">
               <li>
-                <Link href="#" key="instagram" className="flex gap-2">
+                <Link href="https://www.instagram.com/dexurban.md/" key="instagram" className="flex gap-2">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd" d="M12 6.54544C10.5533 6.54544 9.16594 7.12011 8.14301 8.14304C7.12008 9.16597 6.54541 10.5534 6.54541 12C6.54541 13.4466 7.12008 14.834 8.14301 15.8569C9.16594 16.8799 10.5533 17.4545 12 17.4545C13.4466 17.4545 14.834 16.8799 15.8569 15.8569C16.8798 14.834 17.4545 13.4466 17.4545 12C17.4545 10.5534 16.8798 9.16597 15.8569 8.14304C14.834 7.12011 13.4466 6.54544 12 6.54544ZM8.72723 12C8.72723 12.868 9.07203 13.7004 9.68579 14.3142C10.2995 14.9279 11.132 15.2727 12 15.2727C12.8679 15.2727 13.7004 14.9279 14.3141 14.3142C14.9279 13.7004 15.2727 12.868 15.2727 12C15.2727 11.132 14.9279 10.2996 14.3141 9.68582C13.7004 9.07206 12.8679 8.72726 12 8.72726C11.132 8.72726 10.2995 9.07206 9.68579 9.68582C9.07203 10.2996 8.72723 11.132 8.72723 12Z" fill="#F1F1F1"/>
                     <path d="M18.5455 4.36363C18.2562 4.36363 17.9787 4.47857 17.7741 4.68315C17.5695 4.88774 17.4546 5.16521 17.4546 5.45454C17.4546 5.74387 17.5695 6.02135 17.7741 6.22593C17.9787 6.43052 18.2562 6.54545 18.5455 6.54545C18.8348 6.54545 19.1123 6.43052 19.3169 6.22593C19.5215 6.02135 19.6364 5.74387 19.6364 5.45454C19.6364 5.16521 19.5215 4.88774 19.3169 4.68315C19.1123 4.47857 18.8348 4.36363 18.5455 4.36363Z" fill="#F1F1F1"/>

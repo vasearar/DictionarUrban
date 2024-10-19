@@ -11,7 +11,7 @@ export default async function NavBar() {
       <div className='flex w-full lg:w-auto'>
         <Link href={"/"} id="logo" className="lg:flex hidden flex-col text-base font-Unbounded font-bold mr-8">
           <p className='text-myorange'>Dex</p>
-          <p className=''>Urban.ro</p>
+          <p className=''>Urban.md</p>
         </Link>
         <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-8">
           <svg width="0" height="0" className='md:size-14 size-8' viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

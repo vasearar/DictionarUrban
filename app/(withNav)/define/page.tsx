@@ -118,7 +118,7 @@ const Page = () => {
 		<>
     <div className='flex relative px-3 items-center text-white flex-col text-center mb-14'>
       <h1 className='text-3xl md:text-4xl mt-5 mb-5 text-mygray font-bold font-Unbounded text-center'>Ai posibilitatea să contribui la dicționar</h1>
-			<h3 className="text-mygray font-Spacegrotesc mb-8">Definițiile în UrbanDex.ro au fost create de indivizi obișnuiți, asemenea ție.</h3>
+			<h3 className="text-mygray font-Spacegrotesc mb-8">Definițiile în UrbanDex.md au fost create de indivizi obișnuiți, asemenea ție.</h3>
       <form id="define" onSubmit={onSubmit} className='font-Spacegrotesc text-mygray bg-mywhite max-w-[720px] relative h-fit shadow-lg'>
 				<div className={`md:py-6 w-80 im:w-fit p-3 md:px-8 rounded-sm rounded-br-none border-mygray border-2 mybigdropshadow`}>
 					<p className="text-left">*Distribuiți definiții pentru cuvinte care ar putea fi utile altor persoane și NU publicați texte înjositoare sau informații personale <span className="font-bold text-mygray">- acestea vor fi eliminate.</span></p>

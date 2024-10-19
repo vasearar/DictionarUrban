@@ -1,7 +1,6 @@
 import React from 'react'
 import Definition from '../shared/Definition';
 import TopSection from '../shared/TopSection';
-import DeleteLater from '../shared/DeleteLater';
 import Filters from '../shared/Filters';
 
 export default async function page({searchParams}: {searchParams?: {
@@ -16,7 +15,6 @@ export default async function page({searchParams}: {searchParams?: {
     <>
       <TopSection />
       <Definition query={query} page={page} popularity={popularity}/>
-      <DeleteLater />
     </>
   );
 }

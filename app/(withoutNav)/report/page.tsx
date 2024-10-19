@@ -102,13 +102,13 @@ const Report = () => {
     <div className='flex flex-col justify-center w-full items-center my-20 md:my-0 h-fit md:h-screen px-3'>
       <Link href={"/"} id="logo" className="absolute top-8 left-3 md:left-24 flex flex-col text-base font-Unbounded font-bold">
           <p className='text-myorange hidden sm:block'>Dex</p>
-          <p className="hidden sm:block">Urban.ro</p>
+          <p className="hidden sm:block">Urban.md</p>
           <svg className="sm:hidden size-8" width="0" height="0" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21.9998 11V8.33333L5.99984 8.33333L5.99984 5.66667H3.33317L3.33317 8.33333H0.666504L0.666504 11H3.33317L3.33317 13.6667H5.99984V11L21.9998 11ZM8.6665 16.3333H5.99984L5.99984 13.6667H8.6665V16.3333ZM8.6665 16.3333H11.3332V19H8.6665V16.3333ZM8.6665 3L5.99984 3V5.66667L8.6665 5.66667V3ZM8.6665 3H11.3332V0.333334H8.6665V3Z" fill="#202020"/>
           </svg>
       </Link>
       <h1 className='text-3xl lg:text-5xl text-center font-medium mb-6 mt-3'>Raportează această definiție</h1>
-      <h3 className='md:text-lg font-Spacegrotesc mb-12 text-center'>Fii parte din comunitatea DexUrban.ro și ajută-ne să facem platforma mai sigură.</h3>
+      <h3 className='md:text-lg font-Spacegrotesc mb-12 text-center'>Fii parte din comunitatea DexUrban.md și ajută-ne să facem platforma mai sigură.</h3>
       <form id='report' onSubmit={onSubmit} className='font-Spacegrotesc w-full md:w-fit border-2 border-mygray p-3 md:p-8 bg-mywhite relative rounded-sm mybigdropshadow'>
         <h2 className='text-2xl md:text-3xl font-bold text-center mb-8'>De ce acestă definiție trebuie eliminată?</h2>
         <input type="radio" name="reason" id="joke" value="Definiția este o glumă locală, între un grup de prieteni" />
