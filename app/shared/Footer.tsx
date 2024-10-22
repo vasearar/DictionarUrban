@@ -18,7 +18,7 @@ export default function Definition() {
             <p className='text-myorange'>Dex</p>
             <p className='text-mywhite'>Urban.md</p>
           </Link>
-          <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-2 lg:mr-8">
+          <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-2 lg:mr-8" aria-label="dicționar urban">
             <svg width="0" height="0" className='size-14' viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_344_736)">
               <rect x="2" y="2" width="252" height="252" rx="126" fill="#F1F1F1" stroke="#1E1E1E" strokeWidth="4"/>

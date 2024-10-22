@@ -1,7 +1,6 @@
 import React from 'react'
 import Definition from '../shared/Definition';
 import TopSection from '../shared/TopSection';
-import Filters from '../shared/Filters';
 
 export default async function page({searchParams}: {searchParams?: {
   query?: string;

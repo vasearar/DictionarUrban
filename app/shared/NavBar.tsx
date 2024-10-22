@@ -13,7 +13,7 @@ export default async function NavBar() {
           <p className='text-myorange'>Dex</p>
           <p className=''>Urban.md</p>
         </Link>
-        <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-8">
+        <Link href={"/"} id="logo" className="flex flex-col text-base justify-center lg:hidden font-Unbounded font-bold mr-8" aria-label="dicționar urban">
           <svg width="0" height="0" className='md:size-14 size-8' viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_344_737)">
             <rect x="0.25" y="0.25" width="31.5" height="31.5" rx="15.75" fill="#202020" stroke="#F1F1F1" strokeWidth="0.5"/>
