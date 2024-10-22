@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en" className="dark">
-      <head>
+      {/* <head>
         <link
             rel="preload"
             href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
@@ -32,7 +32,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Unbounded:wght@200..900&display=swap"
             rel="stylesheet"
           />
-      </head>
+      </head> */}
       <body>
         <Providers>
           {children}
