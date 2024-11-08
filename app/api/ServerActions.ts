@@ -59,7 +59,7 @@ export async function verifyDefinition(data: myWord) {
   };
 
   errors.word = validateText(data.word, 2, 40, "*Expresia sau cuvântul");
-  errors.definition = validateText(data.definition, 40, 460, "*Definiția");
+  errors.definition = validateText(data.definition, 6, 460, "*Definiția");
   errors.exampleOfUsing = validateText(data.exampleOfUsing, 20, 250, "*Exemplul de folosire");
 
   return errors;
