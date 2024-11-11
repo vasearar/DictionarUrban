@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./shared/Providers";
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: "Dicționar urban",
@@ -14,6 +15,19 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   return (
     <html lang="en" className="dark">
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-NC9BXJJB81"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-NC9BXJJB81');
+          `}
+        </Script>
         <link
             rel="preload"
             href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
@@ -33,6 +47,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             rel="stylesheet"
           />
       </head>
+
       <body>
         <Providers>
           {children}
