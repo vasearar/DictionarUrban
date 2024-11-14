@@ -2,14 +2,16 @@ import React from 'react'
 import Definition from '../shared/Definition';
 import TopSection from '../shared/TopSection';
 
-export default async function page({searchParams}: {searchParams?: {
+export default async function Page({ searchParams }: { searchParams?: Promise<{
   query?: string;
   page?: string;
   popularity?: string;
-};}){
-  const query = searchParams?.query || "";
-  const page = searchParams?.page ?? '1';
-  const popularity = searchParams?.popularity ?? "1";
+}> }) {
+  const params = searchParams ? await searchParams : {};
+
+  const query = params.query || "";
+  const page = params.page ?? '1';
+  const popularity = params?.popularity ?? "1";
   return(
     <>
       <TopSection />

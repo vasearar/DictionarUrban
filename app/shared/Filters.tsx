@@ -33,7 +33,7 @@ const Filters = () => {
       onClick={handleClick}
       className={`${
         popularity > 1 ? 'text-myorange' : 'text-black'
-      } px-6 md:px-3 mx-auto text-left w-[720px] transition-all flex items-center cursor-pointer relative select-none`}
+      } mb-4 mx-auto text-left w-[720px] transition-all font-Spacegrotesc font-bold md:text-xl flex items-center cursor-pointer relative select-none`}
     >
       Popularitate
       <svg
