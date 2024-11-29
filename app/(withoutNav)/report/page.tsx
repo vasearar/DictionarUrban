@@ -88,12 +88,14 @@ const Report = () => {
     }
   }
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      window.location.reload();
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setText((prevText) => prevText + ".");
+  //   }, 1000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  setTimeout(() => {window.location.reload();}, 1500);
 
   if (status === 'loading' || status === 'unauthenticated') {
     return <div className='flex w-full text-4xl h-screen justify-center items-center'>{text}</div>
