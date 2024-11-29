@@ -95,7 +95,9 @@ const Report = () => {
   //   return () => clearInterval(intervalId);
   // }, []);
 
-  setTimeout(() => {window.location.reload();}, 1500);
+  useEffect(() => {
+    setTimeout(() => {window.location.reload();}, 1500);
+  }, []);
 
   if (status === 'loading' || status === 'unauthenticated') {
     return <div className='flex w-full text-4xl h-screen justify-center items-center'>{text}</div>
