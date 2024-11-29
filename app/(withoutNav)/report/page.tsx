@@ -11,6 +11,7 @@ const Report = () => {
   const [id, setId] = useState<string | null>(null);
   const [text, setText] = useState<string>("Verificăm");
   useEffect(() => {
+    window.location.reload();
     const searchParams = new URLSearchParams(window.location.search);
     const paramId = searchParams.get('id');
     setId(paramId);
