@@ -140,6 +140,8 @@ button{
   text-wrap: nowrap;
   border-radius: 2px;
   border: #202020 solid 2px;
+  flex-shrink: 0;
+  box-sizing: border-box; 
 }
 
 .confirm input{
