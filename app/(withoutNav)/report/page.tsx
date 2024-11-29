@@ -97,7 +97,7 @@ const Report = () => {
 
   useEffect(() => {
     setTimeout(() => {window.location.reload();}, 1500);
-  }, []);
+  }, [status]);
 
   if (status === 'loading' || status === 'unauthenticated') {
     return <div className='flex w-full text-4xl h-screen justify-center items-center'>{text}</div>
