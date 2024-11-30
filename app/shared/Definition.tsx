@@ -3,6 +3,7 @@ import { getWords } from "../api/ServerActions";
 import Actions from "./Actions";
 import PaginationControls from "./PaginationControls";
 import Filters from "./Filters";
+import Share from "./Share";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
@@ -56,7 +57,10 @@ export default async function Definition({query, page, popularity}: { query: str
           {displayableWord.map((word: wordModel) => (
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
-                <h1 className="text-2xl md:text-3xl text-myorange font-bold mb-2">{word.word}</h1>
+                <div className="flex justify-between relative w-full">
+                  <h1 className="text-2xl md:text-3xl break-all text-myorange font-bold mb-2">{word.word}</h1>
+                  <Share query={word.word}/>
+                </div>
                 <p className="text-base md:text-lg">{word.definition}</p>
                 <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
                 <p className="text-base md:text-lg font-bold">de <span className="text-myorange mr-2">{word.username}</span>{word.date}</p>
