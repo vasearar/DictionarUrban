@@ -9,7 +9,7 @@ const Share:React.FC<ShareProps> = ({query}) => {
 
   const shareData = {
     title: `${query}`,
-    text: `Definiția pentru ${query}`,
+    text: ``,
     url: `https://www.dexurban.md/?query=${query}`,
   };
 
