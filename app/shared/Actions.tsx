@@ -1,6 +1,6 @@
 'use client'
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { use, useEffect, useState } from 'react';
 
@@ -15,7 +15,8 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
   const email = Session?.data?.user?.email;
   const [isliked, setLiked] = useState(false);
   const [currentLikes, setcurrentLikes] = useState(likes);
-
+  const router = useRouter();
+  
   async function checkIfLiked(){
     if (email != undefined){
       try {
@@ -60,7 +61,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
         likeToUserDb();
       }
     } else {
-      redirect('/signIn')
+      router.push('/signIn');
     }
   }
 
