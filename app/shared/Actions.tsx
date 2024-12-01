@@ -1,5 +1,6 @@
 'use client'
 import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation'
 import Link from 'next/link';
 import React, { use, useEffect, useState } from 'react';
 
@@ -58,6 +59,8 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
         likeToWordDb(currentLikes + 1);
         likeToUserDb();
       }
+    } else {
+      redirect('/signIn')
     }
   }
 
