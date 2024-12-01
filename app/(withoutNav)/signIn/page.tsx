@@ -13,15 +13,11 @@ const Signin = () => {
   };
 
   function detectBrowser() {
-    let userAgent = navigator.userAgent;
-      if (userAgent.indexOf("Instagram") > -1){
-        return false;
-      } else {
-        return true;
-      };
+    let userAgent = navigator.userAgent || navigator.vendor;
+    return userAgent.includes("Instagram");
   }
 
-  if (detectBrowser()){    
+  if (!detectBrowser()){    
     return (
       <Suspense>
       <div className="w-screen h-screen flex items-center justify-center flex-col font-Unbounded">
