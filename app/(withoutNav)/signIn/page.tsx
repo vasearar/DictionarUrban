@@ -2,7 +2,6 @@
 import Link from "next/link";
 import GoogleButton from "../../shared/GoogleButton";
 import { Suspense, useState } from "react";
-import FacebookButton from "@/app/shared/FacebookButton";
 
 const Signin = () => {
   const [accepted, setAccepted] = useState(false);
@@ -26,7 +25,6 @@ const Signin = () => {
         <h1 className="text-mygray text-3xl md:text-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
         <p className="font-Spacegrotes text-sm md:text-base text-center mb-12">Definițiile scrise în UrbanDex.md au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} setShouldAnimate={setShouldAnimate} />
-        <FacebookButton accepted={accepted} />
         <div className={`${shouldAnimate && "shake"} flex items-center max-w-[367px] md:max-w-fit justify-center mt-12 gap-2`}>
           <label className="confirm border border-mygray font-Spacegrotesc">
             <input type="checkbox" name="confirm" id="confirm" onClick={handleCheckboxChange} className="" />

@@ -118,10 +118,10 @@ const Report = () => {
             <path d="M21.9998 11V8.33333L5.99984 8.33333L5.99984 5.66667H3.33317L3.33317 8.33333H0.666504L0.666504 11H3.33317L3.33317 13.6667H5.99984V11L21.9998 11ZM8.6665 16.3333H5.99984L5.99984 13.6667H8.6665V16.3333ZM8.6665 16.3333H11.3332V19H8.6665V16.3333ZM8.6665 3L5.99984 3V5.66667L8.6665 5.66667V3ZM8.6665 3H11.3332V0.333334H8.6665V3Z" fill="#202020"/>
           </svg>
       </Link>
-      <h1 className='text-3xl lg:text-5xl text-center font-medium mb-6 mt-3'>Raportează această definiție</h1>
-      <h3 className='md:text-lg font-Spacegrotesc mb-12 text-center'>Fii parte din comunitatea DexUrban.md și ajută-ne să facem platforma mai sigură.</h3>
+      <h1 className='text-3xl lg:text-5xl text-center font-medium mb-6 mt-3 [@media(max-height:850px)]:mb-3'>Raportează această definiție</h1>
+      <h3 className='md:text-lg font-Spacegrotesc mb-12 [@media(max-height:850px)]:mb-6 text-center'>Fii parte din comunitatea DexUrban.md și ajută-ne să facem platforma mai sigură.</h3>
       <form id='report' onSubmit={onSubmit} className='font-Spacegrotesc w-full md:w-fit border-2 border-mygray p-3 md:p-8 bg-mywhite relative rounded-sm mybigdropshadow'>
-        <h2 className='text-2xl md:text-3xl font-bold text-center mb-8'>De ce acestă definiție trebuie eliminată?</h2>
+        <h2 className='text-2xl md:text-3xl font-bold text-center mb-8 [@media(max-height:850px)]:mb-6'>De ce acestă definiție trebuie eliminată?</h2>
         <input type="radio" name="reason" id="joke" value="Definiția este o glumă locală, între un grup de prieteni" />
         <label htmlFor="joke" className='ml-4 md:text-lg'>Definiția este o glumă locală, între un grup de prieteni</label><br />
         <div className='h-4'></div>
@@ -133,7 +133,7 @@ const Report = () => {
         <div className='h-4'></div>
         <input type="radio" name="reason" required id="other" value="Altele" />
         <label htmlFor="other" className='ml-4 md:text-lg'>Altele</label><br />
-        <textarea placeholder='Introdu informație adițională' name="additional" rows={4} className='p-2 rounded-sm mt-8 mb-6 resize-none outline-none w-full border-2 border-mygray'></textarea>
+        <textarea placeholder='Introdu informație adițională' name="additional" rows={4} className='p-2 rounded-sm mt-8 mb-6 resize-none outline-none w-full border-2 border-mygray [@media(max-height:850px)]:mb-4'></textarea>
         <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} onChange={setCaptcha} className="flex justify-center scale-90 im:scale-100" />
       </form>
       <div className="w-full md:w-[653px] flex md:flex-row flex-col mt-6 gap-6">
