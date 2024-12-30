@@ -12,12 +12,6 @@ const Signin = () => {
     setAccepted(!accepted);
   };
 
-  const ua = navigator.userAgent.toLowerCase();
-  const isInstagramBrowser = ua.includes('instagram');
-
-  alert(ua);
-  alert (isInstagramBrowser);
-
   return (
     <Suspense>
     <div className="w-screen h-screen flex items-center justify-center flex-col font-Unbounded">
