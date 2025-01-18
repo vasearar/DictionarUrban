@@ -1,8 +1,8 @@
-'use server'
 import Link from 'next/link'
 import React from 'react'
 
-export default async function privacy() {
+// export default async function privacy() {
+const Privacy = () => {
   return (
     <article className='mx-auto px-3 md:px-8'>
       <section>
@@ -102,4 +102,6 @@ export default async function privacy() {
     </article>
   )
 }
+
+export default Privacy;
 

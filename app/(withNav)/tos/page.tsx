@@ -1,8 +1,8 @@
-'use server'
 import Link from 'next/link'
 import React from 'react'
 
-export default async function tos() {
+const Tos = () => {
+// export default async function tos() {
   return (
     <article className='mx-auto px-3 md:px-8'>
       <section>
@@ -122,3 +122,5 @@ export default async function tos() {
     </article>
   )
 }
+
+export default Tos
