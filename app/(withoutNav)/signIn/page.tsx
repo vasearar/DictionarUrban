@@ -2,6 +2,7 @@
 import Link from "next/link";
 import GoogleButton from "../../shared/GoogleButton";
 import { Suspense, useState } from "react";
+import AnonymButton from "@/app/shared/AnonymButton";
 
 const Signin = () => {
   const [accepted, setAccepted] = useState(false);
@@ -25,6 +26,7 @@ const Signin = () => {
         <h1 className="text-mygray text-3xl md:text-4xl mb-4 text-center">Conectează-te la<br/><span className="text-myorange">Dex</span>Urban</h1>
         <p className="font-Spacegrotes text-sm md:text-base text-center mb-12">Definițiile scrise în UrbanDex.md au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} setShouldAnimate={setShouldAnimate} />
+        <AnonymButton accepted={accepted} setShouldAnimate={setShouldAnimate} />
         <div className={`${shouldAnimate && "shake"} flex items-center max-w-[367px] md:max-w-fit justify-center mt-12 gap-2`}>
           <label className="confirm border border-mygray font-Spacegrotesc">
             <input type="checkbox" name="confirm" id="confirm" onClick={handleCheckboxChange} className="" />
@@ -32,7 +34,7 @@ const Signin = () => {
               <path d="M1.41 4.58008L0 6.00008L4 10.0001L12 2.00008L10.59 0.580078L4 7.17008L1.41 4.58008Z" fill="#E86842"/>
             </svg>
           </label>
-          <p className={`${shouldAnimate && "check"} md:text-base text-sm`}>Am citit și sunt de acord cu <Link href={"#"} className="text-myorange md:hover:text-myhoverorange transition-all">Termenii și Condiții</Link> și <Link href={"#"} className="text-myorange md:hover:text-myhoverorange transition-all">Politică de Confidențialitate</Link></p>
+          <p className={`${shouldAnimate && "check"} md:text-base text-sm`}>Am citit și sunt de acord cu <Link href={"https://www.dexurban.md/tos"} className="text-myorange md:hover:text-myhoverorange transition-all">Termenii și Condiții</Link> și <Link href={"https://www.dexurban.md/privacy"} className="text-myorange md:hover:text-myhoverorange transition-all">Politică de Confidențialitate</Link></p>
         </div>
       </div>
     </div>
