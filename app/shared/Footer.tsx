@@ -57,10 +57,10 @@ export default function Definition() {
           <div>
             <h2 className="text-myorange text-lg font-medium">Mai multe</h2>
             <ul className="mt-6 font-Spacegrotesc text-mywhite font-medium gap-4 flex flex-col">
-              <li><Link href="#" key="general-rules">Reguli generale</Link></li>
-              <li><Link href="#" key="privacy-policy">Politică de confidențialitate</Link></li>
-              <li><Link href="#" key="terms-conditions">Termeni și condiții</Link></li>
-              <li><Link href="#" key="contact">Contact</Link></li> 
+              <li><Link href="https://www.dexurban.md/tos" key="general-rules">Reguli generale</Link></li>
+              <li><Link href="https://www.dexurban.md/privacy" key="privacy-policy">Politică de confidențialitate</Link></li>
+              <li><Link href="https://www.dexurban.md/tos" key="terms-conditions">Termeni și condiții</Link></li>
+              <li><Link href="https://www.instagram.com/dexurban.md/" key="contact">Contact</Link></li> 
             </ul>
           </div>
         </div>

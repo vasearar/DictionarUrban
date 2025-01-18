@@ -1,12 +1,13 @@
 'use server'
+import Link from 'next/link'
 import React from 'react'
 
-const tos = () => {
+export default async function tos() {
   return (
     <article className='mx-auto px-3 md:px-8'>
       <section>
         <h1 className='text-2xl md:text-5xl leading-tight mb-6 mt-8 font-bold'>Termeni și condiții</h1>
-        <p className='font-Spacegrotesc'>DexUrban oferă site-ul <b>dexurban.md</b> conform Termenilor și condițiilor declarați mai jos. Compania își rezervă dreptul de a revizui acești termeni din când în când și informa utilizatorii despre aceste schimbări. Utilizarea în continuare a site-ului web reprezintă acceptarea de către dumneavoastră a acestor termeni, disponibili la <a className='underline text-myorange' href='http://dexurban.md/tos'>http://dexurban.md/tos</a>.</p>
+        <p className='font-Spacegrotesc'>DexUrban oferă site-ul <b>dexurban.md</b> conform Termenilor și condițiilor declarați mai jos. Compania își rezervă dreptul de a revizui acești termeni din când în când și informa utilizatorii despre aceste schimbări. Utilizarea în continuare a site-ului web reprezintă acceptarea de către dumneavoastră a acestor termeni, disponibili la <Link className='underline text-myorange' href='http://dexurban.md/tos'>http://dexurban.md/tos</Link>.</p>
       </section>
       <section>
         <h1 className='text-2xl md:text-5xl leading-tight mb-6 mt-8 font-bold'>Termeni de utilizare</h1>
@@ -66,11 +67,11 @@ const tos = () => {
 
           <p className='mt-5 font-Spacegrotesc'>Nu aveți voie să trimiteți conținut utilizând metode automate neautorizate („boți”).</p>
 
-          <p className='mt-5 font-Spacegrotesc'>Compania nu controlează și nu poate controla tot conținutul publicat de terți pe site și nu garantează acuratețea, integritatea sau calitatea acelui conținut. Înțelegeți că, utilizând site-ul, puteți fi expus la conținut pe care îl puteți considera ofensator, indecent, incorect sau obiectabil și sunteți de acord că în niciun caz compania nu va fi responsabilă în vreun fel pentru orice Conținut, inclusiv orice erori sau omisiuni în orice conținut sau orice pierdere sau daună de orice fel suferită ca urmare a utilizării oricărui conținut. Dacă doriți să raportați materiale obiectabile, puteți utiliza funcția „Semnalează pentru revizuire” pe orice subiect sau răspuns. Probleme urgente pot fi raportate la această adresă: <a target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</a></p>
+          <p className='mt-5 font-Spacegrotesc'>Compania nu controlează și nu poate controla tot conținutul publicat de terți pe site și nu garantează acuratețea, integritatea sau calitatea acelui conținut. Înțelegeți că, utilizând site-ul, puteți fi expus la conținut pe care îl puteți considera ofensator, indecent, incorect sau obiectabil și sunteți de acord că în niciun caz compania nu va fi responsabilă în vreun fel pentru orice Conținut, inclusiv orice erori sau omisiuni în orice conținut sau orice pierdere sau daună de orice fel suferită ca urmare a utilizării oricărui conținut. Dacă doriți să raportați materiale obiectabile, puteți utiliza funcția „Semnalează pentru revizuire” pe orice subiect sau răspuns. Probleme urgente pot fi raportate la această adresă: <Link target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</Link></p>
 
           <p className='mt-5 font-Spacegrotesc'>Sunteți singurul responsabil pentru orice conținut publicat pe site și pentru consecințele publicării acestui conținut. Sunteți de acord să despăgubiți, să apărați și să exonerați compania, ofițerii, directorii, angajații și agenții săi de orice și toate revendicările, pierderile, costurile, responsabilitățile, daunele, hotărârile, penalitățile, dobânzile și cheltuielile (inclusiv onorariile rezonabile ale avocaților) care decurg sau se raportează la (i) orice încălcare reală sau presupusă a declarațiilor, garanțiilor sau obligațiilor dvs. prevăzute în acești termeni de serviciu și (ii) orice încălcare reală sau presupusă a oricăror drepturi de proprietate intelectuală sau proprietare de către orice conținut sau altă informație pe care o publicați pe site.</p>
 
-          <p className='mt-5 font-Spacegrotesc'>Utilizarea site-ului este, de asemenea, guvernată de <a className='text-myorange underline' href="http://dexurban.md/privacy">Politica noastră de confidențialitate</a>.</p>
+          <p className='mt-5 font-Spacegrotesc'>Utilizarea site-ului este, de asemenea, guvernată de <Link className='text-myorange underline' href="http://dexurban.md/privacy">Politica noastră de confidențialitate</Link>.</p>
         </section>
 
         <section>
@@ -104,7 +105,7 @@ const tos = () => {
             <li>nu există nicio obligație de a menține confidențialitatea oricăror trimiteri.</li>
           </ul>
 
-          <p className='mt-5 font-Spacegrotesc'>Dacă aveți întrebări suplimentare sau aveți nevoie de asistență, vă rugăm să ne contactați la <a className='text-myorange underline' target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</a>.</p>
+          <p className='mt-5 font-Spacegrotesc'>Dacă aveți întrebări suplimentare sau aveți nevoie de asistență, vă rugăm să ne contactați la <Link className='text-myorange underline' target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</Link>.</p>
         </section>
 
         <section>
@@ -113,13 +114,11 @@ const tos = () => {
           <p className='font-Spacegrotesc'>Folosim companii terțe de publicitate pentru a afișa reclame atunci când vizitați site-ul nostru web. Aceste companii pot utiliza informații agregate (care nu includ numele, adresa, adresa de email sau numărul de telefon) despre vizitele dvs. pe acest și alte site-uri web pentru a oferi anunțuri despre bunuri și servicii de interes pentru dvs. Dacă doriți mai multe informații despre această practică și să cunoașteți opțiunile dvs. de a nu permite acestor companii să utilizeze aceste informații, faceți clic aici:</p>
 
           <ul className='list-disc font-Spacegrotesc ml-5 mb-5'>
-            <li><a href="https://www.google.com/policies/privacy/partners/" target="_blank" rel="noopener noreferrer">https://www.google.com/policies/privacy/partners/</a></li>
+            <li><Link href="https://www.google.com/policies/privacy/partners/" target="_blank" rel="noopener noreferrer">https://www.google.com/policies/privacy/partners/</Link></li>
           </ul>
 
-          <p className='mt-5'>Dacă aveți întrebări suplimentare sau aveți nevoie de asistență, vă rugăm să ne contactați la <a className='text-myorange underline' target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</a>.</p>
+          <p className='mt-5'>Dacă aveți întrebări suplimentare sau aveți nevoie de asistență, vă rugăm să ne contactați la <Link className='text-myorange underline' target='_blank' href="https://www.instagram.com/dexurban.md/">@dexurban.md</Link>.</p>
         </section>
     </article>
   )
 }
-
-export default tos

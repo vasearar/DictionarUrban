@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-const PrivacyPolicy = () => {
+export default async function privacy() {
   return (
     <article className='mx-auto px-3 md:px-8'>
       <section>
@@ -90,7 +90,6 @@ const PrivacyPolicy = () => {
         <p className='font-Spacegrotesc'>Nu putem proteja, nici această politică de confidențialitate nu se aplică, oricărei informații pe care o transmiteți altor utilizatori. Nu trebuie să transmiteți niciodată informații personale sau de identificare către alți utilizatori.</p>
       </section>
 
-
       <section>
         <h2 className='text-xl md:text-3xl leading-tight mb-4 mt-6 font-bold'>Copii</h2>
         <p className='font-Spacegrotesc'>Serviciul Dexurban nu este destinat copiilor sub 16 ani și nu colectăm în mod conștient informații de la copii sub vârsta de 16 ani.</p>
@@ -104,4 +103,3 @@ const PrivacyPolicy = () => {
   )
 }
 
-export default PrivacyPolicy
