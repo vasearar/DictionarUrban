@@ -40,15 +40,24 @@ export const authConfig: AuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      if (token) {
-        session.user = {
-          ...session.user,
-          id: token.sub,
-          email: token.email,
-        };
+      interface CustomUser {
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+        id?: string;
       }
+
+      const user = session.user as CustomUser;
+
+      if (token) {
+        user.id = token.sub as string;
+        user.email = token.email as string;
+      }
+
+      session.user = user;
       return session;
     },
+
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
@@ -56,6 +65,6 @@ export const authConfig: AuthOptions = {
         token.name = user.name;
       }
       return token;
-    }
-  }
+    },
+  },
 };
