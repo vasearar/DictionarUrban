@@ -8,6 +8,7 @@ export default async function NavBar() {
   return (
   <>
     <nav id='nav' className="flex text-base h-fit items-center lg:justify-between w-full px-3 lg:px-0 lg:w-fit relative mx-auto py-7">
+      <span className="absolute top-1 left-1 text-[10px] text-gray-400 font-mono">developer build</span>
       <div className='flex w-full lg:w-auto'>
         <Link href={"/"} id="logo" className="lg:flex hidden flex-col text-base font-Unbounded font-bold mr-8">
           <p className='text-myorange'>Dex</p>
