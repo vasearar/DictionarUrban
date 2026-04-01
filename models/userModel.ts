@@ -8,6 +8,6 @@ const userSchema = new Schema({
   likes: [String],
 });
 
-const userModel = models.userModel || model("userModel", userSchema);
+const userModel = models.userModel || model("userModel", userSchema, "users");
 
 export default userModel;

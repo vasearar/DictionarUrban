@@ -8,6 +8,6 @@ const reportSchema = new Schema({
   date: String,
 });
 
-const reportModel = models.reportModel || model("reportModel", reportSchema);
+const reportModel = models.reportModel || model("reportModel", reportSchema, "reports");
 
 export default reportModel;
