@@ -61,11 +61,9 @@
       const body = document.querySelector("body");
       body!.classList.toggle("overflow-hidden");
       body!.classList.toggle("h-screen");
+      html!.classList.toggle("overflow-hidden");
       burger!.classList.toggle("change");
       setActive(!isActive);
-      body!.addEventListener("scroll", (e) => {
-        e.preventDefault();
-      })
     }
     
     const backgroundImage = isDark ? '/moon.svg' : '/sun.svg';
