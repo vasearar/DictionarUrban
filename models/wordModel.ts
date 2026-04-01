@@ -10,6 +10,6 @@ const wordSchema = new Schema({
   date: String,
 });
 
-const wordModel = models.wordModel || model("wordModel", wordSchema);
+const wordModel = models.wordModel || model("wordModel", wordSchema, "words");
 
 export default wordModel;
