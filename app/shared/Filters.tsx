@@ -24,6 +24,7 @@ const Filters = () => {
     } else {
       const params = new URLSearchParams(searchParams.toString());
       params.set('popularity', popularity.toString());
+      params.set('page', '1');
       router.push(`${pathname}?${params.toString()}`);
     }
   }, [popularity])
