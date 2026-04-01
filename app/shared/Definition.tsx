@@ -45,8 +45,9 @@ export default async function Definition({query, page, popularity}: { query: str
   }
 
   const start = (Number(page) - 1) * 7;
-  const end = start + 7;
-  const displayableWord = sortedWords.slice(start, end);
+  const sliceEnd = start + 7;
+  const totalPages = Math.ceil(words.length / 7);
+  const displayableWord = sortedWords.slice(start, sliceEnd);
   return (
     <>
       {displayableWord.length === 0 ? (
@@ -70,7 +71,7 @@ export default async function Definition({query, page, popularity}: { query: str
           ))}
         </>
       )}
-      <PaginationControls hasNextPage={end < words.length} hasPrevPage={start > 0} end={end} />
+      <PaginationControls hasNextPage={sliceEnd < words.length} hasPrevPage={start > 0} end={totalPages} />
     </>
   );
   }
