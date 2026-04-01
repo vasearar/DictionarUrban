@@ -25,16 +25,17 @@ export async function GET(request: NextRequest) {
   const email = searchParams.get("email");
   const word = searchParams.get("word");
   const id = searchParams.get("id");
+  const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   let query = {};
 
   if (id){
     query = { _id: new ObjectId(id) };
   } else if (email && word) {
-    query = { userEmail: email, word: { $regex: `^${word}`, $options: "i" } };
+    query = { userEmail: email, word: { $regex: `^${escapeRegex(word)}`, $options: "i" } };
   } else if (email) {
     query = { userEmail: email };
   } else if (word) {
-    query = { word: { $regex: `^${word}`, $options: "i" } };
+    query = { word: { $regex: `^${escapeRegex(word)}`, $options: "i" } };
   }
   
   try {
