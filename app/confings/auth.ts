@@ -2,6 +2,9 @@ import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { connectDB } from "@/lib/db";
+import userModel from "@/models/userModel";
 
 export const authConfig: AuthOptions = {
   providers: [
@@ -12,6 +15,41 @@ export const authConfig: AuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
+      id: "credentials",
+      name: "Email și parolă",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Parolă", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Introdu email-ul și parola");
+        }
+
+        await connectDB();
+        const user = await userModel.findOne({ email: credentials.email });
+
+        if (!user || !user.password) {
+          throw new Error("Email sau parolă incorectă");
+        }
+
+        if (!user.emailVerified) {
+          throw new Error("Email-ul nu a fost verificat. Verifică-ți inbox-ul");
+        }
+
+        const isValid = await bcrypt.compare(credentials.password, user.password);
+        if (!isValid) {
+          throw new Error("Email sau parolă incorectă");
+        }
+
+        return {
+          id: user._id.toString(),
+          name: user.username,
+          email: user.email,
+        };
+      },
     }),
     CredentialsProvider({
       id: "anonym",
@@ -37,6 +75,19 @@ export const authConfig: AuthOptions = {
   ],
   pages: {
     signIn: '/signIn',
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        // When ready for cross-domain SSO, set:
+        // domain: ".dexurban.com",
+      },
+    },
   },
   callbacks: {
     async session({ session, token }) {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import GoogleButton from "../../shared/GoogleButton";
 import { Suspense, useState } from "react";
 import AnonymButton from "@/app/shared/AnonymButton";
+import CredentialsForm from "@/app/shared/CredentialsForm";
 
 const Signin = () => {
   const [accepted, setAccepted] = useState(false);
@@ -14,7 +15,7 @@ const Signin = () => {
 
   return (
     <Suspense>
-    <div className="w-screen h-screen flex items-center justify-center flex-col font-Unbounded">
+    <div className="w-screen min-h-screen flex items-center justify-center flex-col font-Unbounded py-20">
       <Link href={"/"} id="logo" className="absolute top-8 left-10 md:left-24 flex flex-col text-base font-Unbounded font-bold">
           <p className='text-myorange hidden sm:block'>Dex</p>
           <p className="hidden sm:block">Urban.md</p>
@@ -27,6 +28,15 @@ const Signin = () => {
         <p className="font-Spacegrotes text-sm md:text-base text-center mb-12">Definițiile scrise în UrbanDex.md au fost create de indivizi<br/> obișnuiți, asemenea ție.</p>
         <GoogleButton accepted={accepted} setShouldAnimate={setShouldAnimate} />
         <AnonymButton accepted={accepted} setShouldAnimate={setShouldAnimate} />
+
+        <div className="w-full max-w-[367px] flex items-center gap-4 my-8">
+          <div className="flex-1 h-[2px] bg-mygray"></div>
+          <span className="font-Spacegrotesc text-sm text-mygray">sau</span>
+          <div className="flex-1 h-[2px] bg-mygray"></div>
+        </div>
+
+        <CredentialsForm accepted={accepted} setShouldAnimate={setShouldAnimate} />
+
         <div className={`${shouldAnimate && "shake"} flex items-center max-w-[367px] md:max-w-fit justify-center mt-12 gap-2`}>
           <label className="confirm border border-mygray font-Spacegrotesc">
             <input type="checkbox" name="confirm" id="confirm" onClick={handleCheckboxChange} className="" />
