@@ -1,7 +1,6 @@
 'use client'
 
 import { signIn } from "next-auth/react"
-import { useSearchParams } from "next/navigation"
 
 interface AnonymButtonProps{
   accepted: boolean;
@@ -9,10 +8,6 @@ interface AnonymButtonProps{
 }
 
 const AnonymButton:React.FC<AnonymButtonProps> = ({accepted, setShouldAnimate}) => {
-  const searchParams = useSearchParams();
-  //TODO: transmit callback la user si apoi il folosesc 
-  // searchParams.get("callbackUrl")
-  const callbackUrl = "/verifying";
   let useraccept = accepted;
 
   return (

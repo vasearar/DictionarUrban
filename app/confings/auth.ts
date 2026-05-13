@@ -76,19 +76,6 @@ export const authConfig: AuthOptions = {
   pages: {
     signIn: '/signIn',
   },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        // When ready for cross-domain SSO, set:
-        // domain: ".dexurban.com",
-      },
-    },
-  },
   callbacks: {
     async session({ session, token }) {
       interface CustomUser {
