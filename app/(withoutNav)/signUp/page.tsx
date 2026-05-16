@@ -142,7 +142,7 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={loading}
-              className="mydropshadow relative justify-center outline-none w-full md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-2 disabled:opacity-50"
+              className="mydropshadow relative justify-center outline-none w-full md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-2 disabled:cursor-wait disabled:bg-myhoverorange"
             >
               {loading ? "Se creează..." : "Înregistrare"}
             </button>
