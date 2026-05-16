@@ -20,27 +20,25 @@ const SearchBar = () => {
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const query = searchParams.get('query')?.toString() || "";
+  const [term, setTerm] = useState(query);
   const { replace } = useRouter();
+
+  useEffect(() => {
+    setTerm(query);
+  }, [query]);
 
   function handleSearch(e: React.FormEvent){
     e.preventDefault();
-    const target = e.target as HTMLFormElement;
-    const term = target?.elements.namedItem("term") as HTMLInputElement;
-    const termValue = term.value;
     const params = new URLSearchParams(searchParams.toString());
-    if (termValue) {
-      params.set('query', termValue.toString());
+    if (term) {
+      params.set('query', term);
     } else {
       params.delete('query');
     }
     params.set('page', '1');
     replace(`${pathname}?${params.toString()}`);
   }
-
-  useEffect(() => {
-    let el = (document.querySelector("#valueInput") as HTMLInputElement );
-    el.value = "";
-  }, [pathname])
 
   return (
     <form id='searchForm'
@@ -58,7 +56,8 @@ const SearchBar = () => {
                 name="term"
                 id='valueInput' 
                 placeholder={placeholder}
-                defaultValue={searchParams.get('query')?.toString()}
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
           />
     </form>
   );

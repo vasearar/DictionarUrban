@@ -68,7 +68,7 @@ export async function verifyDefinition(data: myWord) {
 export async function getWords(query: string) {
   try {
     const baseUrl = process.env.NEXTAUTH_URL || "https://dexurban.md";
-    const res = await fetch(`${baseUrl}/api/definition/?word=${query}`, {cache: "no-store"});
+    const res = await fetch(`${baseUrl}/api/definition/?word=${encodeURIComponent(query)}`, {cache: "no-store"});
     if (!res.ok) {
       throw new Error('Failed to fetch data');
     }

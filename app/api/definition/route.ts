@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
   const word = searchParams.get("word");
   const id = searchParams.get("id");
   const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const usernameSearch = word?.startsWith("@") ? word.slice(1).trim() : "";
   let query = {};
 
   if (id){
@@ -34,6 +35,8 @@ export async function GET(request: NextRequest) {
     query = { userEmail: email, word: { $regex: `^${escapeRegex(word)}`, $options: "i" } };
   } else if (email) {
     query = { userEmail: email };
+  } else if (usernameSearch) {
+    query = { username: { $regex: `^${escapeRegex(usernameSearch)}$`, $options: "i" } };
   } else if (word) {
     query = { word: { $regex: `^${escapeRegex(word)}`, $options: "i" } };
   }
