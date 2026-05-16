@@ -65,7 +65,7 @@ export default async function Definition({query, page, popularity}: { query: str
                 </div>
                 <p className="text-base md:text-lg">{word.definition}</p>
                 <p className="text-base md:text-lg italic my-4">„{text(word.exampleOfUsing, word.word)}”</p>
-                <p className="text-base md:text-lg font-bold">de <Link href={`/?query=@${encodeURIComponent(word.username)}&page=1`} className="text-myorange mr-2 underline">{word.username}</Link>{word.date}</p>
+                <p className="text-base md:text-lg font-bold">de <Link href={`/?query=@${encodeURIComponent(word.username)}&page=1`} className="text-myorange mr-2">{word.username}</Link>{word.date}</p>
                 <Actions id={word._id} likes={word.likes} />
               </div>
             </div>
