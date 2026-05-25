@@ -35,6 +35,10 @@ export const authConfig: AuthOptions = {
           throw new Error("Email sau parolă incorectă");
         }
 
+        if (user.banned) {
+          throw new Error("Contul tău a fost blocat");
+        }
+
         if (!user.emailVerified) {
           throw new Error("Email-ul nu a fost verificat. Verifică-ți inbox-ul");
         }

@@ -1,11 +1,12 @@
-import { Schema, model, models, mongo } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema({
   email: String,
   username: String,
   password: String,
   emailVerified: { type: Boolean, default: false },
-  role: String,
+  role: { type: String, enum: ["user", "moderator", "admin"], default: "user" },
+  banned: { type: Boolean, default: false },
   date: String,
   likes: [String],
 });

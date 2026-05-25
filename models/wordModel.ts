@@ -1,4 +1,4 @@
-import { Schema, model, models, mongo } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const wordSchema = new Schema({
   word: String,
@@ -8,6 +8,10 @@ const wordSchema = new Schema({
   userEmail: String,
   likes: Number,
   date: String,
+  hidden: { type: Boolean, default: false },
+  hiddenAt: Date,
+  hiddenBy: String,
+  hiddenReason: String,
 });
 
 const wordModel = models.wordModel || model("wordModel", wordSchema, "words");

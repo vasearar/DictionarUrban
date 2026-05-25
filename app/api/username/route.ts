@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import userModel from "../../../models/userModel";
 import wordModel from "../../../models/wordModel";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/app/confings/auth";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -10,8 +12,13 @@ export async function PATCH(req: NextRequest) {
     await mongoose.connect(MONGO_URI);
 
     const aux = await req.json();
+    const session = await getServerSession(authConfig);
     const newUsername = aux.data;
-    const email = aux.email;
+    const email = session?.user?.email;
+
+    if (!email || aux.email !== email) {
+      return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 });
+    }
 
     const updatedUser = await userModel.findOneAndUpdate(
       { email: email },
@@ -45,7 +52,12 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     await mongoose.connect(MONGO_URI);
 
     const aux = await req.json();
-    const email = aux.email;
+    const session = await getServerSession(authConfig);
+    const email = session?.user?.email;
+
+    if (!email || aux.email !== email) {
+      return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 });
+    }
     
     const deletedUser = await userModel.findOneAndDelete({ email: email });
 
