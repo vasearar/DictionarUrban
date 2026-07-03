@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./shared/Providers";
-import Script from 'next/script';
+import CookieConsent from "./shared/CookieConsent";
 import { Unbounded, Space_Grotesk } from "next/font/google";
 
 // Fonturi self-hosted prin next/font: elimină requestul blocant către
@@ -30,26 +30,11 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en" className={`dark ${unbounded.variable} ${spaceGrotesk.variable}`}>
-      <head>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-NC9BXJJB81"
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-NC9BXJJB81');
-          `}
-        </Script>
-      </head>
-
       <body>
         <Providers>
           {children}
         </Providers>
+        <CookieConsent />
         </body>
     </html>
   );
