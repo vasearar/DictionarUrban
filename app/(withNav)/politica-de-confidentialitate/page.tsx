@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import type { Metadata } from 'next'
+import CookiePreferencesButton from '../../shared/CookiePreferencesButton'
 
 /* =========================================================================
    ⚠️  PLACEHOLDER-E DE COMPLETAT DUPĂ ÎNREGISTRAREA FIRMEI
@@ -118,6 +119,8 @@ const Privacy = () => {
           <li><b>Cookie-uri de analiză / statistică (analytics)</b> - de exemplu Google Analytics, pentru a înțelege cum este utilizată Platforma.</li>
         </ul>
         <p className='font-Spacegrotesc'>Cookie-urile <b>neesențiale</b> (de preferințe și de analiză) sunt utilizate <b>numai cu consimțământul dvs.</b>. Vă puteți retrage consimțământul sau puteți bloca ori șterge cookie-urile oricând din setările browserului; unele funcționalități pot fi afectate.</p>
+        <p className='font-Spacegrotesc mt-4 mb-4'>Vă puteți răzgândi oricând — apăsați butonul de mai jos pentru a reafișa bannerul și a vă schimba alegerea:</p>
+        <CookiePreferencesButton />
       </section>
 
       <section>
