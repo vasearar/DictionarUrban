@@ -2,6 +2,22 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./shared/Providers";
 import Script from 'next/script';
+import { Unbounded, Space_Grotesk } from "next/font/google";
+
+// Fonturi self-hosted prin next/font: elimină requestul blocant către
+// fonts.googleapis.com și adaugă un fallback cu size-adjust (reduce CLS).
+// latin-ext păstrează diacriticele româneşti (ă î ș ț â).
+const unbounded = Unbounded({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-unbounded",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-spacegrotesk",
+});
 
 export const metadata: Metadata = {
   title: "Dicționar urban",
@@ -13,13 +29,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${unbounded.variable} ${spaceGrotesk.variable}`}>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NC9BXJJB81"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -28,24 +44,6 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             gtag('config', 'G-NC9BXJJB81');
           `}
         </Script>
-        <link
-            rel="preload"
-            href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
-            as="style"
-          />
-          <link
-            rel="preload"
-            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Unbounded:wght@200..900&display=swap"
-            as="style"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Unbounded:wght@200..900&display=swap"
-            rel="stylesheet"
-          />
       </head>
 
       <body>

@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        Unbounded: ['"Unbounded"', "sans-serif"],
-        Spacegrotesc: ['"Space Grotesk"', "sans-serif"],
+        Unbounded: ['var(--font-unbounded)', "sans-serif"],
+        Spacegrotesc: ['var(--font-spacegrotesk)', "sans-serif"],
       },
       screens: {
         'im': '390px',
