@@ -1,21 +1,49 @@
 import { NextResponse, NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import wordModel from "../../../models/wordModel";
+import userModel from "../../../models/userModel";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
-export async function POST(req: Request, res: Response) {
-  try{
+export async function POST(req: Request) {
+  try {
+    const session = await getServerSession(authConfig);
+    const email = session?.user?.email;
+    if (!email) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const word = typeof body?.word === "string" ? body.word.trim() : "";
+    const definition = typeof body?.definition === "string" ? body.definition.trim() : "";
+    const exampleOfUsing = typeof body?.exampleOfUsing === "string" ? body.exampleOfUsing.trim() : "";
+
+    if (!word || !definition || !exampleOfUsing) {
+      return NextResponse.json({ error: "All definition fields are required" }, { status: 400 });
+    }
+
     await mongoose.connect(MONGO_URI);
-    const aux = await req.json();
 
-    await wordModel.create(aux);
+    // Identitatea autorului vine din sesiune / DB — niciodată din body,
+    // ca să nu se poată publica conținut în numele altui utilizator.
+    const author = await userModel.findOne({ email });
+    const username = author?.username || session.user?.name || "Anonim";
 
-    return NextResponse.json({ someProp: aux }, { status: 200 });
-  } catch(error) {
+    const created = await wordModel.create({
+      word,
+      definition,
+      exampleOfUsing,
+      username,
+      userEmail: email,
+      likes: 0, // forțat — nu se pot semăna like-uri false
+      date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
+    });
+
+    return NextResponse.json({ someProp: created }, { status: 200 });
+  } catch (error) {
     console.log("Something went wrong", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
@@ -63,13 +91,22 @@ export async function GET(request: NextRequest) {
 }
 
 
-export async function PATCH(req: Request, res: Response) {
+export async function PATCH(req: Request) {
   try {
+    const session = await getServerSession(authConfig);
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
     await mongoose.connect(MONGO_URI);
     const aux = await req.json();
-    const likes = aux.likes;
     const id = aux.id;
-    
+    const likes = Number(aux.likes);
+
+    if (!id || !Number.isFinite(likes) || likes < 0) {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
+
     const updatedWord = await wordModel.findByIdAndUpdate(id, { likes }, { new: true });
 
     if (!updatedWord) {

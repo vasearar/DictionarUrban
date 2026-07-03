@@ -2,18 +2,38 @@ import { NextResponse, NextRequest } from "next/server";
 import reportModel from "../../../models/reportModel";
 import wordModel from "@/models/wordModel";
 import { logAuditAction, requireRole } from "@/lib/moderationAuth";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/app/confings/auth";
 import mongoose from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try{
+    const session = await getServerSession(authConfig);
+    const email = session?.user?.email;
+    if (!email) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    if (!body?.wordId || !body?.reason) {
+      return NextResponse.json({ error: "wordId and reason are required" }, { status: 400 });
+    }
+
     await mongoose.connect(MONGO_URI);
-    const aux = await req.json();
 
-    await reportModel.create({ ...aux, status: "pending" });
+    // Câmpurile de stare/raportor sunt controlate de server, nu preluate din body.
+    await reportModel.create({
+      wordId: body.wordId,
+      reason: body.reason,
+      optional: typeof body?.optional === "string" ? body.optional : "",
+      userEmail: email, // din sesiune, nu din body
+      date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
+      status: "pending",
+    });
 
-    return NextResponse.json({ someProp: aux }, { status: 200 });
+    return NextResponse.json({ ok: true }, { status: 200 });
   } catch(error) {
     console.log("Something went wrong", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
