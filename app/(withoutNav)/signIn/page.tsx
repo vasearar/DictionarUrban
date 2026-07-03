@@ -44,7 +44,7 @@ const Signin = () => {
               <path d="M1.41 4.58008L0 6.00008L4 10.0001L12 2.00008L10.59 0.580078L4 7.17008L1.41 4.58008Z" fill="#E86842"/>
             </svg>
           </label>
-          <p className={`${shouldAnimate && "check"} md:text-base text-sm`}>Am citit și sunt de acord cu <Link href={"https://www.dexurban.md/tos"} className="text-myorange md:hover:text-myhoverorange transition-all">Termenii și Condiții</Link> și <Link href={"https://www.dexurban.md/privacy"} className="text-myorange md:hover:text-myhoverorange transition-all">Politică de Confidențialitate</Link></p>
+          <p className={`${shouldAnimate && "check"} md:text-base text-sm`}>Am citit și sunt de acord cu <Link href={"/termeni-si-conditii"} className="text-myorange md:hover:text-myhoverorange transition-all">Termenii și Condiții</Link> și <Link href={"/politica-de-confidentialitate"} className="text-myorange md:hover:text-myhoverorange transition-all">Politică de Confidențialitate</Link></p>
         </div>
       </div>
     </div>
