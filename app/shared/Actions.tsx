@@ -20,7 +20,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
   async function checkIfLiked(){
     if (email != undefined){
       try {
-      const response = await fetch(`/api/likes?id=${id}&email=${email}`, {
+      const response = await fetch(`/api/likes?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
       console.log(
         "There was a problem with the fetch operation: ", error
       );
-    } 
+    }
     }
   }
 
@@ -46,82 +46,46 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
     if(email){
       checkIfLiked();
     } else {
-      
+
     }
   }, [email]);
 
   async function addLike(){
-    if(email){
-      setLiked(!isliked);
-      if(isliked && email){
-        setcurrentLikes(currentLikes - 1);
-        likeToWordDb(currentLikes - 1);
-        deleteToUserDb()
-      } else {
-        setcurrentLikes(currentLikes + 1);
-        likeToWordDb(currentLikes + 1);
-        likeToUserDb();
-      }
-    } else {
-      router.push('/signIn')
-      return
+    if(!email){
+      router.push('/signIn');
+      return;
     }
-  }
 
-  async function likeToWordDb(currentLike: number){
-    try {
-      const response = await fetch(`/api/definition`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({id: id, likes: currentLike}),
-      });
-      if (!response.ok) {
-        throw new Error("HTTP error! status: " + response.status);
-      }
-    } catch (error) {
-      console.log(
-        "There was a problem with the fetch operation: ", error
-      );
-    }
-  }
-  
-  async function likeToUserDb(){
+    // Reținem starea curentă ca să putem reveni dacă serverul eșuează.
+    const prevLiked = isliked;
+    const prevLikes = currentLikes;
+    const nextLiked = !isliked;
+
+    // 1) Optimistic: randăm instant pe client.
+    setLiked(nextLiked);
+    setcurrentLikes(prevLikes + (nextLiked ? 1 : -1));
+
+    // 2) În background: serverul e sursa de adevăr (contorul e recalculat acolo).
     try {
       const response = await fetch(`/api/likes`, {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({email: email, wordid: id}),
+        body: JSON.stringify({ wordid: id, action: nextLiked ? "like" : "unlike" }),
       });
       if (!response.ok) {
         throw new Error("HTTP error! status: " + response.status);
       }
+      // 3) Reconciliere cu valoarea reală de la server.
+      const data = await response.json();
+      setLiked(data.liked);
+      setcurrentLikes(data.likes);
     } catch (error) {
-      console.log(
-        "There was a problem with the fetch operation: ", error
-      );
-    }
-  }
-
-  async function deleteToUserDb(){
-    try {
-      const response = await fetch(`/api/likes`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({email: email, wordid: id}),
-      });
-      if (!response.ok) {
-        throw new Error("HTTP error! status: " + response.status);
-      }
-    } catch (error) {
-      console.log(
-        "There was a problem with the fetch operation: ", error
-      );
+      // 4) Revert dacă a picat request-ul.
+      setLiked(prevLiked);
+      setcurrentLikes(prevLikes);
+      console.log("There was a problem with the fetch operation: ", error);
     }
   }
 

@@ -91,36 +91,6 @@ export async function GET(request: NextRequest) {
 }
 
 
-export async function PATCH(req: Request) {
-  try {
-    const session = await getServerSession(authConfig);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
-
-    await mongoose.connect(MONGO_URI);
-    const aux = await req.json();
-    const id = aux.id;
-    const likes = Number(aux.likes);
-
-    if (!id || !Number.isFinite(likes) || likes < 0) {
-      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-    }
-
-    const updatedWord = await wordModel.findByIdAndUpdate(id, { likes }, { new: true });
-
-    if (!updatedWord) {
-      return NextResponse.json({ error: "Word not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(updatedWord, { status: 200 });
-
-  } catch(error) {
-    console.error("Something went wrong", error);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
-  }
-}
-
 export async function DELETE(req: Request, res: Response) {
   try {
     await mongoose.connect(MONGO_URI);
