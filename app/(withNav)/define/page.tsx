@@ -1,28 +1,26 @@
 'use client';
-import React, { FormEvent, useState } from "react"
+import React, { FormEvent, useRef, useState } from "react"
 import { useSession } from "next-auth/react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { navigate, verifyCaptcha, verifyDefinition } from "../../api/ServerActions";
+import { navigate, verifyDefinition } from "../../api/ServerActions";
 
 const Page = () => {
 	const Session = useSession();
 	const [captcha, setCaptcha] = useState<string | null>();
 	const [error, setError] = useState<{ word?: string; definition?: string; exampleOfUsing?: string }>({});
 	const [isMessageSent, setMessageSent] = useState(false);
-	
+	// Momentul randării formularului — folosit ca semnal anti-bot (submit instant).
+	const loadedAtRef = useRef<number>(Date.now());
+
 	async function onSubmit(e: FormEvent){
 		e.preventDefault();
 		if (captcha){
-			try{
-				if(await verifyCaptcha(captcha)){
-					handleSubmit(e);
-				}
-			} catch (error){
-				console.error("Error verifying captcha:", error);
-			}
-	} else {
+			// Token-ul captcha e verificat acum pe SERVER (în /api/definition),
+			// deci nu-l mai consumăm aici — doar îl trimitem mai departe.
+			handleSubmit(e);
+		} else {
 			console.log("ReCAPTCHA not verified");
-	}
+		}
 	}
 
 	const resetForm = () => {
@@ -73,6 +71,8 @@ const Page = () => {
     
 		const options : CustomDateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', locale: 'ro' };
 		
+		const honeypot = (target?.elements.namedItem("company_website") as HTMLInputElement)?.value || "";
+
 		const data = {
 			word: word?.value.toLowerCase(),
 			definition: definition.value,
@@ -81,8 +81,11 @@ const Page = () => {
 			userEmail: Session?.data?.user?.email,
 			likes: 0,
 			date: date.toLocaleString('ro-RO', options),
+			captcha,
+			honeypot,
+			elapsedMs: Date.now() - loadedAtRef.current,
 		};
-		
+
 		const tests = await verifyDefinition(data);
 		setError(error => ({
       ...error,
@@ -99,13 +102,22 @@ const Page = () => {
 					body: JSON.stringify(data),
 				});
 				if (!response.ok) {
-					throw new Error("HTTP error! status: " + response.status);
+					// Respins de server (captcha expirat / rate-limit / validare):
+					// rămânem pe formular, resetăm captcha ca utilizatorul să reîncerce.
+					const info = await response.json().catch(() => ({}));
+					setError(prev => ({ ...prev, word: info?.error || "Nu am putut trimite definiția. Reîncearcă." }));
+					grecaptcha.reset();
+					setCaptcha(null);
+					return;
 				}
 				setMessageSent(true);
 			} catch (error) {
 				console.log(
 					"There was a problem with the fetch operation: ", error
 				);
+				grecaptcha.reset();
+				setCaptcha(null);
+				return;
 			}
 			resetForm();
 			grecaptcha.reset();
@@ -122,6 +134,8 @@ const Page = () => {
       <form id="define" onSubmit={onSubmit} className='font-Spacegrotesc text-mygray bg-mywhite max-w-[720px] relative h-fit shadow-lg'>
 				<div className={`md:py-6 w-80 im:w-fit p-3 md:px-8 rounded-sm rounded-br-none border-mygray border-2 mybigdropshadow`}>
 					<p className="text-left">*Distribuiți definiții pentru cuvinte care ar putea fi utile altor persoane și NU publicați texte înjositoare sau informații personale <span className="font-bold text-mygray">- acestea vor fi eliminate.</span></p>
+					{/* Honeypot: invizibil și inaccesibil pentru oameni; doar boții îl completează. */}
+					<input type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 opacity-0" />
 					<input title="fără simboluri speciale și maxim 40" className={`${error.word ? 'myred' : ''} outline-none bg-transparent text-base sm:text-2xl mt-2 mb-9 sm:mb-5 border-mygray border-2 rounded-sm p-2 w-full`} type='text' name='word' id="word" placeholder='Cuvântul sau expresia' />
 					<div className="relative">
 						{error && <p className='text-left absolute -top-9 im:-top-5 text-red-500 text-xs'>{error.word}</p>}

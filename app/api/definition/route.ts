@@ -5,6 +5,13 @@ import userModel from "../../../models/userModel";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
+import {
+  getClientIp,
+  enforceRateLimits,
+  looksAutomated,
+  validateField,
+  verifyCaptchaToken,
+} from "@/lib/antispam";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -17,6 +24,13 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+
+    // 1. Semnale de bot invizibile pentru om (honeypot completat / submit instant).
+    //    Răspundem 200 „gol" ca botul să creadă că a reușit și să nu-și ajusteze scriptul.
+    if (looksAutomated(body)) {
+      return NextResponse.json({ someProp: null }, { status: 200 });
+    }
+
     const word = typeof body?.word === "string" ? body.word.trim() : "";
     const definition = typeof body?.definition === "string" ? body.definition.trim() : "";
     const exampleOfUsing = typeof body?.exampleOfUsing === "string" ? body.exampleOfUsing.trim() : "";
@@ -25,7 +39,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "All definition fields are required" }, { status: 400 });
     }
 
+    // 2. Validare de conținut SERVER-SIDE (înainte era doar în browser → se sărea peste).
+    const contentError =
+      validateField({ value: word, min: 2, max: 40, label: "*Expresia sau cuvântul", charset: true }) ||
+      validateField({ value: definition, min: 6, max: 460, label: "*Definiția", charset: true }) ||
+      validateField({ value: exampleOfUsing, min: 20, max: 250, label: "*Exemplul de folosire", charset: true });
+    if (contentError) {
+      return NextResponse.json({ error: contentError }, { status: 400 });
+    }
+
+    // 3. Captcha verificat pe server (dacă e configurat) — nu se mai poate sări peste.
+    if (!(await verifyCaptchaToken(body?.captcha))) {
+      return NextResponse.json({ error: "Verificarea captcha a eșuat" }, { status: 400 });
+    }
+
+    // 4. Rate-limit pe IP + identitate. Emailul e gratis (provider anonim), deci
+    //    IP-ul e plasa reală împotriva scripturilor. Praguri generoase pt. oameni.
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "def", id: email, limit: 6, windowMs: 60_000 },
+      { scope: "def", id: email, limit: 40, windowMs: 3_600_000 },
+      { scope: "def-ip", id: ip, limit: 20, windowMs: 60_000 },
+      { scope: "def-ip", id: ip, limit: 120, windowMs: 3_600_000 },
+    ]);
+    if (limited) return limited;
+
     await mongoose.connect(MONGO_URI);
+
+    // 5. Anti-duplicat: același autor nu poate re-posta identic același cuvânt+definiție.
+    const duplicate = await wordModel.findOne({ userEmail: email, word, definition });
+    if (duplicate) {
+      return NextResponse.json({ error: "Ai adăugat deja această definiție" }, { status: 409 });
+    }
 
     // Identitatea autorului vine din sesiune / DB — niciodată din body,
     // ca să nu se poată publica conținut în numele altui utilizator.

@@ -1,8 +1,8 @@
 'use client';
-import { navigate, verifyCaptcha } from '@/app/api/ServerActions';
+import { navigate } from '@/app/api/ServerActions';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 const Report = () => {
@@ -10,6 +10,8 @@ const Report = () => {
   const [captcha, setCaptcha] = useState<string | null>();
   const [id, setId] = useState<string | null>(null);
   const [text, setText] = useState<string>("Verificăm");
+  // Momentul randării — semnal anti-bot (submit instant).
+  const loadedAtRef = useRef<number>(Date.now());
   
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem('hasReloaded');
@@ -41,13 +43,8 @@ const Report = () => {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (captcha) {
-      try {
-        if (await verifyCaptcha(captcha)) {
-          handleSubmit(e);
-        }
-      } catch (error) {
-        console.error('Error verifying captcha:', error);
-      }
+      // Token-ul captcha e verificat pe SERVER (în /api/report) — doar îl trimitem.
+      handleSubmit(e);
     } else {
       console.log('ReCAPTCHA not verified');
     }
@@ -60,6 +57,7 @@ const Report = () => {
       target.querySelector('input[name="reason"]:checked') as HTMLInputElement
     )?.value;
     const optional = target?.elements.namedItem('additional') as HTMLInputElement;
+    const honeypot = (target?.elements.namedItem('company_website') as HTMLInputElement)?.value || '';
     const date = new Date();
 
     const options: Intl.DateTimeFormatOptions = {
@@ -75,6 +73,9 @@ const Report = () => {
       optional: optional.value,
       userEmail: session?.user?.email,
       date: date.toLocaleString('ro-RO', options),
+      captcha,
+      honeypot,
+      elapsedMs: Date.now() - loadedAtRef.current,
     };
 
     if (checkedValue == undefined) {
@@ -89,10 +90,18 @@ const Report = () => {
           body: JSON.stringify(data),
         });
         if (!response.ok) {
-          throw new Error('HTTP error! status: ' + response.status);
+          // Respins de server (captcha expirat / rate-limit): rămânem pe pagină.
+          const info = await response.json().catch(() => ({}));
+          alert(info?.error || 'Nu am putut trimite raportul. Reîncearcă.');
+          grecaptcha.reset();
+          setCaptcha(null);
+          return;
         }
       } catch (error) {
         console.log('There was a problem with the fetch operation: ', error);
+        grecaptcha.reset();
+        setCaptcha(null);
+        return;
       }
       navigate();
     }
@@ -122,6 +131,8 @@ const Report = () => {
       <h3 className='md:text-lg font-Spacegrotesc mb-12 [@media(max-height:850px)]:mb-6 text-center'>Fii parte din comunitatea DexUrban.md și ajută-ne să facem platforma mai sigură.</h3>
       <form id='report' onSubmit={onSubmit} className='font-Spacegrotesc w-full md:w-fit border-2 border-mygray p-3 md:p-8 bg-mywhite relative rounded-sm mybigdropshadow'>
         <h2 className='text-2xl md:text-3xl font-bold text-center mb-8 [@media(max-height:850px)]:mb-6'>De ce acestă definiție trebuie eliminată?</h2>
+        {/* Honeypot: invizibil pentru oameni; doar boții îl completează. */}
+        <input type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 opacity-0" />
         <input type="radio" name="reason" id="joke" value="Definiția este o glumă locală, între un grup de prieteni" />
         <label htmlFor="joke" className='ml-4 md:text-lg'>Definiția este o glumă locală, între un grup de prieteni</label><br />
         <div className='h-4'></div>

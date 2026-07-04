@@ -5,6 +5,13 @@ import { logAuditAction, requireRole } from "@/lib/moderationAuth";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
 import mongoose from "mongoose";
+import {
+  getClientIp,
+  enforceRateLimits,
+  looksAutomated,
+  validateField,
+  verifyCaptchaToken,
+} from "@/lib/antispam";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -17,17 +24,53 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+
+    // Semnal de bot invizibil (honeypot / submit instant) → 200 gol, silențios.
+    if (looksAutomated(body)) {
+      return NextResponse.json({ ok: true }, { status: 200 });
+    }
+
     if (!body?.wordId || !body?.reason) {
       return NextResponse.json({ error: "wordId and reason are required" }, { status: 400 });
     }
+
+    // Validare de conținut server-side: lungime + charset (nu doar length).
+    const reason = String(body.reason).trim();
+    const optional = typeof body?.optional === "string" ? body.optional.trim() : "";
+
+    const reasonError = validateField({ value: reason, min: 1, max: 200, label: "Motivul", charset: true });
+    if (reasonError) {
+      return NextResponse.json({ error: reasonError }, { status: 400 });
+    }
+    // `optional` e opțional: validăm charset/lungime doar dacă a fost completat.
+    if (optional) {
+      const optionalError = validateField({ value: optional, min: 1, max: 1000, label: "Informația adițională", charset: true });
+      if (optionalError) {
+        return NextResponse.json({ error: optionalError }, { status: 400 });
+      }
+    }
+
+    // Captcha server-side (dacă e configurat).
+    if (!(await verifyCaptchaToken(body?.captcha))) {
+      return NextResponse.json({ error: "Verificarea captcha a eșuat" }, { status: 400 });
+    }
+
+    // Rate-limit pe IP + identitate (praguri generoase pentru oameni).
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "report", id: email, limit: 10, windowMs: 60_000 },
+      { scope: "report", id: email, limit: 60, windowMs: 3_600_000 },
+      { scope: "report-ip", id: ip, limit: 30, windowMs: 60_000 },
+    ]);
+    if (limited) return limited;
 
     await mongoose.connect(MONGO_URI);
 
     // Câmpurile de stare/raportor sunt controlate de server, nu preluate din body.
     await reportModel.create({
       wordId: body.wordId,
-      reason: body.reason,
-      optional: typeof body?.optional === "string" ? body.optional : "",
+      reason,
+      optional,
       userEmail: email, // din sesiune, nu din body
       date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
       status: "pending",

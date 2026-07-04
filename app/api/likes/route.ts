@@ -4,6 +4,7 @@ import wordModel from "../../../models/wordModel";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
+import { getClientIp, enforceRateLimits } from "@/lib/antispam";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -25,6 +26,15 @@ export async function POST(req: Request) {
     if (!wordid || (action !== "like" && action !== "unlike")) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
+
+    // Toggle-ul e deja capat la ±1/user, dar limităm click-spam-ul ca să nu
+    // fie folosit pentru a hărțui DB-ul. Prag foarte lejer pentru oameni.
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "like", id: email, limit: 60, windowMs: 60_000 },
+      { scope: "like-ip", id: ip, limit: 200, windowMs: 60_000 },
+    ]);
+    if (limited) return limited;
 
     await mongoose.connect(MONGO_URI);
 
