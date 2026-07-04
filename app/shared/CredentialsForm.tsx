@@ -71,10 +71,10 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({ accepted, setShouldAn
         {loading ? "Se conectează..." : "Conectare"}
       </button>
       <div className="flex justify-between font-Spacegrotesc text-sm">
-        <Link href="/signUp" className="text-myorange md:hover:text-myhoverorange transition-all">
+        <Link href="/inregistrare" className="text-myorange md:hover:text-myhoverorange transition-all">
           Creează cont
         </Link>
-        <Link href="/forgot-password" className="text-myorange md:hover:text-myhoverorange transition-all">
+        <Link href="/recuperare-parola" className="text-myorange md:hover:text-myhoverorange transition-all">
           Am uitat parola
         </Link>
       </div>

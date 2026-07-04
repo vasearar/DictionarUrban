@@ -52,7 +52,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
 
   async function addLike(){
     if(!email){
-      router.push('/signIn');
+      router.push('/conectare');
       return;
     }
 

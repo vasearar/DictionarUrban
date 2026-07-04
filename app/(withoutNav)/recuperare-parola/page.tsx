@@ -60,7 +60,7 @@ const ForgotPassword = () => {
             <div className="bg-green-50 border-2 border-green-500 rounded-sm p-6 mb-6">
               <p className="font-Spacegrotesc text-green-700 text-sm">{success}</p>
             </div>
-            <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm">
+            <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm">
               Înapoi la conectare
             </Link>
           </div>
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
               {loading ? "Se trimite..." : "Trimite link de resetare"}
             </button>
 
-            <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm text-center mt-2">
+            <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm text-center mt-2">
               Înapoi la conectare
             </Link>
           </form>

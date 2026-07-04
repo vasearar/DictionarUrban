@@ -55,7 +55,7 @@ const VerifyEmailContent = () => {
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="#22c55e"/>
             </svg>
             <h1 className="text-mygray text-2xl md:text-3xl mb-4 text-center">{message}</h1>
-            <Link href="/signIn" className="mydropshadow relative justify-center outline-none w-full md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-6">
+            <Link href="/conectare" className="mydropshadow relative justify-center outline-none w-full md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-6">
               Conectează-te
             </Link>
           </>
@@ -67,7 +67,7 @@ const VerifyEmailContent = () => {
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#ef4444"/>
             </svg>
             <h1 className="text-mygray text-2xl md:text-3xl mb-4 text-center">{message}</h1>
-            <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm mt-4">
+            <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm mt-4">
               Înapoi la conectare
             </Link>
           </>

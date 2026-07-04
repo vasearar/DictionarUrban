@@ -15,6 +15,21 @@ const nextConfig = {
           destination: '/politica-de-confidentialitate',
           permanent: true, // 301
         },
+        {
+          source: '/signIn',
+          destination: '/conectare',
+          permanent: true, // 301
+        },
+        {
+          source: '/signUp',
+          destination: '/inregistrare',
+          permanent: true, // 301
+        },
+        {
+          source: '/forgot-password',
+          destination: '/recuperare-parola',
+          permanent: true, // 301
+        },
       ];
     },
 };

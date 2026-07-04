@@ -90,7 +90,7 @@ const SignUp = () => {
               </svg>
               <p className="font-Spacegrotesc text-green-700 text-sm">{success}</p>
             </div>
-            <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm">
+            <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm">
               Înapoi la conectare
             </Link>
           </div>
@@ -149,7 +149,7 @@ const SignUp = () => {
 
             <p className="font-Spacegrotesc text-sm text-center mt-2">
               Ai deja un cont?{" "}
-              <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all">
+              <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all">
                 Conectează-te
               </Link>
             </p>

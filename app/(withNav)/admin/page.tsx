@@ -9,7 +9,7 @@ export default async function AdminPage() {
   const session = await getServerSession(authConfig);
 
   if (!session?.user?.email) {
-    redirect("/signIn");
+    redirect("/conectare");
   }
 
   await connectDB();

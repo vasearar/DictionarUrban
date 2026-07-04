@@ -59,7 +59,7 @@ const ResetPasswordContent = () => {
     return (
       <div className="w-screen h-screen flex items-center justify-center flex-col font-Unbounded">
         <h1 className="text-mygray text-2xl md:text-3xl mb-4 text-center">Link invalid</h1>
-        <Link href="/signIn" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm mt-4">
+        <Link href="/conectare" className="text-myorange md:hover:text-myhoverorange transition-all font-Spacegrotesc text-sm mt-4">
           Înapoi la conectare
         </Link>
       </div>
@@ -84,7 +84,7 @@ const ResetPasswordContent = () => {
             <div className="bg-green-50 border-2 border-green-500 rounded-sm p-6 mb-6">
               <p className="font-Spacegrotesc text-green-700 text-sm">{success}</p>
             </div>
-            <Link href="/signIn" className="mydropshadow relative justify-center outline-none w-full max-w-[367px] md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-4">
+            <Link href="/conectare" className="mydropshadow relative justify-center outline-none w-full max-w-[367px] md:hover:bg-myhoverorange transition-all bg-myorange text-mywhite font-bold rounded-sm border-mygray flex gap-4 text-xl md:text-2xl font-Spacegrotesc items-center py-2 border-2 mt-4">
               Conectează-te
             </Link>
           </div>

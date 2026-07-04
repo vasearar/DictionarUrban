@@ -78,7 +78,7 @@ export const authConfig: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/signIn',
+    signIn: '/conectare',
   },
   callbacks: {
     async session({ session, token }) {
