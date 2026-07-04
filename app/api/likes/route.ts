@@ -9,9 +9,10 @@ const MONGO_URI = process.env.MONGO_URI!;
 
 // Toggle like SERVER-AUTHORITATIVE.
 // Clientul trimite doar intenția ("like"/"unlike") pentru propriul cont
-// (emailul vine din sesiune). Contorul cuvântului NU vine din client — e
-// recalculat din numărul real de utilizatori care au cuvântul în lista lor
-// de like-uri, deci nu poate fi trucat și se auto-corectează.
+// (emailul vine din sesiune). Contorul cuvântului se modifică DOAR cu +1/-1
+// și numai când lista utilizatorului chiar se schimbă (gardă atomică), deci:
+//  - nu poate fi trucat din client (max ±1 per utilizator, propriul vot);
+//  - păstrează valoarea de bază (ex. like-uri setate manual în DB nu se pierd).
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authConfig);
@@ -27,21 +28,40 @@ export async function POST(req: Request) {
 
     await mongoose.connect(MONGO_URI);
 
-    // Actualizează lista utilizatorului (idempotent: $addToSet / $pull).
+    // Modificăm lista doar dacă starea chiar se schimbă:
+    //  - like:   doar dacă wordid NU e deja în listă;
+    //  - unlike: doar dacă wordid E în listă.
+    const filter =
+      action === "like"
+        ? { email, likes: { $ne: wordid } }
+        : { email, likes: wordid };
     const update =
       action === "like"
         ? { $addToSet: { likes: wordid } }
         : { $pull: { likes: wordid } };
 
-    const user = await userModel.findOneAndUpdate({ email }, update, { new: true });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    const result = await userModel.updateOne(filter, update);
+
+    let word;
+    if (result.modifiedCount === 1) {
+      // Lista chiar s-a modificat → aplicăm delta pe contorul existent.
+      const delta = action === "like" ? 1 : -1;
+      word = await wordModel.findByIdAndUpdate(
+        wordid,
+        { $inc: { likes: delta } },
+        { new: true }
+      );
+    } else {
+      // Starea era deja cea dorită (fără dublă numărare). Verificăm doar
+      // că utilizatorul există și returnăm contorul curent.
+      const exists = await userModel.exists({ email });
+      if (!exists) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+      word = await wordModel.findById(wordid);
     }
 
-    // Sursa de adevăr: câți utilizatori au acest cuvânt în lista lor de like-uri.
-    const likes = await userModel.countDocuments({ likes: wordid });
-    await wordModel.findByIdAndUpdate(wordid, { likes });
-
+    const likes = Math.max(0, word?.likes ?? 0);
     return NextResponse.json({ liked: action === "like", likes }, { status: 200 });
   } catch (error) {
     console.error("Something went wrong", error);
