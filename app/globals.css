@@ -85,6 +85,15 @@ button{
   transform: translate(8px, 8px);
 }
 
+/* Butoanele dezactivate sunt semi-transparente (opacity), iar umbra ::after din
+   spate ar transpărea prin ele (părea „umbra la suprafață"). O ascundem la disabled. */
+.mydropshadow:disabled::after,
+.mybigdropshadow:disabled::after,
+.mydropshadowrounded:disabled::after,
+.mybigdropshadowrounded:disabled::after {
+  display: none;
+}
+
 .switch {
   position: relative;
   display: inline-block;
