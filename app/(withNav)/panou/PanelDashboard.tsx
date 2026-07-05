@@ -81,6 +81,15 @@ const btnDanger =
   "relative inline-flex items-center gap-1.5 border-2 border-mygray bg-red-600 text-white px-3 py-1.5 text-sm font-bold rounded-sm mydropshadow transition-all hover:bg-red-500 disabled:opacity-40 disabled:pointer-events-none";
 const input =
   "border-2 border-mygray bg-mywhite rounded-sm px-3 py-1.5 text-sm outline-none w-full";
+// Butoanele de acțiune umplu rândul în mod egal: 2 pe rând pe mobil, toate pe un
+// rând pe desktop. Indiferent de câte sunt, nu rămâne spațiu gol.
+const fillBtn = "grow basis-[calc(50%-0.25rem)] justify-center md:basis-0";
+// Bară de accent pe marginea cardului, după stare.
+const reportAccent: Record<Report["status"], string> = {
+  pending: "#E86842",
+  resolved: "#16a34a",
+  dismissed: "#a1a1aa",
+};
 
 /* ---------- iconițe (Feather, stroke currentColor) ---------- */
 const paths: Record<string, string> = {
@@ -520,7 +529,11 @@ function ReportsView({
       ) : (
         <div className="flex flex-col gap-4">
           {reports.map((r) => (
-            <article key={r._id} className={`${card} p-4`}>
+            <article
+              key={r._id}
+              className={`${card} p-4`}
+              style={{ borderLeftWidth: 6, borderLeftColor: reportAccent[r.status] }}
+            >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <h3 className="font-Unbounded text-xl font-bold">{r.definition?.word || "Definiție lipsă"}</h3>
                 <div className="flex items-center gap-2">
@@ -543,26 +556,30 @@ function ReportsView({
                 </p>
               )}
 
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t-2 border-dashed border-zinc-300 pt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t-2 border-dashed border-zinc-300 pt-3">
                 <ReasonChip reason={r.reason} />
                 {r.optional && <span className="text-xs italic text-myhovergray">„{r.optional}”</span>}
                 <span className="text-xs text-myhovergray">{displayEmail(r.userEmail)} · {r.date}</span>
               </div>
 
-              <div className="mt-3 flex flex-wrap justify-end gap-2">
-                <button className={btn} onClick={() => onEdit(r)} disabled={!r.definition}>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button className={`${btn} ${fillBtn}`} onClick={() => onEdit(r)} disabled={!r.definition}>
                   <Icon name="edit" size={14} /> Editează
                 </button>
                 {r.status !== "resolved" && (
-                  <button className={btn} onClick={() => onResolve(r)}>
+                  <button className={`${btn} ${fillBtn}`} onClick={() => onResolve(r)}>
                     <Icon name="check" size={14} /> Rezolvă
                   </button>
                 )}
-                <button className={btnDanger} onClick={() => onHide(r)} disabled={!r.definition || r.definition.hidden}>
+                <button
+                  className={`${btnDanger} ${fillBtn}`}
+                  onClick={() => onHide(r)}
+                  disabled={!r.definition || r.definition.hidden}
+                >
                   <Icon name="eyeOff" size={14} /> Ascunde
                 </button>
                 {r.status !== "dismissed" && (
-                  <button className={btn} onClick={() => onDismiss(r)}>
+                  <button className={`${btn} ${fillBtn}`} onClick={() => onDismiss(r)}>
                     <Icon name="x" size={14} /> Respinge
                   </button>
                 )}
@@ -597,7 +614,11 @@ function HiddenView({
       ) : (
         <div className="flex flex-col gap-4">
           {items.map((d) => (
-            <article key={d._id} className={`${card} p-4`}>
+            <article
+              key={d._id}
+              className={`${card} p-4`}
+              style={{ borderLeftWidth: 6, borderLeftColor: "#202020" }}
+            >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <h3 className="font-Unbounded text-xl font-bold">{d.word}</h3>
                 <span className="rounded-sm border-2 border-mygray bg-mygray px-2 py-0.5 text-[11px] font-bold uppercase text-mywhite">
@@ -611,14 +632,15 @@ function HiddenView({
                   {d.exampleOfUsing}
                 </p>
               )}
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t-2 border-dashed border-zinc-300 pt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t-2 border-dashed border-zinc-300 pt-3">
                 {d.hiddenReason && <ReasonChip reason={d.hiddenReason} />}
                 <span className="text-xs text-myhovergray">
                   {d.username || "Anonim"} · {displayEmail(d.userEmail)}
                 </span>
               </div>
-              <div className="mt-3 flex flex-wrap justify-end gap-2">
-                <button className={btnOrange} onClick={() => onRestore(d)}>
+
+              <div className="mt-3 flex">
+                <button className={`${btnOrange} grow justify-center`} onClick={() => onRestore(d)}>
                   <Icon name="restore" size={14} /> Dezascunde
                 </button>
               </div>
