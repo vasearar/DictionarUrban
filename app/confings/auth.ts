@@ -82,30 +82,34 @@ export const authConfig: AuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      interface CustomUser {
-        name?: string | null;
-        email?: string | null;
-        image?: string | null;
-        id?: string;
-      }
-
-      const user = session.user as CustomUser;
-
       if (token) {
-        user.id = token.sub as string;
-        user.email = token.email as string;
+        session.user.id = token.sub as string;
+        session.user.email = token.email as string;
+        session.user.role = (token.role as string) || "user";
       }
-
-      session.user = user;
       return session;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
+      // La autentificare (sau la un refresh explicit) citim rolul din DB o
+      // singură dată și îl stocăm în token → navbar-ul și restul UI-ului îl
+      // au instant din sesiune, fără fetch pe fiecare render.
       if (user) {
         token.sub = user.id;
         token.email = user.email;
         token.name = user.name;
       }
+
+      if (user || trigger === "update" || token.role === undefined) {
+        try {
+          await connectDB();
+          const dbUser = await userModel.findOne({ email: token.email });
+          token.role = dbUser?.role || "user";
+        } catch {
+          token.role = token.role || "user";
+        }
+      }
+
       return token;
     },
   },

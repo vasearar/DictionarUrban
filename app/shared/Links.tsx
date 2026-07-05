@@ -2,7 +2,7 @@
   
   import React, { useEffect, useState } from 'react';
   import Link from 'next/link';
-  import { useSession, signOut } from 'next-auth/react';
+  import { useSession } from 'next-auth/react';
   import Image from 'next/image';
   import { usePathname } from 'next/navigation';
 
@@ -10,34 +10,12 @@
     const [isDark, setIsDark] = useState(false);
     const [isActive, setActive] = useState(false);
     const [html, setHtml] = useState<HTMLHtmlElement | null>(null);
-    const [userRole, setUserRole] = useState("user");
     const session = useSession();
     const pathname = usePathname();
+    // Rolul vine din sesiune (JWT), populat în callback-urile NextAuth — nu mai
+    // facem fetch pe fiecare render (fostul bug de performanță).
+    const userRole = session?.data?.user?.role ?? "user";
 
-    async function userExist() {
-      try {
-        const response = await fetch(`/api/contact?email=${session.data?.user?.email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const res = await response.json();
-        setUserRole(res.role);
-        if (response.status === 201) {
-          signOut({ callbackUrl: "/" });
-        }
-      } catch (error) {
-        console.log(
-          "There was a problem with the fetch operation: ", error
-        );
-      }
-    }
-    
-    if (session?.data){
-      userExist();
-    }
-    
     useEffect(() => {
       if (typeof window !== 'undefined') {
         const element = typeof window !== 'undefined' ? document.querySelector('html') : null;
@@ -100,15 +78,12 @@
             </span>
           </label> */}
           {(userRole === "moderator" || userRole === "admin") && (
-            <div className='hidden md:flex absolute top-0 right-0'>
-              <Link href="/moderator" className=''>Moderează</Link>
-              {(userRole === "admin") && (
-                <>
-                  <p>&nbsp;|&nbsp;</p>
-                  <Link href="/admin">Admin</Link> 
-                </>
-              )} 
-            </div>
+            <li>
+              <Link href="/panou" aria-label="Panou de moderare" className={`${pathname.includes("/panou") ? "current" : ""} flex items-center gap-2 text-mygray py-[10px] px-4 bg-mywhite hover:text-myhoverorange rounded-sm border-mygray border-2 relative rounded-br-none mydropshadow transition-all`}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E86842" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Panou
+              </Link>
+            </li>
           )}
         </ul>
         <div onClick={handleMenu} className='burger flex flex-col ml-6 gap-1 z-50 lg:hidden transition-all cursor-pointer'>
@@ -125,15 +100,10 @@
             </svg> 
           </Link>
           {(userRole === "moderator" || userRole === "admin") && (
-            <div className='flex md:hidden absolute left-0 top-[50px]'>
-              <Link href="/moderator" className=''>Moderează</Link>
-              {(userRole === "admin") && (
-                <>
-                  <p>&nbsp;|&nbsp;</p>
-                  <Link href="/admin">Admin</Link> 
-                </>
-              )} 
-            </div>
+            <Link onClick={handleMenu} className={`${pathname.includes("/panou") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/panou">
+              Panou moderare
+              <svg width="22" height="20" viewBox="0 0 24 24" fill="none" stroke="#202020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </Link>
           )}
            <Link onClick={handleMenu} className={`${pathname.includes("/define") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="define">
              Adaugă cuvânt
