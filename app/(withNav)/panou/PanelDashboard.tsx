@@ -55,6 +55,11 @@ const statusLabels: Record<Report["status"], string> = {
   resolved: "Rezolvat",
   dismissed: "Respins",
 };
+
+// Conturile anonime au email generat (anon_xxx@no-reply.localhost) — nu-l arătăm,
+// scriem „Anonim".
+const anonEmailRx = /^anon_[a-z0-9]+@no-reply\.localhost$/i;
+const displayEmail = (email?: string) => (email && anonEmailRx.test(email) ? "Anonim" : email || "—");
 const actionLabels: Record<string, string> = {
   ban: "Ban",
   unban: "Unban",
@@ -298,12 +303,14 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
   return (
     <section className="min-h-[calc(100vh-220px)] px-3 pb-20 font-Spacegrotesc text-mygray">
       {toast && (
-        <div
-          className={`fixed left-1/2 top-5 z-[60] -translate-x-1/2 border-2 border-mygray px-4 py-2 font-bold mydropshadow ${
-            toast.kind === "ok" ? "bg-myorange text-mywhite" : "bg-red-600 text-white"
-          }`}
-        >
-          {toast.text}
+        <div className="fixed left-1/2 top-5 z-[60] -translate-x-1/2">
+          <div
+            className={`relative border-2 border-mygray px-4 py-2 font-bold mydropshadow ${
+              toast.kind === "ok" ? "bg-myorange text-mywhite" : "bg-red-600 text-white"
+            }`}
+          >
+            {toast.text}
+          </div>
         </div>
       )}
 
@@ -529,12 +536,20 @@ function ReportsView({
               <p className="mt-2 text-[15px] leading-relaxed">
                 {r.definition?.definition || "Definiția nu mai există în baza de date."}
               </p>
+              {r.definition?.exampleOfUsing && (
+                <p className="mt-2 text-sm italic text-myhovergray">
+                  <span className="font-bold not-italic text-mygray">Exemplu: </span>
+                  {r.definition.exampleOfUsing}
+                </p>
+              )}
 
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t-2 border-dashed border-zinc-300 pt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t-2 border-dashed border-zinc-300 pt-3">
                 <ReasonChip reason={r.reason} />
                 {r.optional && <span className="text-xs italic text-myhovergray">„{r.optional}”</span>}
-                <span className="text-xs text-myhovergray">{r.userEmail} · {r.date}</span>
-                <span className="grow" />
+                <span className="text-xs text-myhovergray">{displayEmail(r.userEmail)} · {r.date}</span>
+              </div>
+
+              <div className="mt-3 flex flex-wrap justify-end gap-2">
                 <button className={btn} onClick={() => onEdit(r)} disabled={!r.definition}>
                   <Icon name="edit" size={14} /> Editează
                 </button>
@@ -590,12 +605,19 @@ function HiddenView({
                 </span>
               </div>
               <p className="mt-2 text-[15px] leading-relaxed">{d.definition}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t-2 border-dashed border-zinc-300 pt-3">
+              {d.exampleOfUsing && (
+                <p className="mt-2 text-sm italic text-myhovergray">
+                  <span className="font-bold not-italic text-mygray">Exemplu: </span>
+                  {d.exampleOfUsing}
+                </p>
+              )}
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t-2 border-dashed border-zinc-300 pt-3">
                 {d.hiddenReason && <ReasonChip reason={d.hiddenReason} />}
                 <span className="text-xs text-myhovergray">
-                  {d.username || "Anonim"} · {d.userEmail}
+                  {d.username || "Anonim"} · {displayEmail(d.userEmail)}
                 </span>
-                <span className="grow" />
+              </div>
+              <div className="mt-3 flex flex-wrap justify-end gap-2">
                 <button className={btnOrange} onClick={() => onRestore(d)}>
                   <Icon name="restore" size={14} /> Dezascunde
                 </button>
@@ -724,7 +746,7 @@ function AuditView({
               </span>
               <span className="text-sm font-bold">{log.actorEmail}</span>
               <span className="text-xs text-myhovergray">({log.actorRole})</span>
-              <span className="text-xs">→ {log.targetEmail || log.targetId}</span>
+              <span className="text-xs">→ {log.targetEmail ? displayEmail(log.targetEmail) : log.targetId}</span>
               <span className="grow" />
               <span className="text-xs text-myhovergray">{new Date(log.createdAt).toLocaleString("ro-RO")}</span>
             </article>

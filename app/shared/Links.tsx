@@ -79,7 +79,7 @@
           </label> */}
           {(userRole === "moderator" || userRole === "admin") && (
             <li>
-              <Link href="/panou" aria-label="Panou de moderare" className={`${pathname.includes("/panou") ? "current" : ""} flex items-center gap-2 text-mygray py-[10px] px-4 bg-mywhite hover:text-myhoverorange rounded-sm border-mygray border-2 relative rounded-br-none mydropshadow transition-all`}>
+              <Link href="/panou" aria-label="Panou de moderare" className={`${pathname.includes("/panou") ? "text-myorange" : "text-mygray"} flex items-center gap-2 py-[10px] px-4 bg-mywhite hover:text-myhoverorange rounded-sm border-mygray border-2 relative rounded-br-none mydropshadow transition-all`}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E86842" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Panou
               </Link>
@@ -100,7 +100,7 @@
             </svg> 
           </Link>
           {(userRole === "moderator" || userRole === "admin") && (
-            <Link onClick={handleMenu} className={`${pathname.includes("/panou") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/panou">
+            <Link onClick={handleMenu} className={`${pathname.includes("/panou") ? "text-myorange" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/panou">
               Panou moderare
               <svg width="22" height="20" viewBox="0 0 24 24" fill="none" stroke="#202020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </Link>
