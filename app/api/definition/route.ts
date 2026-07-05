@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
 }
 
 
-export async function DELETE(req: Request, res: Response) {
+export async function DELETE(req: Request) {
   try {
     await mongoose.connect(MONGO_URI);
     const aux = await req.json();

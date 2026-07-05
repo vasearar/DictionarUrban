@@ -6,7 +6,7 @@ import { authConfig } from "@/app/confings/auth";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
-export async function PATCH(req: Request, res: Response) {
+export async function PATCH(req: Request) {
   try{
     await mongoose.connect(MONGO_URI);
     const aux = await req.json();
