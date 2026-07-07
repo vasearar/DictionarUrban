@@ -216,7 +216,11 @@ const Autocomplete: React.FC<Props> = ({
         <ul
           id={listId}
           role="listbox"
-          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-y-auto rounded-sm border-2 border-mygray bg-mywhite mydropshadow font-Spacegrotesc text-mygray"
+          // Umbra e box-shadow real (nu pseudo-elementul .mydropshadow): lista are
+          // z-index (stacking context), care ar prinde umbra ::after z-[-1] în
+          // interior, desenând-o peste fundal. box-shadow dă același aspect brutalist
+          // fără să afecteze layout-ul/overflow-ul.
+          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-y-auto overflow-x-hidden rounded-sm border-2 border-mygray bg-mywhite shadow-[4px_4px_0_0_#202020] font-Spacegrotesc text-mygray"
         >
           {items.map((s, i) => (
             <li
