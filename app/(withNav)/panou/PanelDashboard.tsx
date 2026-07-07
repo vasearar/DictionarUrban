@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import Autocomplete, { Suggestion } from "@/app/shared/Autocomplete";
+import { matches } from "@/lib/search";
 
 /* ---------- tipuri ---------- */
 interface Definition {
@@ -296,6 +298,23 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
     });
   }, [users, userSearch, userRoleFilter]);
 
+  /* ---------- sugestii locale pentru autocomplete (din datele deja încărcate) ---------- */
+  const reportSuggestions = useMemo<Suggestion[]>(
+    () =>
+      reports
+        .filter((r) => r.definition?.word)
+        .map((r) => ({ _id: r._id, label: r.definition!.word, sub: r.reason, type: "word" })),
+    [reports]
+  );
+  const hiddenSuggestions = useMemo<Suggestion[]>(
+    () => hidden.map((d) => ({ _id: d._id, label: d.word, sub: d.username || d.userEmail, type: "word" })),
+    [hidden]
+  );
+  const userSuggestions = useMemo<Suggestion[]>(
+    () => users.map((u) => ({ _id: u._id, label: u.username || u.email, sub: u.email, type: "user" })),
+    [users]
+  );
+
   const auditActions = useMemo(() => Array.from(new Set(audit.map((a) => a.action))), [audit]);
   const shownAudit = useMemo(
     () => (auditFilter === "all" ? audit : audit.filter((a) => a.action === auditFilter)),
@@ -396,6 +415,7 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
             setFilter={setReportFilter}
             search={reportSearch}
             setSearch={setReportSearch}
+            suggestions={reportSuggestions}
             onEdit={setEditing}
             onHide={(r) => setConfirm({ text: `Ascunzi definiția „${r.definition?.word}”?`, run: () => hideDefinition(r) })}
             onDismiss={(r) => setReportStatus(r._id, "dismissed")}
@@ -406,6 +426,7 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
             items={shownHidden}
             search={hiddenSearch}
             setSearch={setHiddenSearch}
+            suggestions={hiddenSuggestions}
             onRestore={restore}
           />
         ) : tab === "users" ? (
@@ -413,6 +434,7 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
             users={shownUsers}
             search={userSearch}
             setSearch={setUserSearch}
+            suggestions={userSuggestions}
             roleFilter={userRoleFilter}
             setRoleFilter={setUserRoleFilter}
             onBan={(u) => setConfirm({ text: `${u.banned ? "Deblochezi" : "Blochezi"} contul ${u.email}?`, run: () => updateUser(u._id, u.banned ? "unban" : "ban") })}
@@ -453,19 +475,51 @@ function ReasonChip({ reason }: { reason: string }) {
   );
 }
 
-function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+// Căutare cu autocomplete pentru panou. Sursa de sugestii e LOCALĂ (datele sunt
+// deja încărcate în memorie), deci zero request-uri. Tastarea filtrează oricum
+// lista live prin useMemo — sugestiile sunt doar o scurtătură către o intrare.
+function SearchBox({
+  value,
+  onChange,
+  placeholder,
+  suggestions,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  suggestions: Suggestion[];
+}) {
+  const fetchLocal = (q: string) => {
+    const seen = new Set<string>();
+    const out: Suggestion[] = [];
+    for (const s of suggestions) {
+      if (out.length >= 8) break;
+      const key = s.label.toLowerCase();
+      if (seen.has(key)) continue;
+      if (matches(s.label, q) || matches(s.sub, q)) {
+        seen.add(key);
+        out.push(s);
+      }
+    }
+    return Promise.resolve(out);
+  };
   return (
-    <div className="flex flex-1 items-center gap-2 rounded-sm border-2 border-mygray bg-mywhite px-3 py-1.5">
-      <span className="text-myhovergray">
-        <Icon name="search" size={16} />
-      </span>
-      <input
-        className="w-full bg-transparent text-sm outline-none"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-      />
-    </div>
+    <Autocomplete
+      value={value}
+      onChange={onChange}
+      onSelect={(s) => onChange(s.label)}
+      fetchSuggestions={fetchLocal}
+      placeholder={placeholder}
+      ariaLabel={placeholder}
+      minLength={1}
+      className="relative flex flex-1 items-center gap-2 rounded-sm border-2 border-mygray bg-mywhite px-3 py-1.5"
+      inputClassName="w-full bg-transparent text-sm outline-none"
+      leading={
+        <span className="text-myhovergray">
+          <Icon name="search" size={16} />
+        </span>
+      }
+    />
   );
 }
 
@@ -489,6 +543,7 @@ function ReportsView({
   setFilter,
   search,
   setSearch,
+  suggestions,
   onEdit,
   onHide,
   onDismiss,
@@ -500,6 +555,7 @@ function ReportsView({
   setFilter: (f: ReportFilter) => void;
   search: string;
   setSearch: (s: string) => void;
+  suggestions: Suggestion[];
   onEdit: (r: Report) => void;
   onHide: (r: Report) => void;
   onDismiss: (r: Report) => void;
@@ -514,7 +570,7 @@ function ReportsView({
   return (
     <>
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center">
-        <SearchBox value={search} onChange={setSearch} placeholder="Caută cuvânt, motiv sau raportor…" />
+        <SearchBox value={search} onChange={setSearch} suggestions={suggestions} placeholder="Caută cuvânt, motiv sau raportor…" />
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <FilterChip key={f.id} active={filter === f.id} onClick={() => setFilter(f.id)}>
@@ -597,17 +653,19 @@ function HiddenView({
   items,
   search,
   setSearch,
+  suggestions,
   onRestore,
 }: {
   items: Definition[];
   search: string;
   setSearch: (s: string) => void;
+  suggestions: Suggestion[];
   onRestore: (d: Definition) => void;
 }) {
   return (
     <>
       <div className="mb-5">
-        <SearchBox value={search} onChange={setSearch} placeholder="Caută în definițiile ascunse…" />
+        <SearchBox value={search} onChange={setSearch} suggestions={suggestions} placeholder="Caută în definițiile ascunse…" />
       </div>
       {items.length === 0 ? (
         <EmptyState icon="eyeOff" text="Nicio definiție ascunsă." />
@@ -657,6 +715,7 @@ function UsersView({
   users,
   search,
   setSearch,
+  suggestions,
   roleFilter,
   setRoleFilter,
   onBan,
@@ -665,6 +724,7 @@ function UsersView({
   users: UserRow[];
   search: string;
   setSearch: (s: string) => void;
+  suggestions: Suggestion[];
   roleFilter: "all" | "user" | "moderator" | "admin" | "banned";
   setRoleFilter: (r: "all" | "user" | "moderator" | "admin" | "banned") => void;
   onBan: (u: UserRow) => void;
@@ -680,7 +740,7 @@ function UsersView({
   return (
     <>
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center">
-        <SearchBox value={search} onChange={setSearch} placeholder="Caută după poreclă sau email…" />
+        <SearchBox value={search} onChange={setSearch} suggestions={suggestions} placeholder="Caută după poreclă sau email…" />
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <FilterChip key={f.id} active={roleFilter === f.id} onClick={() => setRoleFilter(f.id)}>

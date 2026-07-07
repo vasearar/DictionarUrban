@@ -12,6 +12,7 @@ import {
   validateField,
   verifyCaptchaToken,
 } from "@/lib/antispam";
+import { mongoSearch, diacriticInsensitivePattern } from "@/lib/search";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -100,9 +101,7 @@ export async function GET(request: NextRequest) {
   const email = searchParams.get("email");
   const word = searchParams.get("word");
   const id = searchParams.get("id");
-  const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const usernameSearch = word?.startsWith("@") ? word.slice(1).trim() : "";
-  let query = {};
 
   if (email) {
     const session = await getServerSession(authConfig);
@@ -111,22 +110,42 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  if (id){
-    query = { _id: new ObjectId(id), hidden: { $ne: true } };
-  } else if (email && word) {
-    query = { userEmail: email, word: { $regex: `^${escapeRegex(word)}`, $options: "i" } };
-  } else if (email) {
-    query = { userEmail: email };
-  } else if (usernameSearch) {
-    query = { username: { $regex: `^${escapeRegex(usernameSearch)}$`, $options: "i" }, hidden: { $ne: true } };
-  } else if (word) {
-    query = { word: { $regex: `^${escapeRegex(word)}`, $options: "i" }, hidden: { $ne: true } };
-  } else {
-    query = { hidden: { $ne: true } };
-  }
-  
   try {
     await mongoose.connect(MONGO_URI);
+
+    // Căutare publică pe cuvânt: întâi prefix pe `word`; dacă NICIUN cuvânt nu se
+    // potrivește, abia atunci căutăm în definiție/exemplu. Insensibil la diacritice
+    // și majuscule (vezi lib/search.ts).
+    if (word && !usernameSearch && !email && !id) {
+      const byWord = await wordModel
+        .find({ word: mongoSearch(word, "prefix"), hidden: { $ne: true } })
+        .sort({ _id: -1 });
+      if (byWord.length > 0) {
+        return NextResponse.json(byWord);
+      }
+      const rx = mongoSearch(word, "contains");
+      const byText = await wordModel
+        .find({ $or: [{ definition: rx }, { exampleOfUsing: rx }], hidden: { $ne: true } })
+        .sort({ _id: -1 });
+      return NextResponse.json(byText);
+    }
+
+    let query: Record<string, unknown>;
+    if (id) {
+      query = { _id: new ObjectId(id), hidden: { $ne: true } };
+    } else if (email && word) {
+      query = { userEmail: email, word: mongoSearch(word, "prefix") };
+    } else if (email) {
+      query = { userEmail: email };
+    } else if (usernameSearch) {
+      query = {
+        username: { $regex: `^${diacriticInsensitivePattern(usernameSearch)}$`, $options: "i" },
+        hidden: { $ne: true },
+      };
+    } else {
+      query = { hidden: { $ne: true } };
+    }
+
     const data = await wordModel.find(query).sort({ _id: -1 });
     return NextResponse.json(data);
   } catch (error) {
