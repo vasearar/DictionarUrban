@@ -31,6 +31,25 @@ export async function sendVerificationEmail(email: string, token: string) {
   });
 }
 
+export async function sendEmailLinkConfirmation(email: string, token: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || "https://dexurban.md";
+  const confirmUrl = `${baseUrl}/confirmare-email?token=${token}`;
+
+  await transporter.sendMail({
+    from: FROM,
+    to: email,
+    subject: "Confirmă emailul contului - DexUrban",
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #202020;"><span style="color: #E86842;">Dex</span>Urban - Confirmă emailul</h2>
+        <p>Ai cerut să-ți păstrezi contul de musafir pe DexUrban cu această adresă de email. Apasă pe butonul de mai jos pentru a confirma:</p>
+        <a href="${confirmUrl}" style="display: inline-block; background: #E86842; color: #F1F1F1; padding: 12px 24px; text-decoration: none; border-radius: 2px; font-weight: bold;">Confirmă emailul</a>
+        <p style="margin-top: 24px; font-size: 13px; color: #666;">Link-ul expiră în 24 de ore. Dacă nu ai cerut asta, ignoră acest email.</p>
+      </div>
+    `,
+  });
+}
+
 export async function sendPasswordResetEmail(email: string, token: string) {
   const baseUrl = process.env.NEXTAUTH_URL || "https://dexurban.md";
   const resetUrl = `${baseUrl}/reset-password?token=${token}`;

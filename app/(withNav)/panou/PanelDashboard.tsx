@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Autocomplete, { Suggestion } from "@/app/shared/Autocomplete";
 import { matches } from "@/lib/search";
+import { anonEmailRx } from "@/lib/anon";
 
 /* ---------- tipuri ---------- */
 interface Definition {
@@ -60,7 +61,6 @@ const statusLabels: Record<Report["status"], string> = {
 
 // Conturile anonime au email generat (anon_xxx@no-reply.localhost) — nu-l arătăm,
 // scriem „Anonim".
-const anonEmailRx = /^anon_[a-z0-9]+@no-reply\.localhost$/i;
 const displayEmail = (email?: string) => (email && anonEmailRx.test(email) ? "Anonim" : email || "—");
 const actionLabels: Record<string, string> = {
   ban: "Ban",

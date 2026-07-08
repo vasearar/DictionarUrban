@@ -30,6 +30,11 @@ const nextConfig = {
           destination: '/recuperare-parola',
           permanent: true, // 301
         },
+        {
+          source: '/dashboard',
+          destination: '/contul-meu',
+          permanent: true, // 301
+        },
       ];
     },
 };

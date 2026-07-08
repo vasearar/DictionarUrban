@@ -3,13 +3,24 @@ import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import UsernameEdit from './UsernameEdit'
+import KeepAccountModal from './KeepAccountModal'
+import ChangePasswordModal from './ChangePasswordModal'
+import { isAnonEmail } from '@/lib/anon'
 
 const DashboardInfo = () => {
   const Session = useSession();
   const email = Session?.data?.user?.email;
+  const isAnon = isAnonEmail(email);
   const [username, setUsername] = useState("Obținem numele...");
   const [date, setDate] = useState("[Obținem data înregistrării...]");
+  const [hasPassword, setHasPassword] = useState(false);
+  // sesiune anonimă al cărei cont a fost deja migrat (în alt browser) —
+  // înregistrarea pe emailul anonim nu mai există, cerem reconectare
+  const [accountMigrated, setAccountMigrated] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [showUsernameEdit, setShowUsernameEdit] = useState(false);
+  const [showKeepAccount, setShowKeepAccount] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [data, setData] = useState<string | null>(null);
 
   async function getUsername() {
@@ -24,6 +35,11 @@ const DashboardInfo = () => {
 				const data = await response.json();
         setUsername(data.username);
         setDate(data.date);
+        setHasPassword(Boolean(data.hasPassword));
+      } else if (response.status == 201 && isAnon) {
+        // vizita normală trece mereu prin /verifying → /username, deci lipsa
+        // înregistrării înseamnă că a fost recheiată pe emailul real
+        setAccountMigrated(true);
       };
 		} catch (error) {
 			console.log(
@@ -32,9 +48,27 @@ const DashboardInfo = () => {
 		}
   }
 
+  async function getLinkStatus() {
+    try {
+      const response = await fetch(`/api/account/link-email`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.status == 200) {
+        const data = await response.json();
+        setPendingEmail(data.pending ? data.newEmail : null);
+      }
+    } catch (error) {
+      console.log("There was a problem with the fetch operation: ", error);
+    }
+  }
+
   useEffect(() => {
     if(email){
       getUsername();
+      if (isAnon) {
+        getLinkStatus();
+      }
     }
   }, [email]);
 
@@ -44,6 +78,22 @@ const DashboardInfo = () => {
       document.body.style.overflow = "hidden";
     }
     setData(email);
+  }
+
+  function openModal(setter: React.Dispatch<React.SetStateAction<boolean>>){
+    setter(true);
+    document.body.style.overflow = "hidden";
+  }
+
+  async function cancelLinkRequest(){
+    try {
+      const response = await fetch(`/api/account/link-email`, { method: "DELETE" });
+      if (response.ok) {
+        setPendingEmail(null);
+      }
+    } catch (error) {
+      console.log("There was a problem with the fetch operation: ", error);
+    }
   }
 
 
@@ -59,7 +109,7 @@ const DashboardInfo = () => {
  async function deleteAccount(){
     try {
       const res = await fetch(`/api/username`, {
-        cache: "no-store", 
+        cache: "no-store",
         method: "DELETE",
         headers: {"Content-Type": "application/json",},
         body: JSON.stringify({email: email}),
@@ -73,9 +123,27 @@ const DashboardInfo = () => {
     }
   }
 
+  // Contul a fost transferat pe noul email (confirmat în alt browser) —
+  // sesiunea anonimă veche nu mai corespunde niciunui cont.
+  if (isAnon && accountMigrated) {
+    return (
+      <div className='w-full flex justify-between my-12 font-Spacegrotesc'>
+        <div className='mx-auto flex flex-col items-start gap-4 w-full px-3 md:px-0 md:w-[71%]'>
+          <h1 className='font-bold text-3xl sm:text-4xl font-Spacegrotesc'>Contul tău a fost transferat pe noul email.</h1>
+          <p className='text-zinc-500'>Reconectează-te cu emailul și parola alese ca să-ți accesezi contul.</p>
+          <button className='flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white font-bold border-mygray transition-all bg-myorange hover:bg-myhoverorange mydropshadow' onClick={() => signOut({ callbackUrl: "/conectare" })}>
+            Reconectează-te
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       {showUsernameEdit && <UsernameEdit email={data} close={setShowUsernameEdit} />}
+      {showKeepAccount && <KeepAccountModal close={setShowKeepAccount} onPending={setPendingEmail} />}
+      {showChangePassword && <ChangePasswordModal close={setShowChangePassword} />}
       <div className='w-full flex justify-between my-12 font-Spacegrotesc'>
         <div className='mx-auto flex flex-col sm:flex-row justify-between w-full px-3 md:px-0 md:w-[71%]'>
           <div className=''>
@@ -99,9 +167,37 @@ const DashboardInfo = () => {
                 </span>
               </button>
             </div>
-            <button className='mt-5 sm:ml-auto flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white bg-red-600 transition-all hover:bg-red-400 font-bold border-mygray mydropshadow' onClick={() => confirmFunction()}>
-                Șterge cont
-            </button>
+            {isAnon && !pendingEmail && (
+              <button title="Adaugă un email pentru a păstra contul" className='mt-5 w-full justify-center flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white font-bold border-mygray transition-all bg-myorange hover:bg-myhoverorange mydropshadow' onClick={() => openModal(setShowKeepAccount)}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="#F1F1F1"/>
+                </svg>
+                Păstrează-ți contul
+              </button>
+            )}
+            {isAnon && pendingEmail && (
+              <div className='mt-5 border-2 border-mygray bg-mywhite p-3 relative mydropshadow'>
+                <p className='font-bold text-sm'>Verifică emailul ({pendingEmail})</p>
+                <p className='text-zinc-500 text-sm'>Apasă pe link-ul din email pentru a-ți păstra contul.</p>
+                <div className='flex gap-4 mt-2'>
+                  <button className='font-bold text-sm text-myorange hover:text-myhoverorange transition-all' onClick={() => openModal(setShowKeepAccount)}>Retrimite</button>
+                  <button className='font-bold text-sm text-mygray hover:text-myhovergray transition-all' onClick={cancelLinkRequest}>Anulează</button>
+                </div>
+              </div>
+            )}
+            <div className='flex mt-5 gap-6'>
+              {hasPassword && (
+                <button className='flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white font-bold border-mygray transition-all bg-myorange hover:bg-myhoverorange mydropshadow' onClick={() => openModal(setShowChangePassword)}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17ZM15 8H9V6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8Z" fill="#F1F1F1"/>
+                  </svg>
+                  Schimbă parola
+                </button>
+              )}
+              <button className='sm:ml-auto flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white bg-red-600 transition-all hover:bg-red-400 font-bold border-mygray mydropshadow' onClick={() => confirmFunction()}>
+                  Șterge cont
+              </button>
+            </div>
           </div>
         </div>
       </div>

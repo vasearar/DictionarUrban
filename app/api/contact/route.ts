@@ -68,7 +68,14 @@ export async function GET() {
     const user = await userModel.findOne({ email });
     if (user) {
       return NextResponse.json(
-        { username: user.username, date: user.date, role: user.role },
+        {
+          username: user.username,
+          date: user.date,
+          role: user.role,
+          // e contul propriu al apelantului — UI-ul decide dacă arată
+          // butonul „Schimbă parola" (conturile Google/anonime n-au parolă)
+          hasPassword: Boolean(user.password),
+        },
         { status: 200 }
       );
     }

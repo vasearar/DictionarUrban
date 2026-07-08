@@ -67,7 +67,7 @@
           <li>
           </li> 
           {session?.data ? 
-          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/dashboard">Contul meu</Link></li> : 
+          <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/contul-meu">Contul meu</Link></li> : 
           <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/conectare">Conectează-te </Link></li>}
           {/* <label className={`switch rounded-sm border-mygray border-2 mydropshadow`}>
             <input id='toggle' type="checkbox" onChange={handleToggle} />
@@ -93,7 +93,7 @@
         </div>
         <div className={`fixed bottom-0 left-0 w-full lg:hidden h-[calc(100%-8.8px)] md:h-[calc(100vh-5.5rem)] z-40 ${isActive ? "flex active" : "not-active"} menuself bg-mywhite`}>
           <div className={`relative flex flex-col justify-end w-full gap-y-8 h-full p-3 ${isActive ? "active" : ""}`}>
-           <Link onClick={handleMenu} className={`${["/define", "/dashboard"].includes(pathname) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
+           <Link onClick={handleMenu} className={`${["/define", "/contul-meu"].includes(pathname) ? "" : "current"} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/">
             Acasă
             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
@@ -112,7 +112,7 @@
              </svg>
            </Link>
            {session?.data ?
-            <Link onClick={handleMenu} className={`${pathname.includes("/dashboard") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="dashboard">
+            <Link onClick={handleMenu} className={`${pathname.includes("/contul-meu") ? "current" : ""} imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center`} href="/contul-meu">
              Contul meu
              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
              <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
