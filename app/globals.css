@@ -324,7 +324,7 @@ td{
 
 /* ---------- Banner cookie-uri (design importat) ---------- */
 /* Animație de intrare/ieșire: glisare verticală cu easing-ul burger-menu-ului. */
-.cookie-panel {
+.fursecuri-panel {
   position: fixed;
   left: 0;
   right: 0;
@@ -339,10 +339,10 @@ td{
   transition: transform 0.7s cubic-bezier(0.075, 0.82, 0.165, 1);
   will-change: transform;
 }
-.cookie-panel--open {
+.fursecuri-panel--open {
   transform: translateY(0);
 }
-.cookie-inner {
+.fursecuri-inner {
   max-width: 720px;
   margin: 0 auto;
   display: flex;
@@ -351,37 +351,37 @@ td{
   gap: 20px;
   justify-content: space-between;
 }
-.cookie-copy {
+.fursecuri-copy {
   flex: 1 1 280px;
   min-width: 240px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.cookie-heading-row {
+.fursecuri-heading-row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.cookie-icon {
+.fursecuri-icon {
   flex-shrink: 0;
   color: #E86842;
 }
-.cookie-heading {
+.fursecuri-heading {
   font-family: var(--font-unbounded), "Unbounded", sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 1.0;
   color: #202020;
 }
-.cookie-body {
+.fursecuri-body {
   margin: 0;
   font-size: 14px;
   line-height: 1.4;
   color: #202020;
   max-width: 52ch;
 }
-.cookie-actions {
+.fursecuri-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -422,10 +422,10 @@ td{
 .dx-btn--primary:hover { background: #EA8A6D; }
 
 @media (max-width: 640px) {
-  .cookie-inner { flex-direction: column; align-items: stretch; }
+  .fursecuri-inner { flex-direction: column; align-items: stretch; }
   /* În coloană, flex-basis 280px ar deveni ÎNĂLȚIME și ar lăsa spațiu alb;
      revenim la înălțime după conținut. */
-  .cookie-copy { flex: 0 0 auto; min-width: 0; }
-  .cookie-actions { flex-direction: column; }
+  .fursecuri-copy { flex: 0 0 auto; min-width: 0; }
+  .fursecuri-actions { flex-direction: column; }
   .dx-btn { flex: 1 1 auto; }
 }

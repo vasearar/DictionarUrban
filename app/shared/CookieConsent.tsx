@@ -119,23 +119,23 @@ export default function CookieConsent() {
     <div
       role="dialog"
       aria-label="Setări cookie-uri"
-      className={`cookie-panel ${open ? 'cookie-panel--open' : ''}`}
+      className={`fursecuri-panel ${open ? 'fursecuri-panel--open' : ''}`}
     >
-      <div className="cookie-inner">
-        <div className="cookie-copy">
-          <div className="cookie-heading-row">
-            <svg className="cookie-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <div className="fursecuri-inner">
+        <div className="fursecuri-copy">
+          <div className="fursecuri-heading-row">
+            <svg className="fursecuri-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path fillRule="evenodd" clipRule="evenodd" d="M6 0H14V2H16V4H18V6H20V14H18V16H16V18H14V20H6V18H4V16H2V14H0V6H2V4H4V2H6V0ZM6 4H8V6H6V4ZM12 6H14V8H12V6ZM4 10H6V12H4V10ZM10 12H12V14H10V12Z" fill="currentColor" />
             </svg>
-            <span className="cookie-heading">Fursecuri</span>
+            <span className="fursecuri-heading">Fursecuri</span>
           </div>
-          <p className="cookie-body">
+          <p className="fursecuri-body">
             Folosim cookie-uri esențiale ca site-ul să funcționeze și, doar cu acordul tău,
             cookie-uri de analiză ca să înțelegem ce cuvinte cauți. Alegi tu.{' '}
             <Link href="/politica-de-confidentialitate" className="underline">Detalii</Link>.
           </p>
         </div>
-        <div className="cookie-actions">
+        <div className="fursecuri-actions">
           <button className="dx-btn dx-btn--secondary" type="button" onClick={() => decide('reject')}>Refuz</button>
           <button className="dx-btn dx-btn--primary" type="button" onClick={() => decide('accept')}>Accept tot</button>
         </div>
