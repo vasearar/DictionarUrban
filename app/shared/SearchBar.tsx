@@ -23,7 +23,7 @@ const SearchBar = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get('query')?.toString() || "";
   const [term, setTerm] = useState(query);
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
 
   useEffect(() => {
     setTerm(query);
@@ -37,7 +37,9 @@ const SearchBar = () => {
       params.delete('query');
     }
     params.set('page', '1');
-    replace(`${pathname}?${params.toString()}`);
+    // Pagina de profil nu are rezultate de căutare — căutările pornesc de pe home.
+    const target = pathname.startsWith('/profil') ? '/' : pathname;
+    replace(`${target}?${params.toString()}`);
   }
 
   async function fetchSuggestions(q: string, signal: AbortSignal): Promise<Suggestion[]> {
@@ -48,10 +50,14 @@ const SearchBar = () => {
   }
 
   function onSelect(s: Suggestion) {
-    // Utilizator → caută definițiile lui (@nume). Cuvânt/definiție → caută cuvântul.
-    const value = s.type === 'user' ? `@${s.label}` : s.label;
-    setTerm(value);
-    runSearch(value);
+    // Utilizator → deschide profilul lui. Cuvânt/definiție → caută cuvântul.
+    if (s.type === 'user') {
+      setTerm(`@${s.label}`);
+      push(`/profil/${encodeURIComponent(s.label)}`);
+      return;
+    }
+    setTerm(s.label);
+    runSearch(s.label);
   }
 
   return (
