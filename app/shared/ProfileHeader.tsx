@@ -39,7 +39,7 @@ export default function ProfileHeader({ profile }: { profile: PublicProfile }) {
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="font-bold text-5xl font-Spacegrotesc break-all">{username}</h1>
           <span
-            className={`border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold ${
+            className={`relative border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold ${
               isStaff ? "text-myorange" : ""
             }`}
           >

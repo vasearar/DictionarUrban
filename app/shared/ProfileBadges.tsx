@@ -12,7 +12,7 @@ export default function ProfileBadges({ badges }: { badges: PublicBadge[] }) {
       {badges.map((badge) => (
         <span
           key={badge.id}
-          className="border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold flex items-center gap-1"
+          className="relative border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold flex items-center gap-1"
         >
           {badge.icon && <span aria-hidden="true">{badge.icon}</span>}
           {badge.label}
