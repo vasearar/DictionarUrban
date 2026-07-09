@@ -117,6 +117,10 @@ const DashboardInfo = () => {
       if (!res.ok) {
         throw new Error('Failed to delete');
       }
+      // Contul a fost șters din DB, dar sesiunea (JWT) e stateless și rămâne
+      // validă. O curățăm și trimitem userul acasă; altfel /contul-meu ar rămâne
+      // blocat pe „Obținem numele..." căutând un cont care nu mai există.
+      await signOut({ callbackUrl: "/" });
     } catch (error) {
       console.error('Deleting data error:', error);
       return [];

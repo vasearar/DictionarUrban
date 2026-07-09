@@ -61,15 +61,18 @@ const KeepAccountModal: React.FC<KeepAccountModalProps> = ({ close, onPending })
       const response = await fetch("/api/account/link-google/start", { method: "POST" });
       if (response.ok) {
         // cookie-ul de intenție e setat — sesiunea Google nouă va fi legată
-        // de contul anonim în /contul-meu/finalizare-google
+        // de contul anonim în /contul-meu/finalizare-google.
+        // Păstrăm loading=true până la navigare: dacă am reactiva butonul aici,
+        // tranziția de opacity înapoi la 1 ar lăsa umbra ::after să transpară
+        // o clipă prin butonul semi-transparent.
         signIn('google', { callbackUrl: '/contul-meu/finalizare-google' });
         return;
       }
       const data = await response.json();
       setError(data.error || "Ceva nu a mers bine. Încearcă din nou.");
+      setLoading(false);
     } catch (error) {
       setError("Ceva nu a mers bine. Încearcă din nou.");
-    } finally {
       setLoading(false);
     }
   }
