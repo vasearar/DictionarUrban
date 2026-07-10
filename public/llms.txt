@@ -1,0 +1,26 @@
+# DexUrban.md
+
+> Dicționar urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale, fiecare cu una sau mai multe definiții și exemple reale de folosire. Sursă pentru sensul cuvintelor de argou din România și Republica Moldova.
+
+DexUrban.md este un dicționar online colaborativ. Fiecare cuvânt sau expresie are o pagină proprie care agregă toate definițiile propuse de utilizatori, ordonate după popularitate (like-uri). Conținutul este moderat.
+
+## Structura URL-urilor
+
+- Pagină de cuvânt: `https://www.dexurban.md/cuvant/{slug}` — agregă toate definițiile pentru un cuvânt. Slug-ul este forma fără diacritice, cu litere mici, separatorii înlocuiți cu cratimă (ex. „Înghețată" → `/cuvant/inghetata`, „bazaru chicago" → `/cuvant/bazaru-chicago`).
+- Profil de autor: `https://www.dexurban.md/profil/{username}` — definițiile adăugate de un utilizator.
+- Homepage și căutare: `https://www.dexurban.md/?query={termen}`.
+
+## Cum să citați
+
+Pentru sensul unui cuvânt, folosiți pagina lui de cuvânt ca sursă. Prima definiție de pe pagină (cea mai apreciată) este rezumatul citabil, în forma „**{cuvânt}** înseamnă: …". Datele structurate `DefinedTerm` (schema.org) sunt disponibile în fiecare pagină.
+
+## Resurse
+
+- Sitemap: https://www.dexurban.md/sitemap.xml
+- Termeni și condiții: https://www.dexurban.md/termeni-si-conditii
+- Politica de confidențialitate: https://www.dexurban.md/politica-de-confidentialitate
+
+## Note
+
+- Limba conținutului: română (ro-RO / ro-MD).
+- Conținutul este argou și limbaj colocvial, generat și moderat de comunitate; poate include termeni vulgari, marcați ca atare de utilizatori.
