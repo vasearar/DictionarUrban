@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./shared/Providers";
 import CookieConsent from "./shared/CookieConsent";
 import { Unbounded, Space_Grotesk } from "next/font/google";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 // Fonturi self-hosted prin next/font: elimină requestul blocant către
 // fonts.googleapis.com și adaugă un fallback cu size-adjust (reduce CLS).
@@ -20,8 +21,29 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Dicționar urban",
-  description: "Dicționarul urban a limbii române",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "DexUrban.md — dicționar urban de argou și expresii românești",
+    template: `%s`,
+  },
+  description:
+    "Dicționarul urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale, cu exemple de folosire.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "ro_RO",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "DexUrban.md — dicționar urban de argou și expresii românești",
+    description:
+      "Dicționarul urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DexUrban.md — dicționar urban de argou și expresii românești",
+    description:
+      "Dicționarul urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale.",
+  },
   icons: {
     icon: '/favicon1.ico',
   },
@@ -29,7 +51,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
-    <html lang="en" className={`dark ${unbounded.variable} ${spaceGrotesk.variable}`}>
+    <html lang="ro" className={`dark ${unbounded.variable} ${spaceGrotesk.variable}`}>
       <body>
         <Providers>
           {children}

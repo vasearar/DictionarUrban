@@ -53,3 +53,15 @@ export function matches(haystack: string | undefined | null, needle: string): bo
   if (!haystack) return false;
   return stripDiacritics(haystack).includes(stripDiacritics(needle));
 }
+
+/**
+ * Slug canonic pentru URL-uri de cuvânt: litere mici, fără diacritice, orice run
+ * de caractere non-alfanumerice → cratimă. „Înghețată" → "inghetata",
+ * „De belea!" → "de-belea". Pur (fără DB) → sigur și pe client (ex. Share).
+ */
+export function slugify(word: string): string {
+  return stripDiacritics(word)
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

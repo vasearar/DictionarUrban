@@ -1,6 +1,0 @@
-User-agent: Googlebot
-Disallow: /contul-meu
-Disallow: /report
-
-User-agent: *
-Disallow:

@@ -1,5 +1,7 @@
 'use client'
 import React from 'react'
+import { slugify } from '@/lib/search'
+import { SITE_URL } from '@/lib/site'
 
 interface ShareProps{
   query: string;
@@ -7,10 +9,12 @@ interface ShareProps{
 
 const Share:React.FC<ShareProps> = ({query}) => {
 
+  // Distribuim URL-ul canonic al cuvântului (cu metadata + OG image proprie),
+  // nu vechiul /?query= care ducea la o pagină fără preview.
   const shareData = {
-    title: `${query}`,
-    text: ``,
-    url: `https://www.dexurban.md/?query=${query}`,
+    title: `${query} — ce înseamnă ${query}?`,
+    text: `Vezi ce înseamnă „${query}” pe DexUrban.md`,
+    url: `${SITE_URL}/cuvant/${slugify(query)}`,
   };
 
   async function handleClick(){

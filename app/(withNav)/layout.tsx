@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
 import "../globals.css";
 import NavBar from "../shared/NavBar";
 import Footer from "../shared/Footer";
 import { Suspense } from 'react';
 
-export const metadata: Metadata = {
-  title: "Dicționar urban",
-  description: "Dicționarul urban a limbii române",
-};
+// Fără metadata proprie aici: lăsăm default-ul din root layout (title/OG/twitter
+// corecte) să se aplice homepage-ului; paginile specifice (cuvânt, profil) își
+// suprascriu propria metadata prin generateMetadata.
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
