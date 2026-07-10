@@ -142,7 +142,7 @@ export default async function Page({ params }: Props) {
             </Link>
           </li>
           <li aria-hidden="true">/</li>
-          <li className="font-bold text-mygray dark:text-mywhite" aria-current="page">
+          <li className="font-bold text-mygray" aria-current="page">
             {word}
           </li>
         </ol>
@@ -160,8 +160,8 @@ export default async function Page({ params }: Props) {
         </p>
       </article>
 
-      <section className="mx-auto w-full md:w-[720px]">
-        <h2 className="text-xl md:text-2xl font-bold text-mygray dark:text-mywhite mb-4 px-1">
+      <section className="mx-auto w-full md:w-[720px] font-Spacegrotesc">
+        <h2 className="text-xl md:text-2xl font-bold text-mygray mb-4 px-1">
           Ce înseamnă {word}?
         </h2>
 
