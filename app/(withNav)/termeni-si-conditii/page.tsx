@@ -16,7 +16,7 @@ const LAST_UPDATED = '3 iulie 2026'                                       // ⚠
 export const metadata: Metadata = {
   title: 'Termeni și condiții | DexUrban.md',
   description:
-    'Termenii și condițiile de utilizare a dexurban.md — dicționar satiric de argou. Caracter umoristic, responsabilitatea utilizatorului, mecanism de sesizare și legea aplicabilă (Republica Moldova).',
+    'Termenii și condițiile de utilizare a dexurban.md - dicționar satiric de argou. Caracter umoristic, responsabilitatea utilizatorului, mecanism de sesizare și legea aplicabilă (Republica Moldova).',
   alternates: {
     canonical: 'https://www.dexurban.md/termeni-si-conditii',
   },
@@ -68,7 +68,7 @@ const Tos = () => {
           <li>conține malware, spam ori este trimis prin mijloace automate neautorizate („boți”);</li>
           <li>uzurpă identitatea unei persoane ori sugerează fals o afiliere cu o organizație.</li>
         </ul>
-        <p className='font-Spacegrotesc'>Satira vizează, de regulă, fenomene sociale, cuvinte și tipare de limbaj — nu persoane private concrete. Umorul nu justifică hărțuirea sau lezarea demnității unei persoane reale.</p>
+        <p className='font-Spacegrotesc'>Satira vizează, de regulă, fenomene sociale, cuvinte și tipare de limbaj - nu persoane private concrete. Umorul nu justifică hărțuirea sau lezarea demnității unei persoane reale.</p>
       </section>
 
       <section>
@@ -77,7 +77,7 @@ const Tos = () => {
         <ul className='list-disc font-Spacegrotesc ml-5 mb-5 mt-3'>
           <li>operării, promovării și îmbunătățirii Platformei și a serviciilor asociate;</li>
           <li>afișării definițiilor pe site, în rețelele sociale ale proiectului și în materiale de promovare;</li>
-          <li>utilizării definițiilor și expresiilor pe <b>produse din magazinul propriu (merch)</b> — de exemplu tricouri, căni, autocolante și alte produse.</li>
+          <li>utilizării definițiilor și expresiilor pe <b>produse din magazinul propriu (merch)</b> - de exemplu tricouri, căni, autocolante și alte produse.</li>
         </ul>
         <p className='font-Spacegrotesc'>Licența rămâne valabilă și după eliminarea Conținutului, în măsura necesară pentru copiile deja distribuite sau integrate în produse ori materiale realizate anterior. Nu sunteți îndreptățit la nicio compensație pentru utilizarea Conținutului în condițiile de mai sus.</p>
       </section>
