@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!entry) {
     return {
-      title: "Cuvânt negăsit — DexUrban.md",
+      title: "Cuvânt negăsit - DexUrban.md",
       robots: { index: false, follow: true },
     };
   }
@@ -52,11 +52,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 
   return {
-    title: `${word} — ce înseamnă ${word} | ${SITE_NAME}`,
+    title: `${word} - ce înseamnă ${word} | ${SITE_NAME}`,
     description,
     alternates: { canonical },
     openGraph: {
-      title: `${word} — ce înseamnă ${word}?`,
+      title: `${word} - ce înseamnă ${word}?`,
       description,
       url: canonical,
       siteName: SITE_NAME,
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${word} — ce înseamnă ${word}?`,
+      title: `${word} - ce înseamnă ${word}?`,
       description,
     },
   };
@@ -99,7 +99,7 @@ export default async function Page({ params }: Props) {
         url: canonical,
         inDefinedTermSet: {
           "@type": "DefinedTermSet",
-          name: `${SITE_NAME} — dicționar urban de argou și expresii românești`,
+          name: `${SITE_NAME} - dicționar urban de argou și expresii românești`,
           url: SITE_URL,
         },
       },

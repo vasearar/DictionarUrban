@@ -12,7 +12,7 @@ const Share:React.FC<ShareProps> = ({query}) => {
   // Distribuim URL-ul canonic al cuvântului (cu metadata + OG image proprie),
   // nu vechiul /?query= care ducea la o pagină fără preview.
   const shareData = {
-    title: `${query} — ce înseamnă ${query}?`,
+    title: `${query} - ce înseamnă ${query}?`,
     text: `Vezi ce înseamnă „${query}” pe DexUrban.md`,
     url: `${SITE_URL}/cuvant/${slugify(query)}`,
   };

@@ -23,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "DexUrban.md — dicționar urban de argou și expresii românești",
+    default: "DexUrban.md - dicționar urban de argou și expresii românești",
     template: `%s`,
   },
   description:
@@ -34,13 +34,13 @@ export const metadata: Metadata = {
     locale: "ro_RO",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: "DexUrban.md — dicționar urban de argou și expresii românești",
+    title: "DexUrban.md - dicționar urban de argou și expresii românești",
     description:
       "Dicționarul urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DexUrban.md — dicționar urban de argou și expresii românești",
+    title: "DexUrban.md - dicționar urban de argou și expresii românești",
     description:
       "Dicționarul urban al limbii române, creat de utilizatori: argou, jargoane și expresii neconvenționale.",
   },

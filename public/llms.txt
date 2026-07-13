@@ -6,8 +6,8 @@ DexUrban.md este un dicționar online colaborativ. Fiecare cuvânt sau expresie 
 
 ## Structura URL-urilor
 
-- Pagină de cuvânt: `https://www.dexurban.md/cuvant/{slug}` — agregă toate definițiile pentru un cuvânt. Slug-ul este forma fără diacritice, cu litere mici, separatorii înlocuiți cu cratimă (ex. „Înghețată" → `/cuvant/inghetata`, „bazaru chicago" → `/cuvant/bazaru-chicago`).
-- Profil de autor: `https://www.dexurban.md/profil/{username}` — definițiile adăugate de un utilizator.
+- Pagină de cuvânt: `https://www.dexurban.md/cuvant/{slug}` - agregă toate definițiile pentru un cuvânt. Slug-ul este forma fără diacritice, cu litere mici, separatorii înlocuiți cu cratimă (ex. „Înghețată" → `/cuvant/inghetata`, „bazaru chicago" → `/cuvant/bazaru-chicago`).
+- Profil de autor: `https://www.dexurban.md/profil/{username}` - definițiile adăugate de un utilizator.
 - Homepage și căutare: `https://www.dexurban.md/?query={termen}`.
 
 ## Cum să citați

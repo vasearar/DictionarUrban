@@ -4,12 +4,12 @@ import { renderOgImage, ogSize, ogContentType } from "@/lib/og";
 // proprie). Statică, fără DB → poate fi cache-uită agresiv.
 export const size = ogSize;
 export const contentType = ogContentType;
-export const alt = "DexUrban.md — dicționar urban al limbii române";
+export const alt = "DexUrban.md - dicționar urban al limbii române";
 
 export default function Image() {
   return renderOgImage({
     title: "DexUrban.md",
     subtitle:
-      "Dicționarul urban al limbii române — argou, jargoane și expresii, cu exemple.",
+      "Dicționarul urban al limbii române - argou, jargoane și expresii, cu exemple.",
   });
 }

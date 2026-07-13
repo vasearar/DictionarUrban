@@ -26,10 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = await resolveName(params);
   const profile = name ? await getPublicProfile(name) : null;
   if (!profile) {
-    return { title: "Profil negăsit — Dicționar urban" };
+    return { title: "Profil negăsit - Dicționar urban" };
   }
   return {
-    title: `Profilul lui ${profile.username} — Dicționar urban`,
+    title: `Profilul lui ${profile.username} - Dicționar urban`,
     description: `Definițiile adăugate de ${profile.username} pe dexurban.md`,
   };
 }
