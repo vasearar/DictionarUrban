@@ -126,7 +126,7 @@ const DashDef = () => {
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
                 <div className='flex justify-between items-center mb-3'>
-                  <h1 className="text-2xl md:text-3xl text-myorange font-bold break-all">{word.word}</h1>
+                  <h1 className="text-2xl md:text-3xl text-myorange font-bold break-words">{word.word}</h1>
                   <div className='z-10 flex gap-5'>
                     <button className='px-4 tracking-wide relative h-fit py-2 text-mygray hover:text-myhovergray transition-all bg-mywhite font-bold border-mygray mydropshadow border-2' onClick={() => displayEdit(word)}>
                       <span className='md:block hidden'>Editează</span>

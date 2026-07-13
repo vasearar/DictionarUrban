@@ -61,7 +61,7 @@ export default async function Definition({query, page, popularity}: { query: str
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
                 <div className="flex justify-between relative w-full mb-2 items-center">
-                  <h2 className="text-2xl md:text-3xl break-all text-myorange font-bold">
+                  <h2 className="text-2xl md:text-3xl break-words text-myorange font-bold">
                     <Link href={`/cuvant/${slugify(word.word)}`} className="hover:underline">
                       {word.word}
                     </Link>

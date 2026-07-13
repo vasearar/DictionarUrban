@@ -149,7 +149,7 @@ export default async function Page({ params }: Props) {
       </nav>
 
       <article className="mx-auto mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
-        <h1 className="text-2xl md:text-4xl break-all text-myorange font-bold mb-4">
+        <h1 className="text-2xl md:text-4xl break-words text-myorange font-bold mb-4">
           {word}
         </h1>
 
