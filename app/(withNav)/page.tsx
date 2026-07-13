@@ -2,7 +2,6 @@ import React from 'react'
 import { redirect } from 'next/navigation';
 import Definition from '../shared/Definition';
 import TopSection from '../shared/TopSection';
-import RandomWord from '../shared/RandomWord';
 import { getPublicProfile } from '@/lib/profile';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 
@@ -67,8 +66,6 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{
         />
       )}
       <TopSection />
-      {/* Butonul random doar pe homepage-ul canonic (fără căutare activă). */}
-      {!query && <RandomWord />}
       <Definition query={query} page={page} popularity={popularity}/>
     </>
   );
