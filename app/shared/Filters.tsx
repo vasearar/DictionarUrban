@@ -74,11 +74,19 @@ const Filters = () => {
           className="dice-icon shrink-0"
         >
           <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="2.5" />
-          <circle cx="8.5" cy="8.5" r="1.6" fill="currentColor" />
-          <circle cx="15.5" cy="8.5" r="1.6" fill="currentColor" />
-          <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-          <circle cx="8.5" cy="15.5" r="1.6" fill="currentColor" />
-          <circle cx="15.5" cy="15.5" r="1.6" fill="currentColor" />
+          {/* Două fețe suprapuse: 1 punct (repaus) și 6 puncte. La rostogolire,
+              CSS-ul le comută în plină rotație — zarul „cade" pe 6. */}
+          <g className="dice-face-1">
+            <circle cx="12" cy="12" r="2" fill="currentColor" />
+          </g>
+          <g className="dice-face-6">
+            <circle cx="8.5" cy="7.5" r="1.6" fill="currentColor" />
+            <circle cx="15.5" cy="7.5" r="1.6" fill="currentColor" />
+            <circle cx="8.5" cy="12" r="1.6" fill="currentColor" />
+            <circle cx="15.5" cy="12" r="1.6" fill="currentColor" />
+            <circle cx="8.5" cy="16.5" r="1.6" fill="currentColor" />
+            <circle cx="15.5" cy="16.5" r="1.6" fill="currentColor" />
+          </g>
         </svg>
         {/* Eticheta stă într-un SINGUR span: textul liber + span-ul „un cuvânt"
             ar deveni items flex separate și ar primi gap-2 PE LÂNGĂ &nbsp;

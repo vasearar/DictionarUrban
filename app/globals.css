@@ -107,9 +107,42 @@ button{
   animation: dice-roll 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+/* Fețele zarului: 1 punct în repaus, 6 după rostogolire. Comutarea e un salt
+   de opacitate la 12% din durată — cu curba de mai sus, rotația e atunci la
+   ~230° și încă rapidă, deci schimbarea feței se pierde în mișcare.
+   `forwards` ține 6-le afișat cât durează hover-ul; la ieșire, animația se
+   dezaplică și zarul revine singur la 1. */
+.dice-face-6 {
+  opacity: 0;
+}
+
+@keyframes dice-face-hide {
+  0%, 12%  { opacity: 1; }
+  13%, 100% { opacity: 0; }
+}
+
+@keyframes dice-face-show {
+  0%, 12%  { opacity: 0; }
+  13%, 100% { opacity: 1; }
+}
+
+.dice-btn:hover .dice-face-1,
+.dice-btn:active .dice-face-1 {
+  animation: dice-face-hide 1.2s linear forwards;
+}
+
+.dice-btn:hover .dice-face-6,
+.dice-btn:active .dice-face-6 {
+  animation: dice-face-show 1.2s linear forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dice-btn:hover .dice-icon,
-  .dice-btn:active .dice-icon {
+  .dice-btn:active .dice-icon,
+  .dice-btn:hover .dice-face-1,
+  .dice-btn:active .dice-face-1,
+  .dice-btn:hover .dice-face-6,
+  .dice-btn:active .dice-face-6 {
     animation: none;
   }
 }
