@@ -101,6 +101,23 @@ export const getWordEntry = cache(
   }
 );
 
+/**
+ * Slug-ul unui cuvânt ales aleator dintre definițiile vizibile.
+ * Folosește `$sample` (Mongo) ca să nu tragă tot colecția în memorie — un
+ * singur document random direct din DB. Alimentează butonul „Trage la sorți".
+ */
+export async function getRandomWordSlug(): Promise<string | null> {
+  await connectDB();
+  const rows = await wordModel.aggregate<{ word?: string }>([
+    { $match: { hidden: { $ne: true }, word: { $type: "string", $ne: "" } } },
+    { $sample: { size: 1 } },
+    { $project: { word: 1 } },
+  ]);
+  const word = rows?.[0]?.word;
+  if (!word) return null;
+  return slugify(word) || null;
+}
+
 interface SitemapRow {
   word?: string;
   date?: string;
