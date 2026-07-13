@@ -55,14 +55,32 @@ const Filters = () => {
       </button>
 
       {/* Buton „Trage la sorți": ancoră normală → navigare completă care urmează
-          redirectul 307 de la /aleator → /cuvant/[slug] random. `relative` e
-          obligatoriu ca umbra ::after (mydropshadow) să se raporteze la buton,
-          nu la tot viewport-ul. */}
+          redirectul 307 de la /aleator → /cuvant/[slug] random. Stil SECUNDAR
+          (alb + bordură + umbră dură, ca like-ul și „M-am răzgândit") ca să nu
+          concureze cu CTA-ul orange „Definește un cuvânt" din hero — un singur
+          buton primar pe pagină. `relative` e obligatoriu ca umbra ::after
+          (mydropshadow) să se raporteze la buton, nu la tot viewport-ul. */}
       <a
         href="/aleator"
-        className="relative shrink-0 bg-myorange hover:bg-myhoverorange text-mywhite font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-colors"
+        title="Nu știi ce cauți? Normal. Apasă."
+        className="relative shrink-0 flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all"
       >
-        Trage la sorți un cuvânt
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          className="shrink-0"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="2.5" />
+          <circle cx="8.5" cy="8.5" r="1.6" fill="currentColor" />
+          <circle cx="15.5" cy="8.5" r="1.6" fill="currentColor" />
+          <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+          <circle cx="8.5" cy="15.5" r="1.6" fill="currentColor" />
+          <circle cx="15.5" cy="15.5" r="1.6" fill="currentColor" />
+        </svg>
+        Trage la sorți<span className="hidden im:inline">&nbsp;un cuvânt</span>
       </a>
     </div>
   );

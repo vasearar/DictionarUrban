@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { connectDB } from "@/lib/db";
-import { diacriticInsensitivePattern, slugify } from "@/lib/search";
+import { slugify } from "@/lib/search";
 import wordModel from "@/models/wordModel";
 
 // Re-export pentru compatibilitate: slugify locuiește acum în lib/search (pur,
@@ -45,6 +45,18 @@ function toIso(date: string | undefined): string {
   return Number.isNaN(t) ? "" : new Date(t).toISOString();
 }
 
+// Literele latine accentuate (Latin-1 Supplement → Latin Extended Additional).
+// slugify reduce oricare din ele la litera de bază, deci lookup-ul trebuie să
+// accepte, pentru fiecare literă din slug, și orice variantă accentuată.
+// Caractere LITERALE (nu escape-uri \uXXXX): regex-ul e evaluat de Mongo cu
+// PCRE2, care nu suportă sintaxa \u — escape-urile ar arunca Location51091.
+const ACCENTED = "À-ɏḀ-ỿ";
+
+/** Segment de slug ([a-z0-9]+) → pattern care tolerează litere accentuate. */
+function slugSegmentPattern(part: string): string {
+  return part.replace(/[a-z]/g, (ch) => `[${ch}${ACCENTED}]`);
+}
+
 /**
  * Toate definițiile vizibile pentru un slug, sortate după like-uri (desc).
  * Construiește un regex ancorat, insensibil la diacritice/majuscule, pornind de
@@ -59,13 +71,18 @@ export const getWordEntry = cache(
 
     await connectDB();
 
-    // Fiecare segment din slug → pattern diacritic-insensibil; separatorul poate
-    // fi orice caracter non-alfanumeric din cuvântul original (spațiu, „-", „.").
+    // Fiecare segment din slug → pattern per-literă: litera de bază SAU orice
+    // literă latină accentuată (acoperă ă/â/î/ș/ț, dar și è, ǎ etc. venite din
+    // typos/copy-paste — slugify le reduce pe toate la litera de bază).
+    // Separatorul dintre segmente e orice run non-alfanumeric (spațiu, „-", „,").
+    // Marginile tolerează punctuație pe care slugify o taie („cine?", „belea!") —
+    // altfel acele cuvinte ar fi 404 deși au slug valid. Falsele pozitive sunt
+    // eliminate de filtrul exact slugify(word) === clean de mai jos.
     const body = clean
       .split("-")
-      .map((part) => diacriticInsensitivePattern(part))
+      .map((part) => slugSegmentPattern(part))
       .join("[^a-zA-Z0-9]+");
-    const rx = new RegExp(`^${body}$`, "i");
+    const rx = new RegExp(`^[^a-zA-Z0-9]*${body}[^a-zA-Z0-9]*$`, "i");
 
     const rows = await wordModel
       .find({ word: rx, hidden: { $ne: true } })
