@@ -63,7 +63,7 @@ const Filters = () => {
       <a
         href="/aleator"
         title="Nu știi ce cauți? Normal. Apasă."
-        className="relative shrink-0 flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all"
+        className="dice-btn relative shrink-0 flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all"
       >
         <svg
           width="18"
@@ -71,7 +71,7 @@ const Filters = () => {
           viewBox="0 0 24 24"
           fill="none"
           aria-hidden="true"
-          className="shrink-0"
+          className="dice-icon shrink-0"
         >
           <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="2.5" />
           <circle cx="8.5" cy="8.5" r="1.6" fill="currentColor" />
@@ -80,7 +80,12 @@ const Filters = () => {
           <circle cx="8.5" cy="15.5" r="1.6" fill="currentColor" />
           <circle cx="15.5" cy="15.5" r="1.6" fill="currentColor" />
         </svg>
-        Trage la sorți<span className="hidden im:inline">&nbsp;un cuvânt</span>
+        {/* Eticheta stă într-un SINGUR span: textul liber + span-ul „un cuvânt"
+            ar deveni items flex separate și ar primi gap-2 PE LÂNGĂ &nbsp;
+            (spațiu dublu vizibil). */}
+        <span>
+          Trage la sorți<span className="hidden im:inline">&nbsp;un cuvânt</span>
+        </span>
       </a>
     </div>
   );

@@ -94,6 +94,25 @@ button{
   display: none;
 }
 
+/* Zarul din butonul „Trage la sorți" se rostogolește la hover/tap. */
+@keyframes dice-roll {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.dice-btn:hover .dice-icon,
+.dice-btn:active .dice-icon {
+  animation: dice-roll 0.5s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-btn:hover .dice-icon,
+  .dice-btn:active .dice-icon {
+    animation: none;
+  }
+}
+
 .switch {
   position: relative;
   display: inline-block;
