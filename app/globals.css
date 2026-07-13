@@ -94,16 +94,17 @@ button{
   display: none;
 }
 
-/* Zarul din butonul „Trage la sorți" se rostogolește la hover/tap. */
+/* Zarul din butonul „Trage la sorți" se rostogolește la hover/tap.
+   Un singur segment de keyframe: curba ease-out agresivă a site-ului se aplică
+   per segment, iar un keyframe intermediar ar produce o sacadare la mijloc. */
 @keyframes dice-roll {
-  0%   { transform: rotate(0deg) scale(1); }
-  50%  { transform: rotate(180deg) scale(1.2); }
-  100% { transform: rotate(360deg) scale(1); }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .dice-btn:hover .dice-icon,
 .dice-btn:active .dice-icon {
-  animation: dice-roll 0.5s ease-in-out;
+  animation: dice-roll 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
