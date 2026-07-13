@@ -93,7 +93,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
   return (
     <div className='flex justify-between mt-6'>
       <div className='z-10'>
-        <button onClick={() => addLike()} className={`${isliked ? "bg-myorange text-mywhite" : "bg-mywhite"} border-2 border-mygray md:hover:bg-myhoverorange rounded-sm py-2 px-5 flex gap-1 items-center relative mydropshadow`}>
+        <button onClick={() => addLike()} title="Dă like dacă te-ai simțit vizat." className={`${isliked ? "bg-myorange text-mywhite" : "bg-mywhite"} border-2 border-mygray md:hover:bg-myhoverorange rounded-sm py-2 px-5 flex gap-1 items-center relative mydropshadow`}>
           <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7.5 0.5H4.5V2.5H2.5V4.5H0.5V9.5H2.5V11.5H4.5V13.5H6.5V15.5H8.5V17.5H10.5V19.5H11.5V17.5H13.5V15.5H15.5V13.5H17.5V11.5H19.5V9.5H21.5V4.5H19.5V2.5H17.5V0.5H14.5V2.5H12.5V4.5H9.5V2.5H7.5V0.5Z" fill={isliked ? "#F1F1F1" : "#E86842"} stroke={isliked ? "#F1F1F1" : "#E86842"}/>
           </svg>
@@ -103,7 +103,7 @@ const Actions:React.FC<ActionProps> = ({id, likes}) => {
         </button>
       </div>  
       <div className='z-10'>
-        <Link href={`/report/?id=${id}`} className='border-2 border-mygray flex bg-mywhite md:hover:bg-myhoverorange relative rounded-sm py-2 px-5 mydropshadow'
+        <Link href={`/report/?id=${id}`} title="Te-a ofensat?" className='border-2 border-mygray flex bg-mywhite md:hover:bg-myhoverorange relative rounded-sm py-2 px-5 mydropshadow'
         aria-label='report'>        
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.71429 18.8571V17.1429H0V1.71429H1.71429V0H22.2857V1.71429H24V17.1429H22.2857V18.8571H12H10.2857V20.5714H8.57143V22.2857H6.85714V24H5.14286V22.2857V20.5714V18.8571H1.71429Z" fill="#E86842"/>
