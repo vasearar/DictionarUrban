@@ -110,18 +110,25 @@ button{
   transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+/* `--rolling` e pus din JS la touchstart. Pe touch nu există :hover, iar :active
+   moare când ridici degetul (după 50–150ms), deci rostogolirea era retezată la
+   mijloc și pagina naviga cu zarul înghețat între fețe. Clasa ține starea cât
+   ține rostogolirea, indiferent de cât a durat atingerea. */
 .dice-btn:hover .dice-icon,
-.dice-btn:active .dice-icon {
+.dice-btn:active .dice-icon,
+.dice-btn--rolling .dice-icon {
   transform: rotate(360deg);
 }
 
 /* Fețele zarului: 3 puncte în repaus, 6 la capătul rostogolirii. Comutarea e
-   un salt de opacitate (durată 0) cu delay de 150ms (~12% din rostogolire) —
-   rotația e atunci rapidă, deci schimbarea feței se pierde în mișcare, în
-   ambele sensuri. */
+   un salt de opacitate cu delay de 150ms (~12% din rostogolire) — rotația e
+   atunci rapidă, deci schimbarea feței se pierde în mișcare, în ambele sensuri.
+   Durata e 1ms, nu 0s: Safari tratează tranzițiile cu durată zero ca inexistente
+   și le ignoră delay-ul. Pentru ochi e tot un salt, dar respectă specificația
+   peste tot. */
 .dice-face-3,
 .dice-face-6 {
-  transition: opacity 0s linear 0.15s;
+  transition: opacity 1ms linear 150ms;
 }
 
 .dice-face-6 {
@@ -129,26 +136,15 @@ button{
 }
 
 .dice-btn:hover .dice-face-3,
-.dice-btn:active .dice-face-3 {
+.dice-btn:active .dice-face-3,
+.dice-btn--rolling .dice-face-3 {
   opacity: 0;
 }
 
 .dice-btn:hover .dice-face-6,
-.dice-btn:active .dice-face-6 {
+.dice-btn:active .dice-face-6,
+.dice-btn--rolling .dice-face-6 {
   opacity: 1;
-}
-
-/* Pe touch (iPhone/Android) nu există :hover — rostogolirea vine din :active,
-   care ține DOAR cât degetul e pe ecran. Un tap durează 50–150ms, adică sub
-   delay-ul de 150ms de mai sus, așa că fața nu apuca niciodată să se schimbe:
-   se vedea rotația (pornește la 0ms), dar zarul rămânea pe 3.
-   Aici comutăm fără delay, cu un fade scurt care se pierde în rotație (curba e
-   ease-out, deci mișcarea e oricum cea mai rapidă chiar la început). */
-@media (hover: none) {
-  .dice-face-3,
-  .dice-face-6 {
-    transition: opacity 0.15s linear;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

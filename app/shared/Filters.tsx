@@ -13,6 +13,24 @@ const Filters = ({ showRandom = true }: { showRandom?: boolean }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams()
 
+  // Rostogolirea zarului pe touch. Pe desktop e pur CSS (:hover), dar pe telefon
+  // nu există hover, iar :active ține doar cât degetul pe ecran — mai puțin
+  // decât rostogolirea, deci zarul rămânea înghețat între fețe în timp ce pagina
+  // naviga. Clasa pusă la touchstart lasă mișcarea să se termine.
+  const [rolling, setRolling] = useState(false);
+  const rollTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  function rollDice() {
+    setRolling(true);
+    clearTimeout(rollTimer.current);
+    // De obicei navigăm înainte să expire; contează dacă atingerea n-a fost un
+    // tap (ai derulat de pe buton) — atunci zarul se așază la loc, ca la
+    // ieșirea din hover pe desktop.
+    rollTimer.current = setTimeout(() => setRolling(false), 1200);
+  }
+
+  useEffect(() => () => clearTimeout(rollTimer.current), []);
+
   function handleClick() {
     if (popularity >= 3) {
       setPopularity(1);
@@ -67,7 +85,8 @@ const Filters = ({ showRandom = true }: { showRandom?: boolean }) => {
       <a
         href="/aleator"
         title="Nu știi ce cauți? Normal. Apasă."
-        className="dice-btn relative shrink-0 flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all"
+        onTouchStart={rollDice}
+        className={`dice-btn ${rolling ? "dice-btn--rolling" : ""} relative shrink-0 flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all`}
       >
         <svg
           width="18"

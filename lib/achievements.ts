@@ -30,15 +30,16 @@ export type AchievementTrigger =
   | "session-poll"
   /**
    * Re-evaluează TOT ce se poate deduce din DB (definiții, like-uri primite,
-   * raportări validate, vechime, influencer). Nu e pentru hot-path: e plasa de
-   * siguranță, rulată rar (vezi FULL_SCAN_WINDOW_MS) la încărcarea site-ului și
-   * de scriptul de backfill.
+   * raportări validate, vechime, influencer).
    *
-   * Există pentru că trigger-ele punctuale, oricât de corecte, au două găuri:
-   * (1) nu văd trecutul — cine avea 23 de definiții înainte de lansarea
-   * sistemului nu primea nimic până nu mai posta una; (2) un trigger se
-   * evaluează pentru un singur email, deci un like dat altcuiva muta
-   * influencer-ul global fără să acorde pragurile de like ale noului deținător.
+   * NU se cheamă din rutele obișnuite, intenționat: trigger-ele de mai sus
+   * renumără fiecare complet familia lor (def-* numără toate definițiile tale,
+   * nu doar pe cea nouă), deci prima acțiune de orice fel acordă retroactiv tot
+   * ce lipsea. O scanare pe fiecare pagină ar costa ~5 interogări per
+   * utilizator ca să nu găsească nimic.
+   *
+   * Există pentru scripts/backfill-achievements.ts: singura gaură reală era
+   * istoricul de dinainte de lansarea sistemului, care se închide o dată.
    */
   | "full-scan";
 
@@ -86,13 +87,6 @@ const SENIORITY_TIERS: [number, string][] = [
 export const DICE_THRESHOLD = 50;
 export const DICE_WINDOW_MS = 3_600_000;
 
-/**
- * Cât de des re-scanăm tot, per utilizator, la încărcarea site-ului. Scanarea
- * costă ~5 interogări, deci NU se face la fiecare navigare — o dată pe oră e
- * mai mult decât suficient pentru o plasă de siguranță, fiindcă orice acțiune
- * reală (definiție nouă, like primit) își acordă medaliile pe loc, sincron.
- */
-export const FULL_SCAN_WINDOW_MS = 3_600_000;
 
 /**
  * Trigger-ele care se întâmplă ÎN cererea utilizatorului: el așteaptă răspunsul,
