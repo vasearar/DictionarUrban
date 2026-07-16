@@ -65,16 +65,7 @@ export async function verifyDefinition(data: myWord) {
   return errors;
 }
 
-export async function getWords(query: string) {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || "https://dexurban.md";
-    const res = await fetch(`${baseUrl}/api/definition/?word=${encodeURIComponent(query)}`, {cache: "no-store"});
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    return res.json();
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return [];
-  }
-}
+// `getWords` a fost eliminat: făcea un self-fetch HTTP către propriul
+// /api/definition (prin NEXTAUTH_URL, adică spre producție și din local!) și
+// aducea toată colecția ca să taie apoi 7 definiții în memorie.
+// Înlocuitorul lovește Mongo direct: `getWordsPage` din lib/words.ts.

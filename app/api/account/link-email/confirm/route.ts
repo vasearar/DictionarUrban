@@ -6,6 +6,7 @@ import wordModel from "@/models/wordModel";
 import reportModel from "@/models/reportModel";
 import auditLogModel from "@/models/auditLogModel";
 import emailChangeTokenModel from "@/models/emailChangeTokenModel";
+import { isDuplicateKeyError } from "@/lib/mongoErrors";
 
 // Confirmarea legării: link-ul din email poate fi deschis din orice browser
 // (fără sesiune), ca la verify-email. Identitatea o dă tokenul single-use.
@@ -66,10 +67,22 @@ export async function POST(req: Request) {
     // Migrarea: întâi identitatea (email + parolă + verificat), apoi cascada
     // pe conținut — dacă pică ceva la mijloc, contul e deja funcțional și
     // recheiat, iar cascada e reluabilă (filtrele pe anonEmail rămân valide).
-    await userModel.updateOne(
-      { email: anonEmail },
-      { $set: { email: newEmail, password: passwordHash, emailVerified: true } }
-    );
+    try {
+      await userModel.updateOne(
+        { email: anonEmail },
+        { $set: { email: newEmail, password: passwordHash, emailVerified: true } }
+      );
+    } catch (error) {
+      if (!isDuplicateKeyError(error)) throw error;
+      // Cursă cu re-verificarea de coliziune de mai sus: emailul a fost
+      // înregistrat între `findOne` și update. Același deznodământ ca acolo —
+      // tokenul se consumă, fiindcă emailul cerut nu mai e disponibil.
+      await emailChangeTokenModel.deleteOne({ _id: tokenDoc._id });
+      return NextResponse.json(
+        { error: "Acest email a fost înregistrat între timp." },
+        { status: 409 }
+      );
+    }
     await wordModel.updateMany(
       { userEmail: anonEmail },
       { $set: { userEmail: newEmail } } // username rămâne — porecla nu se schimbă

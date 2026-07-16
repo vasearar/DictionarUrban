@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { connectDB } from "@/lib/db";
-import { slugify } from "@/lib/search";
+import { slugify, mongoSearch, diacriticInsensitivePattern } from "@/lib/search";
 import wordModel from "@/models/wordModel";
 
 // Re-export pentru compatibilitate: slugify locuiește acum în lib/search (pur,
@@ -133,6 +133,118 @@ export async function getRandomWordSlug(): Promise<string | null> {
   const word = rows?.[0]?.word;
   if (!word) return null;
   return slugify(word) || null;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Lista paginată (homepage + profil)
+// ────────────────────────────────────────────────────────────────────────────
+
+/** Câte definiții pe pagină. Era o constantă magică („7") în Definition.tsx. */
+export const WORDS_PER_PAGE = 7;
+
+/** Valorile din `?popularity=` (1 = implicit). */
+export type WordSort = "recent" | "most-liked" | "least-liked";
+
+export interface WordsPage {
+  items: WordDefinition[];
+  /** Numărul TOTAL de potriviri, nu doar cele de pe pagina curentă. */
+  total: number;
+}
+
+const SORT_SPEC: Record<WordSort, Record<string, 1 | -1>> = {
+  recent: { _id: -1 },
+  // Tie-break pe `_id` desc, ca sortarea stabilă din JS de dinainte: la egalitate
+  // de like-uri, definițiile rămân în ordinea „cea mai nouă prima".
+  "most-liked": { likes: -1, _id: -1 },
+  "least-liked": { likes: 1, _id: -1 },
+};
+
+/** `?popularity=` → sortare. Orice altceva (inclusiv lipsa) = „recent". */
+export function sortFromPopularity(popularity: string | undefined): WordSort {
+  if (popularity === "2") return "most-liked";
+  if (popularity === "3") return "least-liked";
+  return "recent";
+}
+
+const VISIBLE = { hidden: { $ne: true } };
+
+/**
+ * Filtrul pentru un termen de căutare, cu aceeași semantică pe care o avea
+ * `GET /api/definition`: „@nume" → definițiile autorului; un cuvânt → întâi
+ * prefix pe `word`, iar dacă NICIUN cuvânt nu se potrivește, abia atunci
+ * definiție/exemplu; gol → tot ce e vizibil.
+ *
+ * Fallback-ul cere un `countDocuments` în plus, dar numai pe ramura de căutare
+ * pe cuvânt — și oricum aveam nevoie de `total` pentru paginare.
+ */
+async function buildFilter(query: string): Promise<Record<string, unknown>> {
+  const trimmed = query.trim();
+  if (!trimmed) return { ...VISIBLE };
+
+  // „@nume" → definițiile autorului. Un „@" singur NU e o căutare de autor: cade
+  // pe căutarea de text obișnuită, exact ca `usernameSearch` din ruta veche.
+  const name = trimmed.startsWith("@") ? trimmed.slice(1).trim() : "";
+  if (name) {
+    return {
+      username: { $regex: `^${diacriticInsensitivePattern(name)}$`, $options: "i" },
+      ...VISIBLE,
+    };
+  }
+
+  const byWord = { word: mongoSearch(trimmed, "prefix"), ...VISIBLE };
+  if (await wordModel.exists(byWord)) return byWord;
+
+  const rx = mongoSearch(trimmed, "contains");
+  return { $or: [{ definition: rx }, { exampleOfUsing: rx }], ...VISIBLE };
+}
+
+/**
+ * O singură pagină de definiții, paginată ȘI sortată de MongoDB.
+ *
+ * Înlocuiește vechiul `getWords()`, care făcea un self-fetch HTTP către propriul
+ * `/api/definition`, aducea TOATĂ colecția și tăia apoi `.slice()` în memorie —
+ * adică payload și sortare care creșteau cu fiecare definiție adăugată.
+ */
+export async function getWordsPage({
+  query,
+  page,
+  sort = "recent",
+  limit = WORDS_PER_PAGE,
+}: {
+  query: string;
+  page: number;
+  sort?: WordSort;
+  limit?: number;
+}): Promise<WordsPage> {
+  await connectDB();
+
+  const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+  const filter = await buildFilter(query);
+
+  const [rows, total] = await Promise.all([
+    wordModel
+      .find(filter)
+      .sort(SORT_SPEC[sort])
+      .skip((safePage - 1) * limit)
+      .limit(limit)
+      // Proiecție: `userEmail` nu ajunge niciodată în HTML-ul public.
+      .select("word definition exampleOfUsing username likes date")
+      .lean<WordRow[]>(),
+    wordModel.countDocuments(filter),
+  ]);
+
+  return {
+    items: rows.map((r) => ({
+      _id: String(r._id),
+      word: r.word || "",
+      definition: r.definition || "",
+      exampleOfUsing: r.exampleOfUsing || "",
+      username: r.username || "Anonim",
+      likes: typeof r.likes === "number" ? r.likes : 0,
+      date: r.date || "",
+    })),
+    total,
+  };
 }
 
 interface SitemapRow {

@@ -33,6 +33,26 @@ const userSchema = new Schema({
   createdAt: Date,
 });
 
+// `findOne({email})` rulează pe aproape fiecare cerere autentificată (callback-ul
+// JWT, requireRole, like-uri, tot motorul de medalii). Fără index, fiecare era un
+// collection scan — de aici lentoarea care crește cu numărul de conturi.
+//
+// `unique` închide și cursa TOCTOU din register/link-email, unde două cereri
+// concurente treceau amândouă de `findOne` și creau același email. Duplicatele
+// se tratează acum ca 409 (eroare Mongo 11000), nu ca 500 — vezi lib/mongoErrors.ts.
+//
+// Pe un DB EXISTENT, schimbarea asta nu e suficientă: `autoIndex` doar creează
+// indexurile lipsă, nu le și modifică, iar createIndex cu alte opțiuni pe
+// aceleași chei dă IndexOptionsConflict (85), înghițit în tăcere la pornire.
+// Indexul vechi trebuie șters și recreat: `npx tsx scripts/unique-email-index.ts --apply`.
+userSchema.index({ email: 1 }, { unique: true });
+
+// Lookup-ul de profil după poreclă e insensibil la majuscule/diacritice, deci
+// folosește un regex neancorat pe litera de bază și NU poate folosi indexul ăsta.
+// Rămâne totuși util pentru potrivirile exacte (ex. verificarea de unicitate la
+// register). Vezi lib/username.ts.
+userSchema.index({ username: 1 });
+
 const userModel = models.userModel || model("userModel", userSchema, "users");
 
 export default userModel;

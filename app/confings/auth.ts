@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import userModel from "@/models/userModel";
+import { checkRateLimits, getClientIpFromHeaders } from "@/lib/antispam";
 
 export const authConfig: AuthOptions = {
   providers: [
@@ -23,9 +24,24 @@ export const authConfig: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Parolă", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Introdu email-ul și parola");
+        }
+
+        // Fără limită aici, ruta de login era brute-force de parolă la discreție.
+        // Limităm și pe IP (un atacator care încearcă multe conturi), și pe email
+        // (un atacator distribuit care încearcă multe parole pe un cont anume).
+        const ip = getClientIpFromHeaders(req?.headers);
+        const loginEmail = credentials.email.toLowerCase();
+        const blocked = await checkRateLimits([
+          { scope: "login-ip", id: ip, limit: 10, windowMs: 60_000 },
+          { scope: "login-ip", id: ip, limit: 60, windowMs: 3_600_000 },
+          { scope: "login-email", id: loginEmail, limit: 5, windowMs: 60_000 },
+          { scope: "login-email", id: loginEmail, limit: 20, windowMs: 3_600_000 },
+        ]);
+        if (blocked) {
+          throw new Error("Prea multe încercări. Încearcă din nou peste puțin timp.");
         }
 
         await connectDB();

@@ -17,6 +17,19 @@ import { checkAchievements } from "@/lib/achievements";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
+// Câmpurile pe care le poate vedea ORICINE. Whitelist, nu `-userEmail`: e
+// singura formă care rămâne sigură când se adaugă un câmp nou în schemă.
+// Ține în afara răspunsului public `userEmail` (emailul real al autorului) și
+// câmpurile de moderare `hiddenBy`/`hiddenReason`.
+const PUBLIC_FIELDS = "word definition exampleOfUsing username likes date";
+
+// Plafon dur pe ramurile publice: fără el, `/api/definition` fără parametri
+// serializa TOATĂ colecția la fiecare cerere.
+const PUBLIC_MAX = 100;
+
+// Sub 2 caractere, „contains" pe definiție/exemplu ar scana colecția degeaba.
+const MIN_QUERY_LEN = 2;
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authConfig);
@@ -110,10 +123,27 @@ export async function GET(request: NextRequest) {
   const id = searchParams.get("id");
   const usernameSearch = word?.startsWith("@") ? word.slice(1).trim() : "";
 
+  // `email` = definițiile proprii. Singura ramură care rămâne neproiectată:
+  // emailul din răspuns e chiar al apelantului.
+  const isOwnScope = Boolean(email);
+
   if (email) {
     const session = await getServerSession(authConfig);
     if (!session?.user?.email || session.user.email !== email) {
       return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 });
+    }
+  } else {
+    // Ramurile publice n-au sesiune de care să se agațe, deci singura plasă e IP-ul.
+    // Praguri largi (un om care caută nu le atinge), dar opresc recoltarea în masă.
+    const ip = getClientIp(request);
+    const limited = await enforceRateLimits([
+      { scope: "def-get-ip", id: ip, limit: 60, windowMs: 60_000 },
+      { scope: "def-get-ip", id: ip, limit: 600, windowMs: 3_600_000 },
+    ]);
+    if (limited) return limited;
+
+    if (word && !usernameSearch && word.trim().length < MIN_QUERY_LEN) {
+      return NextResponse.json([]);
     }
   }
 
@@ -126,14 +156,18 @@ export async function GET(request: NextRequest) {
     if (word && !usernameSearch && !email && !id) {
       const byWord = await wordModel
         .find({ word: mongoSearch(word, "prefix"), hidden: { $ne: true } })
-        .sort({ _id: -1 });
+        .select(PUBLIC_FIELDS)
+        .sort({ _id: -1 })
+        .limit(PUBLIC_MAX);
       if (byWord.length > 0) {
         return NextResponse.json(byWord);
       }
       const rx = mongoSearch(word, "contains");
       const byText = await wordModel
         .find({ $or: [{ definition: rx }, { exampleOfUsing: rx }], hidden: { $ne: true } })
-        .sort({ _id: -1 });
+        .select(PUBLIC_FIELDS)
+        .sort({ _id: -1 })
+        .limit(PUBLIC_MAX);
       return NextResponse.json(byText);
     }
 
@@ -153,7 +187,9 @@ export async function GET(request: NextRequest) {
       query = { hidden: { $ne: true } };
     }
 
-    const data = await wordModel.find(query).sort({ _id: -1 });
+    const cursor = wordModel.find(query).sort({ _id: -1 });
+    if (!isOwnScope) cursor.select(PUBLIC_FIELDS).limit(PUBLIC_MAX);
+    const data = await cursor;
     return NextResponse.json(data);
   } catch (error) {
     console.log("Something went wrong", error);

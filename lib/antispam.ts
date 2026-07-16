@@ -16,14 +16,34 @@ import rateLimitModel from "@/models/rateLimitModel";
 // ────────────────────────────────────────────────────────────────────────────
 // IP-ul clientului (din headerele de proxy — Vercel/Nginx setează x-forwarded-for)
 // ────────────────────────────────────────────────────────────────────────────
-export function getClientIp(req: Request): string {
-  const xff = req.headers.get("x-forwarded-for");
+function pickIp(xff: string | undefined, realIp: string | undefined): string {
   if (xff) {
     // primul IP din lanț = clientul real
     const first = xff.split(",")[0]?.trim();
     if (first) return first;
   }
-  return req.headers.get("x-real-ip")?.trim() || "unknown";
+  return realIp?.trim() || "unknown";
+}
+
+export function getClientIp(req: Request): string {
+  return pickIp(
+    req.headers.get("x-forwarded-for") ?? undefined,
+    req.headers.get("x-real-ip") ?? undefined
+  );
+}
+
+/**
+ * Aceeași logică, dar pentru headere ca obiect simplu: `authorize()` din NextAuth
+ * primește `req.headers` ca Record, nu ca `Headers`, deci `getClientIp` ar arunca.
+ */
+export function getClientIpFromHeaders(
+  headers: Record<string, string | string[] | undefined> | undefined
+): string {
+  const read = (name: string): string | undefined => {
+    const value = headers?.[name];
+    return Array.isArray(value) ? value[0] : value;
+  };
+  return pickIp(read("x-forwarded-for"), read("x-real-ip"));
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -74,17 +94,28 @@ async function hitWindow(w: RateWindow): Promise<RateResult> {
 export async function enforceRateLimits(
   windows: RateWindow[]
 ): Promise<NextResponse | null> {
+  const blocked = await checkRateLimits(windows);
+  if (blocked) {
+    return NextResponse.json(
+      { error: "Prea multe cereri. Încearcă din nou peste puțin timp." },
+      { status: 429, headers: { "Retry-After": String(blocked.retryAfter) } }
+    );
+  }
+  return null;
+}
+
+/**
+ * Varianta „doar verifică" a lui `enforceRateLimits`, pentru contextele care nu
+ * răspund cu HTTP — ex. `authorize()` din NextAuth, care semnalează prin excepție.
+ * Întoarce fereastra depășită sau `null` dacă totul e OK.
+ */
+export async function checkRateLimits(
+  windows: RateWindow[]
+): Promise<RateResult | null> {
   try {
     await connectDB();
     const results = await Promise.all(windows.map(hitWindow));
-    const blocked = results.find((r) => !r.allowed);
-    if (blocked) {
-      return NextResponse.json(
-        { error: "Prea multe cereri. Încearcă din nou peste puțin timp." },
-        { status: 429, headers: { "Retry-After": String(blocked.retryAfter) } }
-      );
-    }
-    return null;
+    return results.find((r) => !r.allowed) ?? null;
   } catch (error) {
     console.error("Rate limit check failed (fail-open):", error);
     return null;

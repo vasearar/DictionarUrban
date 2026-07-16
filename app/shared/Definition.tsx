@@ -1,11 +1,16 @@
 import React from "react";
-import { getWords } from "../api/ServerActions";
 import Actions from "./Actions";
 import PaginationControls from "./PaginationControls";
 import Filters from "./Filters";
 import Share from "./Share";
 import Link from "next/link";
-import { slugify } from "@/lib/words";
+import {
+  slugify,
+  getWordsPage,
+  sortFromPopularity,
+  WORDS_PER_PAGE,
+  type WordDefinition,
+} from "@/lib/words";
 
 function text(aux: string, ver: string) {
   const transformToArr = aux.toLowerCase().split(ver.toLowerCase());
@@ -24,32 +29,17 @@ function text(aux: string, ver: string) {
   return result;
 }
 
-interface wordModel {
-  word: string,
-  definition: string,
-  exampleOfUsing: string,
-  username: string,
-  userEmail: string,
-  likes: number,
-  date: string,
-  _id: string
-}
-
-
 export default async function Definition({query, page, popularity, showRandom = true}: { query: string, page: string, popularity: string, showRandom?: boolean }){
-  const words = await getWords(query);
+  // Sortarea și decuparea paginii se fac acum în Mongo: primim exact cele 7
+  // definiții afișate, plus numărul total (pentru butoanele de paginare).
+  const currentPage = Math.max(1, Number(page) || 1);
+  const { items: displayableWord, total } = await getWordsPage({
+    query,
+    page: currentPage,
+    sort: sortFromPopularity(popularity),
+  });
 
-  let sortedWords = [...words];
-  if (popularity === "2") {
-    sortedWords = sortedWords.sort((a, b) => b.likes - a.likes);
-  } else if (popularity === "3") {
-    sortedWords = sortedWords.sort((a, b) => a.likes - b.likes);
-  }
-
-  const start = (Number(page) - 1) * 7;
-  const sliceEnd = start + 7;
-  const totalPages = Math.ceil(words.length / 7);
-  const displayableWord = sortedWords.slice(start, sliceEnd);
+  const totalPages = Math.ceil(total / WORDS_PER_PAGE);
   return (
     <>
       {displayableWord.length === 0 ? (
@@ -57,7 +47,7 @@ export default async function Definition({query, page, popularity, showRandom = 
       ) : (
         <>
           <Filters showRandom={showRandom} />
-          {displayableWord.map((word: wordModel) => (
+          {displayableWord.map((word: WordDefinition) => (
             <div className="px-3 md:px-0" key={word._id}>
               <div key={word._id} className="mx-auto mybigdropshadowrounded md:mybigdropshadowrounded relative font-Spacegrotesc text-mygray break-words bg-mywhite rounded-md border-2 border-mygray w-full md:w-[720px] p-3 md:p-8 mb-4 md:mb-6">
                 <div className="flex justify-between relative w-full mb-2 items-center">
@@ -77,7 +67,7 @@ export default async function Definition({query, page, popularity, showRandom = 
           ))}
         </>
       )}
-      <PaginationControls hasNextPage={sliceEnd < words.length} hasPrevPage={start > 0} end={totalPages} />
+      <PaginationControls hasNextPage={currentPage < totalPages} hasPrevPage={currentPage > 1} end={totalPages} />
     </>
   );
   }

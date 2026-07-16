@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import userModel from "../../../models/userModel";
 import { authConfig } from "@/app/confings/auth";
+import { isDuplicateKeyError } from "@/lib/mongoErrors";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -39,14 +40,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ someProp: existingUser }, { status: 200 });
     }
 
-    const created = await userModel.create({
-      email, // din sesiune, nu din body
-      username,
-      role: "user", // forțat — niciodată din body
-      date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
-      createdAt: new Date(), // din server — `date` poate veni localizat din body
-      likes: [],
-    });
+    let created;
+    try {
+      created = await userModel.create({
+        email, // din sesiune, nu din body
+        username,
+        role: "user", // forțat — niciodată din body
+        date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
+        createdAt: new Date(), // din server — `date` poate veni localizat din body
+        likes: [],
+      });
+    } catch (error) {
+      if (!isDuplicateKeyError(error)) throw error;
+      // Cursă cu o cerere paralelă (ex. dublu-click pe finalizarea OAuth): contul
+      // a apărut între `findOne` și `create`. Ramura de mai sus întoarce oricum
+      // 200 cu contul existent, deci facem la fel — nu e o eroare pentru user.
+      created = await userModel.findOne({ email });
+    }
 
     return NextResponse.json({ someProp: created }, { status: 200 });
   } catch (error) {

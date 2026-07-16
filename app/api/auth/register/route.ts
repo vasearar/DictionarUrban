@@ -5,6 +5,9 @@ import { connectDB } from "@/lib/db";
 import userModel from "@/models/userModel";
 import verificationTokenModel from "@/models/verificationTokenModel";
 import { sendVerificationEmail } from "@/lib/email";
+import { getClientIp, enforceRateLimits } from "@/lib/antispam";
+import { validateUsername, sameUsernameQuery } from "@/lib/username";
+import { isDuplicateKeyError } from "@/lib/mongoErrors";
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +20,16 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Fără limită, ruta asta însemna conturi în masă și email-bombing pe adresa
+    // oricui (fiecare înregistrare trimite un email de verificare).
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "register-ip", id: ip, limit: 5, windowMs: 60_000 },
+      { scope: "register-ip", id: ip, limit: 20, windowMs: 3_600_000 },
+      { scope: "register-email", id: String(email).toLowerCase(), limit: 3, windowMs: 3_600_000 },
+    ]);
+    if (limited) return limited;
 
     if (password.length < 6) {
       return NextResponse.json(
@@ -33,19 +46,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const usernameRegex = /^[a-zA-Z0-9_ăîșțâĂÎȘȚÂ]+$/;
-    if (name.length < 3 || name.length > 28) {
-      return NextResponse.json(
-        { error: "Porecla trebuie să fie între 3 și 28 de simboluri" },
-        { status: 400 }
-      );
+    const invalidUsername = validateUsername(name);
+    if (invalidUsername) {
+      return NextResponse.json({ error: invalidUsername }, { status: 400 });
     }
-    if (!usernameRegex.test(name)) {
-      return NextResponse.json(
-        { error: "Porecla nu trebuie să conțină simboluri speciale" },
-        { status: 400 }
-      );
-    }
+    // Validarea lucrează pe forma trimmed — stocăm tot forma trimmed, altfel
+    // porecla ar intra în DB cu spații pe care regulile tocmai le-au respins.
+    const username = String(name).trim();
 
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -55,7 +62,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const existingUsername = await userModel.findOne({ username: name });
+    // Insensibil la majuscule/diacritice, ca lookup-ul de profil: „Mihaita" și
+    // „Mihăiță" rezolvă la același profil, deci nu pot fi conturi diferite.
+    const existingUsername = await userModel.findOne({ username: sameUsernameQuery(username) });
     if (existingUsername) {
       return NextResponse.json(
         { error: "Această poreclă deja se folosește" },
@@ -73,16 +82,29 @@ export async function POST(req: Request) {
       timeZone: "UTC",
     };
 
-    await userModel.create({
-      email,
-      username: name,
-      password: hashedPassword,
-      emailVerified: false,
-      role: "user",
-      date: date.toLocaleString("ro-RO", options),
-      createdAt: date, // `date` de mai sus e localizat ro-RO; ăsta e cel calculabil
-      likes: [],
-    });
+    try {
+      await userModel.create({
+        email,
+        username,
+        password: hashedPassword,
+        emailVerified: false,
+        role: "user",
+        date: date.toLocaleString("ro-RO", options),
+        createdAt: date, // `date` de mai sus e localizat ro-RO; ăsta e cel calculabil
+        likes: [],
+      });
+    } catch (error) {
+      // Cursa pe care o prinde indexul unique de pe `users.email`: două cereri
+      // concurente trec amândouă de `findOne` de mai sus. Fără ramura asta, a
+      // doua ar primi un 500 generic în loc de motivul real.
+      if (isDuplicateKeyError(error)) {
+        return NextResponse.json(
+          { error: "Acest email este deja înregistrat" },
+          { status: 409 }
+        );
+      }
+      throw error;
+    }
 
     const token = crypto.randomBytes(32).toString("hex");
     await verificationTokenModel.create({

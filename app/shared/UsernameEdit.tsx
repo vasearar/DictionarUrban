@@ -33,13 +33,18 @@ const UsernameEdit: React.FC<UsernameEditProps> = ({ email, close }) => {
           body: JSON.stringify({email: email, data: newUsername}),
         });
         if (!response.ok) {
-          throw new Error("HTTP error! status: " + response.status);
+          // Serverul respinge acum porecle deja luate (409) sau invalide (400).
+          // Fără asta, butonul părea pur și simplu mort.
+          const body = await response.json().catch(() => null);
+          setError(body?.error || "Porecla nu a putut fi schimbată. Încearcă din nou.");
+          return;
         }
         location.reload();
       } catch (error) {
         console.log(
           "There was a problem with the fetch operation: ", error
         );
+        setError("Porecla nu a putut fi schimbată. Încearcă din nou.");
         }
     } else {
       setError(tests);

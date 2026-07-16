@@ -8,6 +8,7 @@ import wordModel from "@/models/wordModel";
 import reportModel from "@/models/reportModel";
 import auditLogModel from "@/models/auditLogModel";
 import linkIntentModel from "@/models/linkIntentModel";
+import { isDuplicateKeyError } from "@/lib/mongoErrors";
 
 const LINK_INTENT_COOKIE = "dexurban_link_intent";
 
@@ -75,10 +76,22 @@ export async function POST(req: NextRequest) {
     if (!googleUser) {
       // Ramura A: emailul Google nu are cont — contul anonim devine contul
       // Google (porecla rămâne, nu se mai cere /username).
-      await userModel.updateOne(
-        { email: anonEmail },
-        { $set: { email: googleEmail, emailVerified: true } }
-      );
+      try {
+        await userModel.updateOne(
+          { email: anonEmail },
+          { $set: { email: googleEmail, emailVerified: true } }
+        );
+      } catch (error) {
+        if (!isDuplicateKeyError(error)) throw error;
+        // Cursă: contul Google a apărut între `findOne` de mai sus și update.
+        // NU facem cleanup și NU ștergem cookie-ul — intenția rămâne validă, iar
+        // o reluare va găsi `googleUser` și va trece pe ramura B (merge), care e
+        // exact ce trebuia să se întâmple.
+        return NextResponse.json(
+          { error: "Contul Google tocmai a fost creat în paralel. Încearcă din nou." },
+          { status: 409 }
+        );
+      }
       await wordModel.updateMany(
         { userEmail: anonEmail },
         { $set: { userEmail: googleEmail } }
