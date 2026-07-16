@@ -257,8 +257,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "beta",
     title: "Cobai profesionist",
-    howTo:
-      "Se acordă pentru depistarea unei probleme sau a unei vulnerabilități. Ne-ai spus în loc s-o exploatezi.",
+    howTo: "Ai găsit un bug și ne-ai spus în loc să-l exploatezi.",
     category: "Comunitate",
     countsForEndgame: false,
   },
