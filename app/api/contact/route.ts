@@ -44,6 +44,7 @@ export async function POST(req: Request) {
       username,
       role: "user", // forțat — niciodată din body
       date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
+      createdAt: new Date(), // din server — `date` poate veni localizat din body
       likes: [],
     });
 

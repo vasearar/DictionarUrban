@@ -1,12 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import BackButton from "./shared/BackButton";
+import NotFoundTracker from "./shared/badges/NotFoundTracker";
 
 // 404 global. Fiind la rădăcina app/ (nu în grupul (withNav)), se randează doar
 // în root layout → FĂRĂ bară de navigare și footer, așa cum trebuie.
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 px-4 py-16 text-center text-mygray font-Spacegrotesc">
+      <NotFoundTracker />
       <p
         aria-hidden="true"
         className="font-Unbounded font-bold text-myorange leading-none text-8xl md:text-[10rem]"

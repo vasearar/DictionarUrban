@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./shared/Providers";
 import CookieConsent from "./shared/CookieConsent";
+import AchievementToastProvider from "./shared/badges/AchievementToast";
 import { Unbounded, Space_Grotesk } from "next/font/google";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -54,7 +55,12 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     <html lang="ro" className={`dark ${unbounded.variable} ${spaceGrotesk.variable}`}>
       <body>
         <Providers>
-          {children}
+          {/* Înăuntrul Providers: are nevoie de sesiune. La rădăcină, nu în
+              (withNav): toast-urile trebuie să apară și pe paginile fără navbar
+              și pe 404 (de unde se ia chiar o medalie). */}
+          <AchievementToastProvider>
+            {children}
+          </AchievementToastProvider>
         </Providers>
         <CookieConsent />
         </body>

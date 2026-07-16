@@ -37,6 +37,7 @@ interface UserRow {
   role?: "user" | "moderator" | "admin";
   banned?: boolean;
   date?: string;
+  achievements?: { id: string }[];
 }
 interface AuditLog {
   _id: string;
@@ -67,6 +68,8 @@ const actionLabels: Record<string, string> = {
   unban: "Unban",
   assign_moderator: "Rol moderator acordat",
   remove_moderator: "Rol moderator retras",
+  achievement_grant: "Medalie acordată",
+  achievement_revoke: "Medalie retrasă",
   definition_edited: "Definiție editată",
   definition_hidden: "Definiție ascunsă",
   definition_restored: "Definiție restaurată",
@@ -110,6 +113,7 @@ const paths: Record<string, string> = {
   ban: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM4.93 4.93l14.14 14.14",
   shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
   alert: "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01",
+  award: "M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM8.21 13.89L7 23l5-3 5 3-1.21-9.12",
 };
 function Icon({ name, size = 16 }: { name: string; size?: number }) {
   return (
@@ -260,6 +264,40 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
         .then((r) => (r.ok ? r.json() : []))
         .then(setAudit);
       notify("Utilizatorul a fost actualizat.");
+    } else {
+      const e = await res.json().catch(() => ({}));
+      notify(e.error || "Acțiunea nu a reușit.", "err");
+    }
+  }
+
+  // Singura medalie care se dă de mână: „Cobai profesionist" (beta), pentru
+  // testerii de dinainte de lansare. Serverul refuză orice alt id — restul se
+  // câștigă, nu se acordă.
+  async function toggleBeta(user: UserRow) {
+    const hasBeta = (user.achievements || []).some((a) => a.id === "beta");
+    const action = hasBeta ? "revoke" : "grant";
+    const res = await fetch("/api/achievements/admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user._id, action, id: "beta" }),
+    });
+    if (res.ok) {
+      setUsers((cur) =>
+        cur.map((u) =>
+          u._id === user._id
+            ? {
+                ...u,
+                achievements: hasBeta
+                  ? (u.achievements || []).filter((a) => a.id !== "beta")
+                  : [...(u.achievements || []), { id: "beta" }],
+              }
+            : u
+        )
+      );
+      fetch("/api/admin/audit", { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : []))
+        .then(setAudit);
+      notify(hasBeta ? "Medalia beta a fost retrasă." : "Medalia beta a fost acordată.");
     } else {
       const e = await res.json().catch(() => ({}));
       notify(e.error || "Acțiunea nu a reușit.", "err");
@@ -439,6 +477,7 @@ export default function PanelDashboard({ role }: { role: "moderator" | "admin" }
             setRoleFilter={setUserRoleFilter}
             onBan={(u) => setConfirm({ text: `${u.banned ? "Deblochezi" : "Blochezi"} contul ${u.email}?`, run: () => updateUser(u._id, u.banned ? "unban" : "ban") })}
             onMod={(u) => updateUser(u._id, u.role === "moderator" ? "remove_moderator" : "assign_moderator")}
+            onBeta={toggleBeta}
           />
         ) : (
           <AuditView logs={shownAudit} actions={auditActions} filter={auditFilter} setFilter={setAuditFilter} />
@@ -720,6 +759,7 @@ function UsersView({
   setRoleFilter,
   onBan,
   onMod,
+  onBeta,
 }: {
   users: UserRow[];
   search: string;
@@ -729,6 +769,7 @@ function UsersView({
   setRoleFilter: (r: "all" | "user" | "moderator" | "admin" | "banned") => void;
   onBan: (u: UserRow) => void;
   onMod: (u: UserRow) => void;
+  onBeta: (u: UserRow) => void;
 }) {
   const filters = [
     { id: "all", label: "Toți" },
@@ -773,18 +814,26 @@ function UsersView({
                 )}
               </div>
               <span className="grow" />
-              {u.role !== "admin" && (
-                <div className="flex flex-wrap gap-2">
-                  <button className={btn} onClick={() => onMod(u)}>
-                    <Icon name="shield" size={14} />
-                    {u.role === "moderator" ? "Scoate mod" : "Fă moderator"}
-                  </button>
-                  <button className={u.banned ? btn : btnDanger} onClick={() => onBan(u)}>
-                    <Icon name="ban" size={14} />
-                    {u.banned ? "Deblochează" : "Blochează"}
-                  </button>
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {/* Beta se poate acorda oricui, inclusiv unui admin — și el
+                    poate fi fost tester. Restul acțiunilor nu ating adminii. */}
+                <button className={btn} onClick={() => onBeta(u)}>
+                  <Icon name="award" size={14} />
+                  {(u.achievements || []).some((a) => a.id === "beta") ? "Scoate beta" : "Dă beta"}
+                </button>
+                {u.role !== "admin" && (
+                  <>
+                    <button className={btn} onClick={() => onMod(u)}>
+                      <Icon name="shield" size={14} />
+                      {u.role === "moderator" ? "Scoate mod" : "Fă moderator"}
+                    </button>
+                    <button className={u.banned ? btn : btnDanger} onClick={() => onBan(u)}>
+                      <Icon name="ban" size={14} />
+                      {u.banned ? "Deblochează" : "Blochează"}
+                    </button>
+                  </>
+                )}
+              </div>
             </article>
           ))}
         </div>

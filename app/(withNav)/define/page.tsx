@@ -3,9 +3,11 @@ import React, { FormEvent, useRef, useState } from "react"
 import { useSession } from "next-auth/react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { navigate, verifyDefinition } from "../../api/ServerActions";
+import { useAchievementToasts } from "../../shared/badges/AchievementToast";
 
 const Page = () => {
 	const Session = useSession();
+	const { notify } = useAchievementToasts();
 	const [captcha, setCaptcha] = useState<string | null>();
 	const [error, setError] = useState<{ word?: string; definition?: string; exampleOfUsing?: string }>({});
 	const [isMessageSent, setMessageSent] = useState(false);
@@ -110,6 +112,11 @@ const Page = () => {
 					setCaptcha(null);
 					return;
 				}
+				// Medaliile de definiții sunt acordate în aceeași cerere, deci vin
+				// direct în răspuns. Toast-ul trăiește în layout, deci supraviețuiește
+				// redirectului de mai jos.
+				const info = await response.json().catch(() => ({}));
+				notify(info?.newAchievements);
 				setMessageSent(true);
 			} catch (error) {
 				console.log(

@@ -1,13 +1,17 @@
 'use client'
 import React from 'react'
+import { useSession } from 'next-auth/react'
 import { slugify } from '@/lib/search'
 import { SITE_URL } from '@/lib/site'
+import { useAchievementToasts } from './badges/AchievementToast'
 
 interface ShareProps{
   query: string;
 }
 
 const Share:React.FC<ShareProps> = ({query}) => {
+  const { status } = useSession();
+  const { notify } = useAchievementToasts();
 
   // Distribuim URL-ul canonic al cuvântului (cu metadata + OG image proprie),
   // nu vechiul /?query= care ducea la o pagină fără preview.
@@ -21,7 +25,25 @@ const Share:React.FC<ShareProps> = ({query}) => {
     try {
       await navigator.share(shareData);
     } catch (err) {
+      // Panoul de share închis (AbortError) sau API indisponibil — n-a
+      // distribuit nimic, deci nu se acordă „Apostol digital".
       return;
+    }
+
+    // Aici înseamnă că share-ul a fost DUS LA CAPĂT (promisiunea a rezolvat),
+    // nu doar deschis. De asta grant-ul e după try/catch, nu în el.
+    if (status !== "authenticated") return;
+    try {
+      const response = await fetch("/api/achievements/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "share" }),
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      notify(data?.newAchievements);
+    } catch {
+      // Medalia se ratează, share-ul a mers — nu deranjăm userul cu nimic.
     }
   }
 

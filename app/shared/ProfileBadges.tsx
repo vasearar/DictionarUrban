@@ -1,8 +1,10 @@
 import React from "react";
 import { PublicBadge } from "@/lib/profile";
+import { BadgeIcon } from "./badges/BadgeIcons";
 
-// Slot pentru badge-urile viitoare (iconițe/titluri de obținut). Deocamdată
-// API-ul întoarce mereu o listă goală, deci componenta nu randează nimic.
+// Chip-ul cu medalia aleasă pentru profil. E cel mult una — restul colecției se
+// vede în modalul „Medalii". Medaliile speciale (staff, influencer, endgame) au
+// chip inversat cu umbră portocalie, ca să se vadă de la un kilometru.
 
 export default function ProfileBadges({ badges }: { badges: PublicBadge[] }) {
   if (badges.length === 0) return null;
@@ -12,9 +14,13 @@ export default function ProfileBadges({ badges }: { badges: PublicBadge[] }) {
       {badges.map((badge) => (
         <span
           key={badge.id}
-          className="relative border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold flex items-center gap-1"
+          className={`relative border-2 border-mygray px-2 py-[2px] text-sm font-bold flex items-center gap-[6px] ${
+            badge.special
+              ? "bg-mygray text-mywhite myorangedropshadow"
+              : "bg-mywhite text-mygray mydropshadow"
+          }`}
         >
-          {badge.icon && <span aria-hidden="true">{badge.icon}</span>}
+          <BadgeIcon id={badge.id} size={18} />
           {badge.label}
         </span>
       ))}

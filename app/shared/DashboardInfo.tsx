@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import UsernameEdit from './UsernameEdit'
 import KeepAccountModal from './KeepAccountModal'
 import ChangePasswordModal from './ChangePasswordModal'
+import AchievementsButton from './badges/AchievementsButton'
 import { isAnonEmail } from '@/lib/anon'
 
 const DashboardInfo = () => {
@@ -12,6 +13,9 @@ const DashboardInfo = () => {
   const email = Session?.data?.user?.email;
   const isAnon = isAnonEmail(email);
   const [username, setUsername] = useState("Obținem numele...");
+  // Modalul de medalii caută profilul după poreclă, deci butonul apare abia
+  // după ce avem porecla reală (nu textul de așteptare).
+  const [usernameReady, setUsernameReady] = useState(false);
   const [date, setDate] = useState("[Obținem data înregistrării...]");
   const [hasPassword, setHasPassword] = useState(false);
   // sesiune anonimă al cărei cont a fost deja migrat (în alt browser) —
@@ -34,6 +38,7 @@ const DashboardInfo = () => {
       if(response.status == 200){
 				const data = await response.json();
         setUsername(data.username);
+        setUsernameReady(Boolean(data.username));
         setDate(data.date);
         setHasPassword(Boolean(data.hasPassword));
       } else if (response.status == 201 && isAnon) {
@@ -153,6 +158,11 @@ const DashboardInfo = () => {
           <div className=''>
             <h1 className='font-bold text-5xl font-Spacegrotesc'>{username}</h1>
             <h6 className='text-zinc-500'>Înregistrat la data {date}</h6>
+            {usernameReady && (
+              <div className='mt-3'>
+                <AchievementsButton username={username} />
+              </div>
+            )}
           </div>
           <div>
             <div className='flex sm:mt-0 mt-2'>

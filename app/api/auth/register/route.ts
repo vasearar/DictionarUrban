@@ -80,6 +80,7 @@ export async function POST(req: Request) {
       emailVerified: false,
       role: "user",
       date: date.toLocaleString("ro-RO", options),
+      createdAt: date, // `date` de mai sus e localizat ro-RO; ăsta e cel calculabil
       likes: [],
     });
 

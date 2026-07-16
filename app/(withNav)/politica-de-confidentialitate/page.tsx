@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import type { Metadata } from 'next'
 import CookiePreferencesButton from '../../shared/CookiePreferencesButton'
+import FinePrintTracker from '../../shared/badges/FinePrintTracker'
 
 /* =========================================================================
    ⚠️  PLACEHOLDER-E DE COMPLETAT DUPĂ ÎNREGISTRAREA FIRMEI
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 const Privacy = () => {
   return (
     <article className='mx-auto px-3 md:px-8'>
+      <FinePrintTracker type='privacy' />
       <section>
         <h1 className='text-2xl md:text-5xl leading-tight mb-6 mt-8 font-bold'>Politica de confidențialitate</h1>
         <p className='font-Spacegrotesc'>Această politică explică ce date cu caracter personal colectăm despre dvs. atunci când utilizați dexurban.md („Platforma”), în ce scop și în ce temei le prelucrăm, cui le divulgăm, cât timp le păstrăm și ce drepturi aveți. Prelucrarea se face cu respectarea <b>Legii nr. 133/2011 privind protecția datelor cu caracter personal</b> din Republica Moldova și, pentru vizitatorii din Uniunea Europeană, a <b>Regulamentului (UE) 2016/679 (GDPR)</b>.</p>

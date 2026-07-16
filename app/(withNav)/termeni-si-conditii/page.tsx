@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import type { Metadata } from 'next'
+import FinePrintTracker from '../../shared/badges/FinePrintTracker'
 
 /* =========================================================================
    ⚠️  PLACEHOLDER-E DE COMPLETAT DUPĂ ÎNREGISTRAREA FIRMEI
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 const Tos = () => {
   return (
     <article className='mx-auto px-3 md:px-8'>
+      <FinePrintTracker type='terms' />
       <section>
         <h1 className='text-2xl md:text-5xl leading-tight mb-6 mt-8 font-bold'>Termeni și condiții</h1>
         <p className='font-Spacegrotesc'><b>{OPERATOR_NAME}</b> oferă site-ul <b>dexurban.md</b> („Platforma”) conform Termenilor și condițiilor de mai jos. Prin accesarea, navigarea sau utilizarea Platformei, prin crearea unui cont ori prin publicarea de conținut, declarați că ați citit, ați înțeles și sunteți de acord cu acești termeni. Dacă nu sunteți de acord, vă rugăm să nu utilizați Platforma. Ne rezervăm dreptul de a revizui acești termeni periodic; utilizarea în continuare a Platformei după publicarea modificărilor reprezintă acceptarea lor. Versiunea în vigoare este disponibilă permanent la <Link className='underline text-myorange' href='/termeni-si-conditii'>dexurban.md/termeni-si-conditii</Link>.</p>

@@ -92,6 +92,44 @@ export async function enforceRateLimits(
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// Contor pe fereastră, fără blocare
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Incrementează un contor pe fereastră fixă și întoarce noua valoare, fără să
+ * blocheze nimic. Același mecanism ca rate-limit-ul (document atomic + TTL, deci
+ * curățarea e gratis), dar folosit ca să NUMERE, nu ca să oprească: medalia
+ * „Păcănele" are nevoie de „de câte ori ai dat cu zarul în ultima oră".
+ *
+ * Fail-open: pe eroare de DB întoarce 0 (nicio medalie), niciodată o excepție —
+ * apelantul e pe calea unui redirect care nu are voie să pice.
+ */
+export async function bumpCounter(w: {
+  scope: string;
+  id: string;
+  windowMs: number;
+}): Promise<number> {
+  try {
+    await connectDB();
+    const now = Date.now();
+    const windowStart = Math.floor(now / w.windowMs) * w.windowMs;
+    const key = `${w.scope}:${w.id}:${w.windowMs}:${windowStart}`;
+    const doc = await rateLimitModel.findOneAndUpdate(
+      { _id: key },
+      {
+        $inc: { count: 1 },
+        $setOnInsert: { expiresAt: new Date(windowStart + w.windowMs + 1000) },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    return doc?.count ?? 0;
+  } catch (error) {
+    console.error("bumpCounter failed (fail-open):", error);
+    return 0;
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // Semnale de bot invizibile pentru om: honeypot + timp de completare
 // ────────────────────────────────────────────────────────────────────────────
 

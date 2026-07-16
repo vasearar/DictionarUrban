@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
 import { getClientIp, enforceRateLimits } from "@/lib/antispam";
+import { checkAchievements } from "@/lib/achievements";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -61,6 +62,11 @@ export async function POST(req: Request) {
         { $inc: { likes: delta } },
         { new: true }
       );
+
+      // Medaliile merg la AUTORUL definiției, nu la cel care a dat like. El nu
+      // așteaptă niciun răspuns aici, deci le va afla din poll, la următoarea
+      // pagină pe care o deschide.
+      await checkAchievements(word?.userEmail, "like", { action });
     } else {
       // Starea era deja cea dorită (fără dublă numărare). Verificăm doar
       // că utilizatorul există și returnăm contorul curent.

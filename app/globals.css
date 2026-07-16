@@ -28,7 +28,8 @@ button{
 }
 
 .mydropshadow::after,
-.mywhitedropshadow::after, 
+.myorangedropshadow::after,
+.mywhitedropshadow::after,
 .mywhitedropshadowno::after,
 .mybigdropshadow::after,
 .mybigwhitedropshadow::after,
@@ -46,6 +47,14 @@ button{
 
 .mydropshadow::after{
   background-color: #202020;
+  border-radius: 2px;
+  transform: translate(4px, 4px);
+}
+
+/* Umbră portocalie: pentru tile-urile inversate (fundal #202020), unde umbra
+   închisă nu s-ar vedea. Medaliile speciale — staff, influencer, endgame. */
+.myorangedropshadow::after{
+  background-color: #E86842;
   border-radius: 2px;
   transform: translate(4px, 4px);
 }
@@ -131,6 +140,32 @@ button{
 
 @media (prefers-reduced-motion: reduce) {
   .dice-icon {
+    transition: none;
+  }
+}
+
+/* ---------- Medalii ---------- */
+/* Toast-ul de deblocare intră glisând din dreapta, cu easing-ul signature al
+   site-ului (același ca meniul burger și bannerul de cookie-uri). Offset-ul
+   depășește 100% ca să scoată din ecran și umbra solidă, nu doar cardul. */
+.achievement-toast {
+  transform: translateX(calc(100% + 2rem));
+  transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  will-change: transform;
+}
+
+.achievement-toast--open {
+  transform: translateX(0);
+}
+
+/* Bara de progres X/34 din modal: umple de la 0 la mount, cu același easing. */
+.achievement-progress-fill {
+  transition: width 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-toast,
+  .achievement-progress-fill {
     transition: none;
   }
 }

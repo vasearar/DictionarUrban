@@ -1,6 +1,7 @@
 import React from "react";
 import { PublicProfile } from "@/lib/profile";
 import ProfileBadges from "./ProfileBadges";
+import AchievementsButton from "./badges/AchievementsButton";
 
 // Antetul paginii de profil public — layout oglindit după DashboardInfo,
 // dar read-only (fără sesiune, fără butoane de acțiune).
@@ -51,6 +52,9 @@ export default function ProfileHeader({ profile }: { profile: PublicProfile }) {
           {countLabel}
         </h6>
         <ProfileBadges badges={badges} />
+        <div className="mt-3">
+          <AchievementsButton username={username} />
+        </div>
       </div>
     </div>
   );

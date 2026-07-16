@@ -1,5 +1,7 @@
 import { cache } from "react";
 import { connectDB } from "@/lib/db";
+import { holdsAchievement } from "@/lib/achievements";
+import { ACHIEVEMENT_MAP } from "@/lib/achievementCatalog";
 import { diacriticInsensitivePattern } from "@/lib/search";
 import userModel from "@/models/userModel";
 import wordModel from "@/models/wordModel";
@@ -8,9 +10,11 @@ import wordModel from "@/models/wordModel";
 // email, parolă, banned sau lista de like-uri.
 
 export interface PublicBadge {
+  /** id-ul din achievementCatalog — e și cheia iconiței (BadgeIcons). */
   id: string;
   label: string;
-  icon?: string;
+  /** tile/chip inversat: staff, influencer, endgame */
+  special?: boolean;
 }
 
 export interface PublicProfile {
@@ -18,13 +22,16 @@ export interface PublicProfile {
   role: "user" | "moderator" | "admin";
   memberSince: string; // users.date
   definitionCount: number; // doar definițiile vizibile (nu hidden)
-  badges: PublicBadge[]; // mereu gol deocamdată — slot de extensie
+  /** Cel mult UNA: medalia aleasă de user pentru profil. Restul se văd în modal. */
+  badges: PublicBadge[];
 }
 
 interface UserRow {
   username?: string;
   role?: string;
   date?: string;
+  achievements?: { id: string }[];
+  displayedAchievement?: string | null;
 }
 
 // Match exact (ancorat), insensibil la majuscule și diacritice — același
@@ -49,7 +56,7 @@ export const getPublicProfile = cache(
 
     let user = await userModel
       .findOne({ username: exactNameQuery(trimmed) })
-      .select("username role date")
+      .select("username role date achievements displayedAchievement")
       .lean<UserRow | null>();
 
     if (!user) {
@@ -61,7 +68,7 @@ export const getPublicProfile = cache(
       if (!word?.userEmail) return null;
       user = await userModel
         .findOne({ email: word.userEmail })
-        .select("username role date")
+        .select("username role date achievements displayedAchievement")
         .lean<UserRow | null>();
     }
 
@@ -79,7 +86,26 @@ export const getPublicProfile = cache(
       role,
       memberSince: user.date || "",
       definitionCount,
-      badges: [],
+      badges: displayedBadge(user, role),
     };
   }
 );
+
+/**
+ * Medalia aleasă pentru profil — dar numai dacă e chiar deținută. Re-validăm la
+ * fiecare citire pentru cazurile în care a fost pierdută după ce a fost pusă pe
+ * profil: „Vedeta cartierului" se mută la alt autor, iar medaliile de rol dispar
+ * la retrogradare. Altfel un fost moderator ar rămâne cu „Șerif de cartier" pe
+ * profil la nesfârșit.
+ */
+function displayedBadge(user: UserRow, role: string): PublicBadge[] {
+  const id = user.displayedAchievement;
+  if (!id) return [];
+
+  const achievement = ACHIEVEMENT_MAP[id];
+  if (!achievement) return [];
+
+  if (!holdsAchievement(user.achievements || [], role, id)) return [];
+
+  return [{ id, label: achievement.title, special: achievement.special }];
+}

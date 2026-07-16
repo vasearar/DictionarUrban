@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import reportModel from "../../../models/reportModel";
 import wordModel from "@/models/wordModel";
 import { logAuditAction, requireRole } from "@/lib/moderationAuth";
+import { checkAchievements } from "@/lib/achievements";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
 import mongoose from "mongoose";
@@ -142,6 +143,14 @@ export async function PATCH(req: Request) {
       targetEmail: report.userEmail,
       details: { status, wordId: report.wordId },
     });
+
+    // Medaliile de raportări merg la cine A FĂCUT raportul, nu la moderatorul
+    // care l-a rezolvat. Dacă raportul e mutat înapoi în „pending" medalia NU se
+    // retrage — regula generală e că nimic nu se revocă (singura excepție e
+    // „Vedeta cartierului", care e prin definiție a unei singure persoane).
+    if (status === "resolved") {
+      await checkAchievements(report.userEmail, "report-resolved");
+    }
 
     return NextResponse.json(report, { status: 200 });
   } catch (error) {

@@ -13,6 +13,7 @@ import {
   verifyCaptchaToken,
 } from "@/lib/antispam";
 import { mongoSearch, diacriticInsensitivePattern } from "@/lib/search";
+import { checkAchievements } from "@/lib/achievements";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -88,7 +89,13 @@ export async function POST(req: Request) {
       date: typeof body?.date === "string" ? body.date : new Date().toISOString(),
     });
 
-    return NextResponse.json({ someProp: created }, { status: 200 });
+    // Medaliile de definiții. `await`, nu fire-and-forget: pe serverless funcția
+    // poate fi înghețată imediat după răspuns și grant-ul s-ar pierde.
+    // checkAchievements nu aruncă niciodată, deci definiția e deja salvată
+    // indiferent ce se întâmplă aici.
+    const newAchievements = await checkAchievements(email, "definition");
+
+    return NextResponse.json({ someProp: created, newAchievements }, { status: 200 });
   } catch (error) {
     console.log("Something went wrong", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
