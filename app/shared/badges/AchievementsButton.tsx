@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import AchievementsModal from "./AchievementsModal";
 
 /**
- * Butonul „Medalii" + modalul lui. Folosit pe profilul public
+ * Butonul „Trofee" + modalul lui. Folosit pe profilul public
  * (ProfileHeader) și pe contul propriu (DashboardInfo) — modalul e același,
  * doar că serverul decide dacă e profilul tău și, deci, dacă poți alege medalia
  * afișată.
@@ -32,13 +32,22 @@ export default function AchievementsButton({ username }: { username: string }) {
           aria-hidden="true"
           focusable="false"
         >
-          {/* medalie: cerc pixelat cu panglică */}
-          <path
-            d="M4 0H6V3H4V0ZM10 0H12V3H10V0ZM5 3H11V4H5V3ZM4 4H5V5H4V4ZM11 4H12V5H11V4ZM3 5H4V11H3V5ZM12 5H13V11H12V5ZM4 11H5V12H4V11ZM11 11H12V12H11V11ZM5 12H6V16H5V12ZM10 12H11V16H10V12ZM6 12H10V13H6V12ZM6 14H10V15H6V14Z"
-            fill="#F1F1F1"
-          />
+          {/* cupă: potir cu toarte, picior și soclu */}
+          <g fill="#F1F1F1">
+            <rect x="2" y="2" width="12" height="1" />
+            <rect x="3" y="3" width="10" height="4" />
+            <rect x="1" y="3" width="1" height="3" />
+            <rect x="14" y="3" width="1" height="3" />
+            <rect x="1" y="6" width="2" height="1" />
+            <rect x="13" y="6" width="2" height="1" />
+            <rect x="4" y="7" width="8" height="1" />
+            <rect x="5" y="8" width="6" height="1" />
+            <rect x="7" y="9" width="2" height="2" />
+            <rect x="5" y="11" width="6" height="1" />
+            <rect x="4" y="12" width="8" height="1" />
+          </g>
         </svg>
-        Medalii
+        Trofee
       </button>
     </>
   );

@@ -119,7 +119,7 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ username, close }
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-bold text-3xl">Medalii</h1>
+            <h1 className="font-bold text-3xl">Trofee</h1>
             <p className="text-zinc-500 text-sm mt-1">
               {isOwn ? "Colecția ta" : `Colecția lui ${username}`}
             </p>
@@ -135,7 +135,7 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ username, close }
         {error ? (
           <p className="text-red-500 font-bold mt-8">{error}</p>
         ) : loading ? (
-          <p className="text-zinc-500 mt-8">Numărăm medaliile...</p>
+          <p className="text-zinc-500 mt-8">Numărăm trofeele...</p>
         ) : (
           <>
             {/* progres X/34 */}
