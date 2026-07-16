@@ -27,7 +27,20 @@ export type AchievementTrigger =
   | "report-resolved"
   | "dice"
   | "client-event"
-  | "session-poll";
+  | "session-poll"
+  /**
+   * Re-evaluează TOT ce se poate deduce din DB (definiții, like-uri primite,
+   * raportări validate, vechime, influencer). Nu e pentru hot-path: e plasa de
+   * siguranță, rulată rar (vezi FULL_SCAN_WINDOW_MS) la încărcarea site-ului și
+   * de scriptul de backfill.
+   *
+   * Există pentru că trigger-ele punctuale, oricât de corecte, au două găuri:
+   * (1) nu văd trecutul — cine avea 23 de definiții înainte de lansarea
+   * sistemului nu primea nimic până nu mai posta una; (2) un trigger se
+   * evaluează pentru un singur email, deci un like dat altcuiva muta
+   * influencer-ul global fără să acorde pragurile de like ale noului deținător.
+   */
+  | "full-scan";
 
 export interface AchievementContext {
   /** doar pentru "client-event": id-ul medaliei cerute (terms/privacy/lost-404/share) */
@@ -72,6 +85,14 @@ const SENIORITY_TIERS: [number, string][] = [
 /** Câte medalii ale zarului într-o „sesiune" (fereastră de 1h, server-side). */
 export const DICE_THRESHOLD = 50;
 export const DICE_WINDOW_MS = 3_600_000;
+
+/**
+ * Cât de des re-scanăm tot, per utilizator, la încărcarea site-ului. Scanarea
+ * costă ~5 interogări, deci NU se face la fiecare navigare — o dată pe oră e
+ * mai mult decât suficient pentru o plasă de siguranță, fiindcă orice acțiune
+ * reală (definiție nouă, like primit) își acordă medaliile pe loc, sincron.
+ */
+export const FULL_SCAN_WINDOW_MS = 3_600_000;
 
 /**
  * Trigger-ele care se întâmplă ÎN cererea utilizatorului: el așteaptă răspunsul,
@@ -193,6 +214,44 @@ async function checkEndgame(email: string, notified: boolean): Promise<string[]>
   return (await grant(email, ENDGAME_ID, notified)) ? [ENDGAME_ID] : [];
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Evaluările, una per familie de medalii. Fiecare deduce totul din DB, deci pot
+// fi chemate și de un trigger punctual, și de scanarea completă — logica de
+// praguri există într-un singur loc.
+// ────────────────────────────────────────────────────────────────────────────
+
+async function scanDefinitions(email: string, notified: boolean): Promise<string[]> {
+  const count = await wordModel.countDocuments({ userEmail: email, hidden: { $ne: true } });
+  return grantTiers(email, count, DEFINITION_TIERS, notified);
+}
+
+async function scanLikes(email: string, notified: boolean): Promise<string[]> {
+  return grantTiers(email, await totalLikesFor(email), LIKE_TIERS, notified);
+}
+
+async function scanReports(email: string, notified: boolean): Promise<string[]> {
+  const count = await reportModel.countDocuments({ userEmail: email, status: "resolved" });
+  return grantTiers(email, count, REPORT_TIERS, notified);
+}
+
+async function scanSeniority(email: string, notified: boolean): Promise<string[]> {
+  const user = await userModel
+    .findOne({ email })
+    .select("createdAt")
+    .lean<{ _id: mongoose.Types.ObjectId; createdAt?: Date } | null>();
+  if (!user) return [];
+
+  let createdAt = user.createdAt;
+  if (!createdAt) {
+    // Cont vechi neprins de backfill → îl reparăm acum, o dată.
+    // Vezi scripts/backfill-user-createdat.ts.
+    createdAt = user._id.getTimestamp();
+    await userModel.updateOne({ email }, { $set: { createdAt } });
+  }
+
+  return grantTiers(email, yearsSince(createdAt), SENIORITY_TIERS, notified);
+}
+
 /**
  * Evaluează medaliile afectate de `trigger` pentru `email` și întoarce id-urile
  * NOU deblocate (lista e goală în cazul normal, când nimic nu s-a schimbat).
@@ -216,11 +275,7 @@ export async function checkAchievements(
 
     switch (trigger) {
       case "definition": {
-        const count = await wordModel.countDocuments({
-          userEmail: email,
-          hidden: { $ne: true },
-        });
-        unlocked.push(...(await grantTiers(email, count, DEFINITION_TIERS, notified)));
+        unlocked.push(...(await scanDefinitions(email, notified)));
         break;
       }
 
@@ -228,8 +283,7 @@ export async function checkAchievements(
         // Pe unlike suma doar scade, deci pragurile n-au ce descoperi — dar
         // recordul platformei se poate muta, deci influencer-ul se verifică.
         if (ctx.action !== "unlike") {
-          const total = await totalLikesFor(email);
-          unlocked.push(...(await grantTiers(email, total, LIKE_TIERS, notified)));
+          unlocked.push(...(await scanLikes(email, notified)));
         }
         const newLeader = await syncInfluencer();
         if (newLeader === email) unlocked.push("influencer");
@@ -237,11 +291,7 @@ export async function checkAchievements(
       }
 
       case "report-resolved": {
-        const count = await reportModel.countDocuments({
-          userEmail: email,
-          status: "resolved",
-        });
-        unlocked.push(...(await grantTiers(email, count, REPORT_TIERS, notified)));
+        unlocked.push(...(await scanReports(email, notified)));
         break;
       }
 
@@ -262,22 +312,17 @@ export async function checkAchievements(
       }
 
       case "session-poll": {
-        const user = await userModel
-          .findOne({ email })
-          .select("createdAt")
-          .lean<{ _id: mongoose.Types.ObjectId; createdAt?: Date } | null>();
-        if (!user) break;
+        unlocked.push(...(await scanSeniority(email, notified)));
+        break;
+      }
 
-        let createdAt = user.createdAt;
-        if (!createdAt) {
-          // Cont vechi neprins de backfill → îl reparăm acum, o dată.
-          // Vezi scripts/backfill-user-createdat.ts.
-          createdAt = user._id.getTimestamp();
-          await userModel.updateOne({ email }, { $set: { createdAt } });
-        }
-
-        const years = yearsSince(createdAt);
-        unlocked.push(...(await grantTiers(email, years, SENIORITY_TIERS, notified)));
+      case "full-scan": {
+        unlocked.push(...(await scanDefinitions(email, notified)));
+        unlocked.push(...(await scanLikes(email, notified)));
+        unlocked.push(...(await scanReports(email, notified)));
+        unlocked.push(...(await scanSeniority(email, notified)));
+        const leader = await syncInfluencer();
+        if (leader === email) unlocked.push("influencer");
         break;
       }
     }

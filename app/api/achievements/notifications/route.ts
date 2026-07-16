@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/app/confings/auth";
 import { connectDB } from "@/lib/db";
-import { enforceRateLimits } from "@/lib/antispam";
-import { checkAchievements } from "@/lib/achievements";
+import { bumpCounter, enforceRateLimits } from "@/lib/antispam";
+import { checkAchievements, FULL_SCAN_WINDOW_MS } from "@/lib/achievements";
 import userModel from "@/models/userModel";
 
 // Coada de toast-uri a utilizatorului autentificat.
@@ -26,11 +26,23 @@ export async function GET() {
     ]);
     if (limited) return limited;
 
-    // Vechimea n-are un eveniment care s-o declanșeze — nimeni nu „face" ceva
-    // când îi trece un an. O evaluăm leneș, aici: userul primește tortul la
-    // prima pagină deschisă după aniversare. Tot aici se repară `createdAt`
-    // pentru conturile pe care backfill-ul nu le-a prins.
-    await checkAchievements(email, "session-poll");
+    // Plasa de siguranță. Trigger-ele punctuale (definiție nouă, like primit)
+    // acordă medaliile pe loc, dar au două găuri: nu văd trecutul, iar un like
+    // se evaluează doar pentru autorul definiției atinse. Așa că, o dată pe oră
+    // per utilizator, re-deducem TOT din DB — la simpla deschidere a site-ului.
+    //
+    // Contorul e atomic, deci din zece navigări rapide exact una declanșează
+    // scanarea; restul plătesc doar un `$inc`. Vechimea (care n-are cum să aibă
+    // un eveniment — nimeni nu „face" ceva când îi trece un an) și repararea
+    // lui `createdAt` intră tot în scanare.
+    const scans = await bumpCounter({
+      scope: "ach-scan",
+      id: email,
+      windowMs: FULL_SCAN_WINDOW_MS,
+    });
+    if (scans === 1) {
+      await checkAchievements(email, "full-scan");
+    }
 
     await connectDB();
     const user = await userModel

@@ -272,7 +272,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "merch-cana",
     title: "Bea apă, boss",
-    howTo: "Ai cumpărat cana DexUrban. Cod de revendicare primit pe email.",
+    howTo: "Ai cumpărat cana DexUrban.",
     category: "Merch",
     stub: true,
     countsForEndgame: false,
@@ -280,7 +280,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "merch-hoodie",
     title: "Golan cu glugă",
-    howTo: "Ai cumpărat hoodie-ul DexUrban. Cod de revendicare primit pe email.",
+    howTo: "Ai cumpărat hoodie-ul DexUrban.",
     category: "Merch",
     stub: true,
     countsForEndgame: false,
@@ -288,7 +288,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "merch-tricou",
     title: "Reclamă ambulantă",
-    howTo: "Ai cumpărat tricoul DexUrban. Cod de revendicare primit pe email.",
+    howTo: "Ai cumpărat tricoul DexUrban.",
     category: "Merch",
     stub: true,
     countsForEndgame: false,
@@ -296,7 +296,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "merch-chipiu",
     title: "Șmecher cu cozoroc",
-    howTo: "Ai cumpărat chipiul DexUrban. Cod de revendicare primit pe email.",
+    howTo: "Ai cumpărat chipiul DexUrban.",
     category: "Merch",
     stub: true,
     countsForEndgame: false,
