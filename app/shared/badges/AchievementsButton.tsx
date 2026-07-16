@@ -20,8 +20,11 @@ export default function AchievementsButton({ username }: { username: string }) {
   return (
     <>
       {open && <AchievementsModal username={username} close={setOpen} />}
+      {/* Stil SECUNDAR (alb + bordură + umbră dură), ca „Trage la sorți": pe un
+          profil, lucrul important e omul și definițiile lui, nu galeria. Un
+          singur buton primar pe pagină. */}
       <button
-        className="flex items-center gap-2 border-2 relative px-4 tracking-wide h-fit py-2 text-white font-bold border-mygray transition-all bg-myorange hover:bg-myhoverorange mydropshadow"
+        className="relative shrink-0 h-fit flex items-center gap-2 bg-mywhite md:hover:bg-myhoverorange text-mygray font-bold text-sm md:text-base border-2 border-mygray rounded-sm px-3 py-2 md:px-4 md:py-[0.625rem] mydropshadow transition-all"
         onClick={openModal}
       >
         <svg
@@ -32,8 +35,10 @@ export default function AchievementsButton({ username }: { username: string }) {
           aria-hidden="true"
           focusable="false"
         >
-          {/* cupă: potir cu toarte, picior și soclu */}
-          <g fill="#F1F1F1">
+          {/* cupă: potir cu toarte, picior și soclu. currentColor, nu alb fix:
+              butonul e alb, iar la hover devine portocaliu — glifa trebuie să
+              rămână vizibilă în ambele. */}
+          <g fill="currentColor">
             <rect x="2" y="2" width="12" height="1" />
             <rect x="3" y="3" width="10" height="4" />
             <rect x="1" y="3" width="1" height="3" />

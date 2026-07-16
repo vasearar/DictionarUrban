@@ -138,6 +138,19 @@ button{
   opacity: 1;
 }
 
+/* Pe touch (iPhone/Android) nu există :hover — rostogolirea vine din :active,
+   care ține DOAR cât degetul e pe ecran. Un tap durează 50–150ms, adică sub
+   delay-ul de 150ms de mai sus, așa că fața nu apuca niciodată să se schimbe:
+   se vedea rotația (pornește la 0ms), dar zarul rămânea pe 3.
+   Aici comutăm fără delay, cu un fade scurt care se pierde în rotație (curba e
+   ease-out, deci mișcarea e oricum cea mai rapidă chiar la început). */
+@media (hover: none) {
+  .dice-face-3,
+  .dice-face-6 {
+    transition: opacity 0.15s linear;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dice-icon {
     transition: none;

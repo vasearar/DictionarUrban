@@ -3,7 +3,10 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
-const Filters = () => {
+// `showRandom`: pe profilul cuiva, „Trage la sorți" n-are ce căuta — te-ar
+// arunca la un cuvânt aleator de pe tot site-ul, adică exact în afara listei pe
+// care tocmai o citeai. Pe home/căutare rămâne.
+const Filters = ({ showRandom = true }: { showRandom?: boolean }) => {
   const [popularity, setPopularity] = useState(1);
   const [isFirstRender, setIsFirstRender] = useState(0);
   const router = useRouter();
@@ -60,6 +63,7 @@ const Filters = () => {
           concureze cu CTA-ul orange „Definește un cuvânt" din hero — un singur
           buton primar pe pagină. `relative` e obligatoriu ca umbra ::after
           (mydropshadow) să se raporteze la buton, nu la tot viewport-ul. */}
+      {showRandom && (
       <a
         href="/aleator"
         title="Nu știi ce cauți? Normal. Apasă."
@@ -98,6 +102,7 @@ const Filters = () => {
           Trage la sorți<span className="hidden im:inline">&nbsp;un cuvânt</span>
         </span>
       </a>
+      )}
     </div>
   );
 };

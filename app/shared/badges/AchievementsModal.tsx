@@ -178,6 +178,7 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ username, close }
                   key={achievement.id}
                   achievement={achievement}
                   unlocked={unlocked.has(achievement.id)}
+                  isOwn={isOwn}
                   displayed={displayed === achievement.id}
                   selectable={isOwn && unlocked.has(achievement.id)}
                   onSelect={() => chooseDisplayed(achievement.id)}
@@ -194,17 +195,19 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ username, close }
 function BadgeTile({
   achievement,
   unlocked,
+  isOwn,
   displayed,
   selectable,
   onSelect,
 }: {
   achievement: AchievementDef;
   unlocked: boolean;
+  isOwn: boolean;
   displayed: boolean;
   selectable: boolean;
   onSelect: () => void;
 }) {
-  const { title, howTo, hidden } = displayFor(achievement, unlocked);
+  const { title, howTo, hidden } = displayFor(achievement, unlocked, isOwn);
   const special = achievement.special && unlocked;
 
   // Blocată = glifa în gri, transparentă. Gri e rezervat exclusiv stării ăsteia,
@@ -221,8 +224,10 @@ function BadgeTile({
       <p className={`font-bold text-sm leading-tight ${unlocked ? "" : "text-myhovergray"}`}>
         {title}
       </p>
+      {/* Și medaliile care nu se pot lua încă (merch, easter eggs) își arată
+          condiția: „În curând" nu spunea nimic și le făcea să pară un bug. */}
       <p className={`text-xs leading-snug mt-1 ${special ? "text-mydarkhovergray" : "text-zinc-500"}`}>
-        {achievement.stub && !unlocked ? "În curând." : howTo}
+        {howTo}
       </p>
       {displayed && (
         <p className="mt-2 text-[11px] font-bold uppercase tracking-widest text-myorange">

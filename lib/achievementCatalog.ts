@@ -257,7 +257,8 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "beta",
     title: "Cobai profesionist",
-    howTo: "Ai testat platforma în beta. Acordată manual de admin.",
+    howTo:
+      "Se acordă pentru depistarea unei probleme sau a unei vulnerabilități. Ne-ai spus în loc s-o exploatezi.",
     category: "Comunitate",
     countsForEndgame: false,
   },
@@ -305,10 +306,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: "endgame-100",
     title: "Atinge iarba",
-    howTo: "Ai deblocat toate celelalte medalii. Acum du-te afară.",
+    // Textul vechi („toate celelalte medalii") era o minciună: rolurile,
+    // influencer-ul, beta și stub-urile n-au fost niciodată cerute. Ăsta descrie
+    // ce cere de fapt ENDGAME_SET.
+    howTo:
+      "Ai deblocat tot ce se poate câștiga singur pe site. Restul se dau, se cumpără sau se fură. Acum du-te afară.",
     category: "Endgame",
+    secret: true,
     special: true,
     countsForEndgame: false,
+    lockedHint: "Nu se caută. Se ajunge la ea.",
   },
 ];
 
@@ -339,18 +346,37 @@ export const ROLE_ACHIEVEMENTS: Record<string, string> = {
 /** Medaliile pe care un admin le poate acorda/retrage manual din panou. */
 export const MANUAL_GRANTABLE = ["beta"];
 
+/** Ce scrie pe o medalie secretă deblocată de ALTCINEVA — adică nimic util. */
+const FOREIGN_SECRET_HINT = "Medalie secretă. Cum se ia afli doar dacă o iei.";
+
 /**
- * Ce vede clientul pentru o medalie, ținând cont că secretele blocate nu-și
- * dezvăluie titlul. Un singur loc care decide asta → galeria, chip-ul de profil
- * și toast-ul nu pot ajunge să se contrazică.
+ * Ce vede clientul pentru o medalie. Singurul loc care decide cât se dezvăluie,
+ * ca galeria să nu poată ajunge să se contrazică cu ea însăși.
+ *
+ * `isOwn` NU are valoare implicită, intenționat: e singurul lucru care ține
+ * secretele secrete, deci fiecare apelant trebuie să spună explicit al cui e
+ * profilul. Un default ar fi o scurgere care așteaptă să se întâmple.
  */
-export function displayFor(achievement: AchievementDef, unlocked: boolean) {
-  if (achievement.secret && !unlocked) {
+export function displayFor(achievement: AchievementDef, unlocked: boolean, isOwn: boolean) {
+  if (!achievement.secret) {
+    return { title: achievement.title, howTo: achievement.howTo, hidden: false };
+  }
+
+  // Blocată → nici titlu, nici iconiță. Doar gluma.
+  if (!unlocked) {
     return {
       title: "???",
       howTo: achievement.lockedHint || "Medalie secretă.",
       hidden: true,
     };
   }
+
+  // Deblocată, dar pe profilul altcuiva: titlul și iconița se văd — a câștigat-o,
+  // are dreptul s-o arate — dar CONDIȚIA nu. Altfel oricine ar afla toate
+  // secretele răsfoind profilurile celor care le-au luat deja.
+  if (!isOwn) {
+    return { title: achievement.title, howTo: FOREIGN_SECRET_HINT, hidden: false };
+  }
+
   return { title: achievement.title, howTo: achievement.howTo, hidden: false };
 }

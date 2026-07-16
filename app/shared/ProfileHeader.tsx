@@ -36,25 +36,29 @@ export default function ProfileHeader({ profile }: { profile: PublicProfile }) {
 
   return (
     <div className="w-full flex justify-between my-12 font-Spacegrotesc">
-      <div className="mx-auto flex flex-col items-start gap-1 w-full px-3 md:px-0 md:w-[71%]">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-bold text-5xl font-Spacegrotesc break-all">{username}</h1>
-          <span
-            className={`relative border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold ${
-              isStaff ? "text-myorange" : ""
-            }`}
-          >
-            {ROLE_LABELS[role]}
-          </span>
+      {/* Identitatea la stânga, „Trofee" la dreapta, aliniat sus cu porecla:
+          rândul era deja justify-between cu un singur copil, deci toată partea
+          dreaptă stătea goală, iar butonul se așeza între identitate și lista de
+          definiții — exact în drum. Pe mobil coboară sub identitate. */}
+      <div className="mx-auto flex w-full flex-col gap-4 px-3 md:px-0 md:w-[71%] sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col items-start gap-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-bold text-5xl font-Spacegrotesc break-all">{username}</h1>
+            <span
+              className={`relative border-2 border-mygray bg-mywhite mydropshadow px-2 text-sm font-bold ${
+                isStaff ? "text-myorange" : ""
+              }`}
+            >
+              {ROLE_LABELS[role]}
+            </span>
+          </div>
+          <h6 className="text-zinc-500">
+            {memberSince ? `Membru din ${formatMemberSince(memberSince)} · ` : ""}
+            {countLabel}
+          </h6>
+          <ProfileBadges badges={badges} />
         </div>
-        <h6 className="text-zinc-500">
-          {memberSince ? `Membru din ${formatMemberSince(memberSince)} · ` : ""}
-          {countLabel}
-        </h6>
-        <ProfileBadges badges={badges} />
-        <div className="mt-3">
-          <AchievementsButton username={username} />
-        </div>
+        <AchievementsButton username={username} />
       </div>
     </div>
   );

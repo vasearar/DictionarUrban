@@ -54,7 +54,14 @@ export default async function Page({ params, searchParams }: Props) {
     <>
       <ProfileHeader profile={profile} />
       <Suspense>
-        <Definition query={`@${profile.username}`} page={page} popularity={popularity} />
+        {/* Fără „Trage la sorți" aici: ești pe lista cuiva anume, iar butonul
+            te-ar arunca la un cuvânt aleator de pe tot site-ul. */}
+        <Definition
+          query={`@${profile.username}`}
+          page={page}
+          popularity={popularity}
+          showRandom={false}
+        />
       </Suspense>
     </>
   );
