@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import userModel from "@/models/userModel";
 import verificationTokenModel from "@/models/verificationTokenModel";
+import { getClientIp, enforceRateLimits } from "@/lib/antispam";
 
 export async function GET(req: Request) {
   try {
@@ -12,6 +13,16 @@ export async function GET(req: Request) {
     if (!token) {
       return NextResponse.json({ error: "Token lipsă" }, { status: 400 });
     }
+
+    // Ca la reset-password: tokenul e pe 256 de biți, deci limita ține doar de
+    // abuz de resurse. Pragul e larg și pentru că scanerele de email prefetch-uiesc
+    // linkurile — nu vrem să blocăm o verificare legitimă.
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "verify-ip", id: ip, limit: 10, windowMs: 60_000 },
+      { scope: "verify-ip", id: ip, limit: 60, windowMs: 3_600_000 },
+    ]);
+    if (limited) return limited;
 
     const tokenDoc = await verificationTokenModel.findOne({ token });
 

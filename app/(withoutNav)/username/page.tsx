@@ -69,11 +69,12 @@ const Page = () => {
 				},
 				body: JSON.stringify(data),
 			});
-      if(response.status == 409){
-        setError("Acestă poreclă deja se folosește");
-      }
 			if (!response.ok) {
-				throw new Error("HTTP error! status: " + response.status);
+        // Serverul poate respinge porecla (409), o poate invalida (400) sau ne
+        // poate opri (429). Fără mesaj, butonul ar părea pur și simplu mort.
+        const body = await response.json().catch(() => null);
+        setError(body?.error || "Porecla nu a putut fi salvată. Încearcă din nou.");
+        return;
 			} else {
         navigate();
       }

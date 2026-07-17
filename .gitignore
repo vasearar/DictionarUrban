@@ -35,3 +35,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# postari video generate (skill video-post)
+/social-video/
+
+# Exporturi din MongoDB (mongoexport / Compass). Conțin userEmail — adică exact
+# datele scoase din API-ul public. Un `git add .` le-ar face permanente în
+# istoricul public al repo-ului.
+*.wordmodels.json
+myFirstDatabase.*.json
+/dump/
+/mongo-export/

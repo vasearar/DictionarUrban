@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import userModel from "@/models/userModel";
 import passwordResetTokenModel from "@/models/passwordResetTokenModel";
+import { getClientIp, enforceRateLimits } from "@/lib/antispam";
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +16,16 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Tokenul are 256 de biți, deci ghicitul e practic imposibil — limita e aici
+    // pentru abuz de resurse, nu ca apărare împotriva brute-force-ului.
+    // Se dă click o dată, dintr-un email: pragul nu atinge niciun om real.
+    const ip = getClientIp(req);
+    const limited = await enforceRateLimits([
+      { scope: "reset-ip", id: ip, limit: 10, windowMs: 60_000 },
+      { scope: "reset-ip", id: ip, limit: 60, windowMs: 3_600_000 },
+    ]);
+    if (limited) return limited;
 
     if (password.length < 6) {
       return NextResponse.json(

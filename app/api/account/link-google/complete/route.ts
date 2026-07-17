@@ -9,6 +9,7 @@ import reportModel from "@/models/reportModel";
 import auditLogModel from "@/models/auditLogModel";
 import linkIntentModel from "@/models/linkIntentModel";
 import { isDuplicateKeyError } from "@/lib/mongoErrors";
+import { getClientIp, enforceRateLimits } from "@/lib/antispam";
 
 const LINK_INTENT_COOKIE = "dexurban_link_intent";
 
@@ -29,6 +30,14 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Ruta face merge de conturi, deci merită o plasă chiar dacă e deja gardată
+    // de cookie + token de intenție. Pragul e la fel de larg ca la /start (15/h):
+    // legarea se face o dată în viața unui cont.
+    const limited = await enforceRateLimits([
+      { scope: "linkgoogle-done-ip", id: getClientIp(req), limit: 20, windowMs: 60 * 60 * 1000 },
+    ]);
+    if (limited) return limited;
 
     const expired = () => {
       const res = NextResponse.json(
