@@ -131,6 +131,22 @@ button{
   transition: opacity 1ms linear 150ms;
 }
 
+/* Dar delay-ul e un lux pe care-l avem doar cât pagina trăiește. La tap urmează
+   imediat navigarea, iar Safari pe iOS îngheață pagina veche cât o încarcă pe
+   cea nouă: rotația merge mai departe (transform pe <svg> = accelerat, treaba
+   compozitorului), însă opacitatea unui <g> din interiorul SVG-ului nu se poate
+   accelera separat — are nevoie de un recalcul de stil la +150ms, care nu mai
+   vine. Zarul se rostogolea cu 3-ul înghețat în el. Fără tranziție, fața se
+   schimbă în ACELAȘI recalcul care pornește rotația, deci intră în rasterizare
+   din prima. Nu se vede saltul: easing-ul e cvasi-vertical la start (zarul e
+   deja la ~55° după un cadru). */
+.dice-btn--rolling .dice-face-3,
+.dice-btn--rolling .dice-face-6,
+.dice-btn:active .dice-face-3,
+.dice-btn:active .dice-face-6 {
+  transition: none;
+}
+
 .dice-face-6 {
   opacity: 0;
 }
