@@ -7,6 +7,18 @@ import { connectDB } from "@/lib/db";
 import userModel from "@/models/userModel";
 import { checkRateLimits, getClientIpFromHeaders } from "@/lib/antispam";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Cookie partajat pe subdomeniul .dexurban.md → SSO comun cu shop.dexurban.md.
+// Sesiunile sunt JWT (fără adapter DB), semnate cu NEXTAUTH_SECRET. Dacă ambele
+// aplicații (dicționar + shop) folosesc același secret, același nume de cookie și
+// același `domain`, sesiunea creată aici e citită pe shop.dexurban.md și invers.
+// `domain` se setează DOAR când COOKIE_DOMAIN e definit (producție) → local rămâne
+// host-only. csrfToken rămâne pe default (host-only) — doar sessionToken se partajează.
+// ─────────────────────────────────────────────────────────────────────────────
+const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith("https://") ?? false;
+const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
+
 export const authConfig: AuthOptions = {
   providers: [
     GoogleProvider({
@@ -95,6 +107,27 @@ export const authConfig: AuthOptions = {
   ],
   pages: {
     signIn: '/conectare',
+  },
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+    callbackUrl: {
+      name: `${cookiePrefix}next-auth.callback-url`,
+      options: {
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
   },
   callbacks: {
     async session({ session, token }) {
