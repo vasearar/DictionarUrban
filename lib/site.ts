@@ -9,3 +9,7 @@ export const SITE_NAME = "DexUrban.md";
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
+
+// Magazinul de merch (subdomeniu separat, sesiune SSO partajată). ?ref=... e
+// citit de shop pentru atribuirea traficului (eveniment "visit" în /api/track).
+export const SHOP_URL = "https://shop.dexurban.md";

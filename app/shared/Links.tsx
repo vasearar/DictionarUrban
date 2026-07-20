@@ -5,6 +5,7 @@
   import { useSession } from 'next-auth/react';
   import Image from 'next/image';
   import { usePathname } from 'next/navigation';
+  import { SHOP_URL } from '@/lib/site';
 
   const Links = () => {
     const [isDark, setIsDark] = useState(false);
@@ -65,7 +66,15 @@
             </Link>
           </li>
           <li>
-          </li> 
+            <Link className='flex items-center gap-2 hover:opacity-75' href={`${SHOP_URL}/?ref=dict-nav`} title="Magazinul oficial de merch DexUrban - tricouri, hanorace, șepci și căni">
+              <svg width="15" height="14" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0.5H4.5V2.5H6.5V4.5H21.5V6.5H19.5V8.5H17.5V10.5H15.5V12.5H7.5V10.5H5.5V4.5H4.5V2.5H0V0.5Z" fill="#202020"/>
+                <path d="M7 14.5H9V16.5H7V14.5Z" fill="#202020"/>
+                <path d="M14 14.5H16V16.5H14V14.5Z" fill="#202020"/>
+              </svg>
+              Magazin
+            </Link>
+          </li>
           {session?.data ? 
           <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/contul-meu">Contul meu</Link></li> : 
           <li><Link className={`text-mywhite py-[10px] hover:bg-myhoverorange mydropshadow px-4 bg-myorange rounded-sm border-mygray border-solid border-2 relative rounded-br-none transition-all`} href="/conectare">Conectează-te </Link></li>}
@@ -128,6 +137,14 @@
              Donează
              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M0.333171 8.6665L0.333171 11.3332L16.3332 11.3332L16.3332 13.9998L18.9998 13.9998L18.9998 11.3332L21.6665 11.3332L21.6665 8.6665L18.9998 8.6665L18.9998 5.99984L16.3332 5.99984L16.3332 8.6665L0.333171 8.6665ZM13.6665 3.33317L16.3332 3.33317L16.3332 5.99984L13.6665 5.99984L13.6665 3.33317ZM13.6665 3.33317L10.9998 3.33317L10.9998 0.666503L13.6665 0.666504L13.6665 3.33317ZM13.6665 16.6665L16.3332 16.6665L16.3332 13.9998L13.6665 13.9998L13.6665 16.6665ZM13.6665 16.6665L10.9998 16.6665L10.9998 19.3332L13.6665 19.3332L13.6665 16.6665Z" fill="#202020"/>
+             </svg>
+           </Link>
+           <Link onClick={handleMenu} className="imp w-full text-2xl vs:text-3xl flex justify-between text-nowrap items-center" href={`${SHOP_URL}/?ref=dict-nav`} title="Magazinul oficial de merch DexUrban - tricouri, hanorace, șepci și căni">
+             Magazin
+             <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 0.5H4.5V2.5H6.5V4.5H21.5V6.5H19.5V8.5H17.5V10.5H15.5V12.5H7.5V10.5H5.5V4.5H4.5V2.5H0V0.5Z" fill="#202020"/>
+              <path d="M7 14.5H9V16.5H7V14.5Z" fill="#202020"/>
+              <path d="M14 14.5H16V16.5H14V14.5Z" fill="#202020"/>
              </svg>
            </Link>
            <div className='anim flex justify-center w-full gap-8 my-8'>

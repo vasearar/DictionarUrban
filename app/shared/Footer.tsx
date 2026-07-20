@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { SHOP_URL } from "@/lib/site";
 
 export default function Definition() {
   return (
@@ -66,7 +67,8 @@ export default function Definition() {
               <li><Link href="/termeni-si-conditii" key="general-rules">Reguli generale</Link></li>
               <li><Link href="/politica-de-confidentialitate" key="privacy-policy">Politică de confidențialitate</Link></li>
               <li><Link href="/termeni-si-conditii" key="terms-conditions">Termeni și condiții</Link></li>
-              <li><Link href="https://www.instagram.com/dexurban.md/" key="contact">Contact</Link></li> 
+              <li><Link href={`${SHOP_URL}/?ref=dict-footer`} key="shop" title="Magazinul oficial de merch DexUrban - tricouri, hanorace, șepci și căni">Magazin</Link></li>
+              <li><Link href="https://www.instagram.com/dexurban.md/" key="contact">Contact</Link></li>
             </ul>
           </div>
         </div>

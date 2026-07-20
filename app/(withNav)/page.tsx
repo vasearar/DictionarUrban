@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import Definition from '../shared/Definition';
 import TopSection from '../shared/TopSection';
 import { getPublicProfile } from '@/lib/profile';
-import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { SITE_URL, SITE_NAME, SHOP_URL } from '@/lib/site';
 
 // JSON-LD pentru homepage: WebSite + SearchAction (activează sitelinks search
 // box în Google) și Organization (semnal de autoritate/identitate pentru Google
@@ -34,6 +34,14 @@ const homeJsonLd = {
       logo: `${SITE_URL}/favicon1.ico`,
       description:
         "DexUrban.md este un dicționar online în limba română, creat de utilizatori, specializat în jargoane, argouri și expresii neconvenționale.",
+      // Leagă entitatea de proprietățile oficiale (shop + rețele sociale) -
+      // consolidare de identitate pentru Google/LLM-uri.
+      sameAs: [
+        SHOP_URL,
+        "https://www.instagram.com/dexurban.md/",
+        "https://www.facebook.com/groups/dexurban.md",
+        "https://www.tiktok.com/@dexurban.md",
+      ],
     },
   ],
 };
