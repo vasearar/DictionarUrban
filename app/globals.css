@@ -356,28 +356,27 @@ button{
 
 .active .anim{
   transform: translateY(500px);
-  animation: anim 1.2s 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
-}
-
-.active .imp:nth-child(2){
-  animation-delay: 0.3s;
-}
-
-.active .imp:nth-child(3){
-  animation-delay: 0.6s;
-}
-
-.active .imp:nth-child(4){
-  animation-delay: 0.9s;
-}
-.active .imp:nth-child(5){
-  animation-delay: 1.2s;
+  animation: anim 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
 }
 
 .active .imp{
   transform: translateX(1000px);
   animation: active 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
 }
+
+/* Intrarea în cascadă: fiecare rând apare la 0.3s după precedentul. Regulile
+   merg pe copiii direcți, nu pe indici de .imp, fiindcă numărul de rânduri
+   variază cu rolul și autentificarea (Panou doar la moderatori, Contul meu vs
+   Conectează-te) - altfel ultimul rând rămâne fără delay și intră instantaneu.
+   Blocul de rețele sociale e ultimul copil, deci se așază singur la rând. */
+.active > *:nth-child(1){ animation-delay: 0s; }
+.active > *:nth-child(2){ animation-delay: 0.3s; }
+.active > *:nth-child(3){ animation-delay: 0.6s; }
+.active > *:nth-child(4){ animation-delay: 0.9s; }
+.active > *:nth-child(5){ animation-delay: 1.2s; }
+.active > *:nth-child(6){ animation-delay: 1.5s; }
+.active > *:nth-child(7){ animation-delay: 1.8s; }
+.active > *:nth-child(8){ animation-delay: 2.1s; }
 
 .current{
   color: #E86842;
